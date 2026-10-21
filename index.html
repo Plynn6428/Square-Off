@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 1.8</title>
+<title>SQUARE OFF | PC 1.9</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -256,7 +256,7 @@ body{padding:0 !important;display:block;background:#071223}
 .hero-limb{position:absolute;background:var(--fighter-color);border:clamp(4px,.6vw,9px) solid #111727;border-radius:30px;z-index:3}
 .hero-limb.arm{width:37%;height:12%;top:45%}.hero-limb.arm.left{left:-9%;transform:rotate(-37deg)}.hero-limb.arm.right{right:-9%;transform:rotate(28deg)}.hero-limb.leg{width:13%;height:22%;bottom:0}.hero-limb.leg.left{left:27%;transform:rotate(14deg)}.hero-limb.leg.right{right:27%;transform:rotate(-14deg)}
 .hero-shadow{position:absolute;bottom:0;left:16%;right:16%;height:6%;border-radius:50%;background:#04071099;filter:blur(10px)}
-.hero-anger{position:absolute;z-index:6;top:11%;right:12%;font:900 80px Impact,sans-serif;color:#ffdc5e;transform:rotate(28deg)}
+
 .rounds-nameplate{position:absolute;left:17%;right:17%;bottom:2%;background:#101929dc;border:2px solid #ffe089;color:#fff;text-align:center;padding:8px 10px;font:900 clamp(16px,2vw,25px) Impact,sans-serif;letter-spacing:2px;z-index:8;transform:rotate(-3deg)}
 .rounds-product{position:absolute;z-index:7;width:clamp(190px,20vw,300px);text-align:center}
 .rounds-pos-0{left:3%;top:24%;transform:rotate(-10deg)}
@@ -277,18 +277,26 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-width:950px){.rounds-hero-wrap{width:38vw;height:53vh}.rounds-pos-0{left:1%;top:26%}.rounds-pos-2{right:1%;top:26%}.rounds-product{width:28vw}.rounds-product .cola-stage{height:25vh}.rounds-product .vend-details{padding:7px}.rounds-product .vend-name{font-size:18px}.rounds-product .vend-desc{font-size:12px}.rounds-controls{font-size:9px}}
 @media(max-height:720px) and (min-width:800px){.rounds-title{top:3%}.rounds-title h2{font-size:45px}.rounds-title p{margin:5px}.rounds-pos-0,.rounds-pos-2{top:20%}.rounds-pos-1{top:17%}.rounds-product .cola-stage{height:25vh}.rounds-product .vend-details{padding:7px}.rounds-product .vend-name{font-size:21px}.rounds-product .vend-desc{font-size:13px}.rounds-hero-wrap{height:55vh}}
 
-/* Keep the fighter expressive and visible below the three cola choices. */
+/* 1.9 / CHARACTER REACH AND PICKUP */
 .rounds-hero .hero-body{width:auto;height:auto}
-.rounds-hero-wrap{height:min(50vh,455px);width:min(36vw,460px);bottom:1%;z-index:8}
-.rounds-pos-1{top:16%}
-.rounds-product .cola-stage{height:clamp(176px,27vh,275px)}
-.rounds-pos-1 .vend-details{position:relative;z-index:10}
-@media(max-height:720px) and (min-width:800px){.rounds-hero-wrap{height:47vh}.rounds-product .cola-stage{height:23vh}.rounds-pos-1{top:14%}}
+.reach-arm{--reach-color:#ff5965;position:absolute;top:0;left:0;width:0;height:clamp(26px,3.2vw,46px);z-index:8;background:linear-gradient(180deg,color-mix(in srgb,var(--reach-color) 82%,white 18%),var(--reach-color) 54%,color-mix(in srgb,var(--reach-color) 73%,black 27%));border:clamp(4px,.5vw,7px) solid #121725;border-radius:100px;box-shadow:inset 0 5px 0 #fff3,4px 8px 0 #0005;transform-origin:0 50%;transform:translateY(-50%) rotate(0);opacity:0;pointer-events:none;transition:left .21s ease,top .21s ease,width .21s ease,transform .21s ease,opacity .16s ease}
+.reach-arm.is-reaching{opacity:1}
+.reach-hand{position:absolute;right:-10px;top:50%;transform:translateY(-50%);width:clamp(36px,4vw,56px);height:clamp(36px,4vw,56px);background:var(--reach-color);border:clamp(4px,.5vw,7px) solid #121725;border-radius:38%;box-shadow:inset 5px 4px 0 #fff4}
+.rounds-hero-wrap.reaching .hero-limb.arm.right{opacity:.03}
+.rounds-hero-wrap.reaching.left-reach .hero-limb.arm.left{opacity:.03}
+.rounds-hero-wrap.reaching.left-reach .hero-limb.arm.right{opacity:1}
+.rounds-product.chosen .vend-slot{transform:translateY(-11px) scale(1.1)!important;filter:drop-shadow(0 0 22px #ffe781)!important}
+.rounds-product.chosen .vend-details{border-color:#ffe781!important}
+.rounds-display.drinking .rounds-hero{animation:cola-chug .4s ease-in-out 2}
+.rounds-display.drinking .rounds-hero-wrap{filter:drop-shadow(0 0 26px #ffed8b80)}
+.rounds-display.drinking .rounds-title{opacity:.65}
+@keyframes cola-chug{0%,100%{translate:0 0}50%{translate:0 -9px}}
+@media(prefers-reduced-motion:reduce){.reach-arm,.rounds-product .vend-slot{transition:none!important}.rounds-display.drinking .rounds-hero{animation:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.8</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.9</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -302,7 +310,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 1.8</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 1.9</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -418,12 +426,12 @@ function renderColaCan(c){
 function renderColaCard(c,i){return `<button class="vend-slot" data-i="${i}" aria-label="${c.name}. ${c.desc}"><div class="cola-stage">${renderColaCan(c)}</div><div class="vend-details"><span class="vend-number">0${i+1} // ${c.type}</span><strong class="vend-name">${c.name}</strong><span class="vend-desc">${c.desc}</span></div><div class="vend-rail"></div></button>`}
 function vendingMarkup(opts,isBot=false){
  const color=isBot?'#5fa7ff':'#ff5965',name=isBot?'BLUE BOT':'RED FIGHTER';
- const fig=`<div class="rounds-hero" style="--fighter-color:${color}" aria-hidden="true"><div class="hero-aura"></div><div class="hero-anger">〰</div><div class="hero-limb leg left"></div><div class="hero-limb leg right"></div><div class="hero-limb arm left"></div><div class="hero-limb arm right"></div><div class="hero-body"><div class="hero-eyes"><b></b><b></b></div><div class="hero-mouth"></div></div><div class="hero-shadow"></div></div>`;
+ const fig=`<div class="rounds-hero" style="--fighter-color:${color}" aria-hidden="true"><div class="hero-aura"></div><div class="hero-limb leg left"></div><div class="hero-limb leg right"></div><div class="hero-limb arm left"></div><div class="hero-limb arm right"></div><div class="hero-body"><div class="hero-eyes"><b></b><b></b></div><div class="hero-mouth"></div></div><div class="hero-shadow"></div></div>`;
  const slots=opts.map((c,i)=>`<div class="rounds-product rounds-pos-${isBot?1:i}">${renderColaCard(c,i)}</div>`).join('');
  return `<div class="rounds-draft ${isBot?'rounds-bot':''}">
   <div class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF // PERK BREAK</div><div>ROUND ${round} / ${isBot?'BOT IS UPGRADING':'YOUR COMEBACK'}</div></div>
   <div class="rounds-title"><h2>${isBot?'RIVAL REFILL':'PICK YOUR POP'}</h2><p>${isBot?'The bot cracked open a new perk.':'Pick one of three sodas to power up your fighter.'}</p></div>
-  <div class="rounds-display"><div class="rounds-rays"></div><div class="rounds-hero-wrap">${fig}<div class="rounds-nameplate">${name}</div></div>${slots}
+  <div class="rounds-display"><div class="rounds-rays"></div><div class="reach-arm" id="colaReachArm" aria-hidden="true"><div class="reach-hand"></div></div><div class="rounds-hero-wrap">${fig}<div class="rounds-nameplate">${name}</div></div>${slots}
    <div class="rounds-floor"></div>
   </div>
   <div class="rounds-controls"><span>PERKS STACK FOR THE WHOLE MATCH</span><strong>${isBot?'NEXT ROUND TO CONTINUE':'HOVER TO INSPECT · CLICK OR PRESS 1 / 2 / 3'}</strong></div>
@@ -446,7 +454,12 @@ try{const pref=JSON.parse(localStorage.getItem('square-off-pc-settings')||'{}');
 const BEATS={
  menu:{bpm:114,bass:[43,null,43,46,48,null,46,null,43,null,50,48,46,null,41,null],lead:[null,67,null,70,null,72,70,null,null,74,null,72,null,70,67,null],kick:[0,8],snare:[4,12],hat:[0,2,4,6,8,10,12,14]},
  battle:{bpm:132,bass:[29,null,29,29,32,null,29,27,29,null,36,34,27,null,27,32],lead:[null,null,null,null,null,null,53,null,null,null,null,null,51,null,null,null],kick:[0,3,6,8,10,14],snare:[4,12],hat:[0,2,4,6,8,10,12,14]},
- cola:{bpm:128,bass:[48,null,48,55,51,null,51,58,46,null,46,53,43,null,43,50],lead:[72,75,79,null,82,79,75,null,70,74,77,null,79,77,74,null],kick:[0,4,8,12],snare:[4,12],hat:[0,2,4,6,8,10,12,14]}
+ cola:{bpm:116,bass:[48,null,null,55,51,null,null,null,46,null,null,53,43,null,null,null],
+  lead:[79,null,82,null,null,84,null,79,null,null,77,null,75,null,null,null,
+        77,null,null,79,null,82,84,null,null,79,null,75,null,null,72,null,
+        82,null,84,null,null,86,null,82,null,79,null,null,77,null,79,null,
+        79,null,null,75,null,77,null,79,null,null,82,null,84,null,null,null],
+  kick:[0,8],snare:[12],hat:[2,6,10,14]}
 };
 function noteHz(n){return 440*Math.pow(2,(n-69)/12)}
 function synthTone(freq,t,dur,type,vol,filterHz=0){
@@ -465,15 +478,15 @@ function musicSchedule(){
  if(musicNext<audio.currentTime-.2)musicNext=audio.currentTime+.025;
  let ahead=0;
  while(musicNext<audio.currentTime+.15&&ahead++<16){
-  const j=musicStep%16,t=musicNext,b=track.bass[j],n=track.lead[j];
-  if(track.kick.includes(j))musicKick(t,musicTheme==='battle'?.14:.046);
-  if(track.snare.includes(j))noiseTap(t+.002,musicTheme==='battle'?.15:.105,musicTheme==='battle'?.042:.021,musicTheme==='battle'?400:1000);
-  if(track.hat.includes(j))noiseTap(t,.035,musicTheme==='battle'?.004:.009,5700);
-  if(b!==null){if(musicTheme==='battle'){synthTone(noteHz(b),t,stepLen*3.6,'sawtooth',.042,160);synthTone(noteHz(b-12),t,stepLen*3,'sine',.10)}else synthTone(noteHz(b),t,stepLen*2.5,'sawtooth',.026,400)}
-  if(n!==null)synthTone(noteHz(n),t,stepLen*(musicTheme==='battle'?1.9:.85),musicTheme==='cola'?'square':musicTheme==='battle'?'sawtooth':'triangle',musicTheme==='cola'?.028:musicTheme==='battle'?.007:.018,musicTheme==='battle'?700:2300);
+  const j=musicStep%16,phrase=musicStep%track.lead.length,t=musicNext,b=track.bass[j],n=track.lead[phrase];
+  if(track.kick.includes(j))musicKick(t,musicTheme==='battle'?.14:musicTheme==='cola'?.027:.046);
+  if(track.snare.includes(j))noiseTap(t+.002,musicTheme==='battle'?.15:.105,musicTheme==='battle'?.042:musicTheme==='cola'?.008:.021,musicTheme==='battle'?400:1000);
+  if(track.hat.includes(j))noiseTap(t,.035,musicTheme==='battle'?.004:musicTheme==='cola'?.003:.009,5700);
+  if(b!==null){if(musicTheme==='battle'){synthTone(noteHz(b),t,stepLen*3.6,'sawtooth',.042,160);synthTone(noteHz(b-12),t,stepLen*3,'sine',.10)}else synthTone(noteHz(b),t,stepLen*(musicTheme==='cola'?3.6:2.5),musicTheme==='cola'?'sine':'sawtooth',musicTheme==='cola'?.018:.026,musicTheme==='cola'?0:400)}
+  if(n!==null)synthTone(noteHz(n),t,stepLen*(musicTheme==='battle'?1.9:.85),musicTheme==='cola'?'triangle':musicTheme==='battle'?'sawtooth':'triangle',musicTheme==='cola'?.016:musicTheme==='battle'?.007:.018,musicTheme==='battle'?700:2300);
   // Gentle backbeat chord sparkle on menu; rhythmic extra arp for soda shop.
   if(musicTheme==='menu'&&j%8===0){synthTone(noteHz(j?55:53),t,stepLen*6,'sine',.017)}
-  if(musicTheme==='cola'&&j%4===2)synthTone(noteHz([79,82,75,77][Math.floor(j/4)]),t,stepLen*.65,'triangle',.018);
+  if(musicTheme==='cola'&&j===0)synthTone(noteHz([60,56,58,55][Math.floor((musicStep%64)/16)]),t,stepLen*14,'sine',.009);
   musicNext+=stepLen;musicStep++;
  }
 }
@@ -491,7 +504,7 @@ function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classLis
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.8</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.9</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -544,7 +557,7 @@ function help(){state='help';fullMenu(`<section class="splash-page" aria-label="
  <button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('backBtn').onclick=menu}
 function showOverlay(html){panel.innerHTML=html;overlay.classList.remove('hidden')}
 function hideOverlay(){overlay.classList.remove('menu-screen','vend-screen');overlay.classList.add('hidden')}
-function startMatch(){mouse.down=false;mouse.used=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);startRound(true)}
+function startMatch(){colaSelectionPending=false;mouse.down=false;mouse.used=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);startRound(true)}
 function startRound(first=false){mouse.down=false;arena=maps[arenaIndex];const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.x=i===0?138:948;p.y=GROUND-p.h;p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;});bullets=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;aiThink=0;aiPlan={move:0,jump:false,block:false};state='playing';setMusicTheme('battle');hideOverlay();hud.classList.add('show');hint.classList.add('show');hint.textContent='A/D MOVE • W JUMP • S DROP • MOUSE AIM • SPACE / CLICK SHOOT • E/F SHIELD • ESC PAUSE';$('name1').textContent='RED • PLAYER 1';$('name2').textContent='BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS • LOSE A ROUND TO PICK A COLA');else toast(`ROUND ${round} • ${arena.name}`);
  const coarse=window.matchMedia('(pointer:coarse)').matches;touchEl.style.display='none';updateHUD();}
 function updateHUD(){if(!p1||!p2)return;$('hp1').style.width=`${100*cap(p1.hp/p1.stats.maxHp,0,1)}%`;$('hp2').style.width=`${100*cap(p2.hp/p2.stats.maxHp,0,1)}%`;$('stats1').textContent=`${Math.ceil(Math.max(0,p1.hp))} HP  •  ${p1.reload>0?'RELOADING':p1.ammo+' / '+p1.stats.ammo+' AMMO'}`;$('stats2').textContent=`${Math.ceil(Math.max(0,p2.hp))} HP  •  ${p2.reload>0?'RELOADING':p2.ammo+' / '+p2.stats.ammo+' AMMO'}`}
@@ -557,10 +570,59 @@ function finishRound(win){if(state!=='playing')return;winner=win;loser=1-win;sco
 function postRound(){const champ=scores[0]>=5||scores[1]>=5;
  if(champ){state='gameover';setMusicTheme('menu');const name=winner===0?'RED':'BLUE BOT';showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> FINAL WHISTLE / MATCH COMPLETE</div><div class="result-kicker">FIRST TO FIVE</div><h2 class="roundheading ${winner===0?'cyan':'coral'}">${name} <span>TAKES IT.</span></h2><div class="result-score"><span>${scores[0]}</span><em>—</em><span>${scores[1]}</span></div><p class="subtitle">PLAYER 1: ${p1.upgrades.length} COLAS <span class="sep">//</span> BOT: ${p2.upgrades.length} COLAS</p><div class="buttonrow"><button class="btn" id="rematch">RUN IT BACK</button><button class="btn secondary" id="toMenu">MAIN MENU</button></div></div>`);$('rematch').onclick=startMatch;$('toMenu').onclick=menu;return}
  const opts=cardOptions();const lose=loser===0?'RED':'BLUE BOT';
- if(loser===1){const choice=opts[Math.floor(Math.random()*opts.length)];applyCard(p2,choice);state='botdraft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup([choice],true));$('continueBtn').onclick=nextRound;setMusicTheme('cola');return}
- state='draft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup(opts,false));panel.querySelectorAll('.vend-slot').forEach(b=>b.onclick=()=>pickCard(opts,Number(b.dataset.i)));window.currentOptions=opts;setMusicTheme('cola');
+ if(loser===1){const choice=opts[Math.floor(Math.random()*opts.length)];applyCard(p2,choice);state='botdraft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup([choice],true));$('continueBtn').onclick=nextRound;setMusicTheme('cola');requestAnimationFrame(()=>reachForCola(1,true));return}
+ state='draft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup(opts,false));panel.querySelectorAll('.vend-slot').forEach(b=>{
+  const target=Number(b.dataset.i);
+  b.addEventListener('pointerenter',()=>reachForCola(target));
+  b.addEventListener('focus',()=>reachForCola(target));
+  b.addEventListener('pointerleave',()=>resetColaReach());
+  b.addEventListener('blur',()=>resetColaReach());
+  b.onclick=()=>pickCard(opts,target);
+ });window.currentOptions=opts;setMusicTheme('cola');
 }
-function pickCard(opts,i){if(state!=='draft'||!opts[i])return;applyCard(loser===0?p1:p2,opts[i]);sound(680,.15,'triangle',.07,1.5);nextRound()}
+let colaSelectionPending=false,colaReachTarget=null;
+function reachForCola(i,isBot=false){
+ if(state!=='draft'&&state!=='botdraft'&&state!=='drinking')return;
+ const display=panel.querySelector('.rounds-display'),hero=panel.querySelector('.rounds-hero-wrap'),arm=panel.querySelector('#colaReachArm');
+ const slot=panel.querySelector(isBot?'.rounds-pos-1':`.rounds-pos-${i}`),can=slot?.querySelector('.cola-stage');
+ if(!display||!hero||!arm||!can)return;
+ const dr=display.getBoundingClientRect(),hr=hero.getBoundingClientRect(),cr=can.getBoundingClientRect();
+ const targetX=cr.left+cr.width*.5-dr.left,targetY=cr.top+cr.height*.61-dr.top;
+ const center=hr.left+hr.width*.5-dr.left,left=targetX<center;
+ const x=hr.left+hr.width*(left?.19:.81)-dr.left,y=hr.top+hr.height*.49-dr.top;
+ const dx=targetX-x,dy=targetY-y,dist=Math.hypot(dx,dy);
+ arm.style.setProperty('--reach-color',isBot?'#5fa7ff':'#ff5965');
+ arm.style.left=`${x}px`;arm.style.top=`${y}px`;arm.style.width=`${Math.max(25,dist)}px`;
+ arm.style.transform=`translateY(-50%) rotate(${Math.atan2(dy,dx)}rad)`;
+ arm.classList.add('is-reaching');hero.classList.add('reaching');hero.classList.toggle('left-reach',left);
+ colaReachTarget=i;
+}
+function resetColaReach(){if(colaSelectionPending||state==='drinking')return;const arm=panel.querySelector('#colaReachArm'),hero=panel.querySelector('.rounds-hero-wrap');if(arm)arm.classList.remove('is-reaching');hero?.classList.remove('reaching','left-reach');colaReachTarget=null}
+window.addEventListener('resize',()=>{if(colaReachTarget!==null&&(state==='draft'||state==='botdraft'))reachForCola(colaReachTarget,state==='botdraft')});
+function sodaDrinkSound(){
+ if(muted)return;
+ try{
+  audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();const t=audio.currentTime;
+  // Metallic tab pop / carbonated fizz / three glugs, all synthesized in-browser.
+  synthTone(980,t,.045,'triangle',.12);synthTone(350,t+.045,.08,'square',.035,1700);
+  noiseTap(t+.08,.32,.052,2400);
+  [0,.18,.36].forEach((delay,i)=>{
+   const osc=audio.createOscillator(),filter=audio.createBiquadFilter(),g=audio.createGain(),at=t+.28+delay;
+   osc.type='sine';osc.frequency.setValueAtTime([310,260,215][i],at);osc.frequency.exponentialRampToValueAtTime([115,104,92][i],at+.14);
+   filter.type='lowpass';filter.frequency.value=450;g.gain.setValueAtTime(.001,at);g.gain.exponentialRampToValueAtTime(.11,at+.035);g.gain.exponentialRampToValueAtTime(.0001,at+.17);
+   osc.connect(filter);filter.connect(g);g.connect(audio.destination);osc.start(at);osc.stop(at+.2);
+  });
+ }catch(e){}
+}
+function pickCard(opts,i){
+ if(state!=='draft'||!opts?.[i]||colaSelectionPending)return;
+ colaSelectionPending=true;state='drinking';reachForCola(i,false);
+ const target=panel.querySelector(`.rounds-pos-${i}`);target?.classList.add('chosen');
+ panel.querySelector('.rounds-display')?.classList.add('drinking');
+ panel.querySelectorAll('.vend-slot').forEach(b=>b.disabled=true);
+ applyCard(p1,opts[i]);sodaDrinkSound();
+ setTimeout(()=>{colaSelectionPending=false;if(state==='drinking'){state='draft';nextRound()}},950);
+}
 function nextRound(){if(state!=='draft'&&state!=='botdraft')return;round++;arenaIndex=(arenaIndex+1+Math.floor(rand(0,2)))%maps.length;startRound()}
 function jump(p){if(p.dead)return;if(p.grounded||(p.stats.double>0&&p.jumps<=p.stats.double)){p.vy=-p.stats.jump;p.grounded=false;p.jumps++;burst(p.x+p.w/2,p.y+p.h,'#b6e4ff',7,120);sound(260,.10,'sine',.055,1.7)}}
 function block(p){if(p.shieldCD>0||p.dead)return;p.shieldTime=.5;p.shieldCD=p.stats.shield;burst(p.x+p.w/2,p.y+p.h/2,p.color,13,115);sound(440,.28,'triangle',.09,.5)}
