@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 1.6</title>
+<title>SQUARE OFF | PC 1.62</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -116,11 +116,25 @@ body{padding:0 !important;display:block;background:#071223}
 .cola-desc{display:block;color:#b8c7d8;font:600 12px/1.5 'Trebuchet MS',sans-serif;min-height:52px}
 .cola-footer{display:flex;justify-content:space-between;align-items:center;margin:15px -14px 0;padding:11px 14px;background:#21364e;border-top:1px solid #4d637b;color:#e7edf3;font:800 10px Consolas,monospace;letter-spacing:1px}.cola-footer strong{color:#ffe07a}.cola-footer i{font-style:normal;color:#ffd34f;font-size:18px;line-height:1}
 .cola-stage{display:flex;justify-content:center;align-items:center;height:180px;margin:8px 0 10px}
-.soda-can{--can:#ff8f2e;--can-deep:#d86d11;position:relative;width:118px;height:164px;border-radius:20px 20px 28px 28px;background:linear-gradient(180deg,#ffffff14 0 6%,var(--can) 6%,var(--can-deep) 100%);border:2px solid #ffe7bd36;box-shadow:inset 0 0 0 2px #ffffff12,0 16px 30px #0007;overflow:hidden}
-.soda-can::before{content:'';position:absolute;left:0;right:0;top:0;height:20px;background:linear-gradient(180deg,#edf0f4,#8f98a4);border-bottom:1px solid #6c7684}.soda-can::after{content:'';position:absolute;left:50%;top:4px;transform:translateX(-50%);width:34px;height:10px;border-radius:10px;background:linear-gradient(180deg,#8d96a3,#d5dae0);box-shadow:0 0 0 2px #c8cdd3 inset}
-.can-shine{position:absolute;left:12px;top:16px;bottom:19px;width:18px;background:linear-gradient(180deg,#ffffff8a,#ffffff08 40%,#ffffff3b 82%,#ffffff00);border-radius:16px;transform:skew(-7deg)}.can-rim{position:absolute;left:0;right:0;bottom:0;height:16px;background:linear-gradient(180deg,#b8c0cb,#767f8d)}
-.can-label{position:absolute;left:10px;right:10px;top:33px;bottom:18px;border-radius:16px;background:linear-gradient(180deg,#ffffff18,#00000010 30%,#00000018 100%);border:1px solid #ffffff24;overflow:hidden}.can-band{position:absolute;left:0;right:0;top:8px;text-align:center;color:#ffffffea;font:900 10px/1 Consolas,monospace;letter-spacing:1.2px;text-transform:uppercase}
-.can-scene{position:absolute;left:12px;right:12px;top:28px;height:58px}.can-name{position:absolute;left:8px;right:8px;bottom:14px;text-align:center;color:#fff;font:900 16px/.96 Impact,'Arial Black',sans-serif;letter-spacing:.35px;text-transform:uppercase;text-shadow:0 2px 0 #0006}
+.soda-can{--can:#ff8f2e;--can-deep:#d86d11;--accent:#ffe56f;--spin:-6deg;position:relative;width:126px;height:176px;border-radius:22px 22px 30px 30px;background:linear-gradient(90deg,#ffffff1e 0 9%,var(--can) 11%,color-mix(in srgb,var(--can) 82%,#fff 18%) 28%,var(--can-deep) 52%,color-mix(in srgb,var(--can) 70%,#000 30%) 100%);border:2px solid #ffffff22;box-shadow:inset 0 0 0 2px #ffffff10,inset -14px 0 20px #00000022,inset 14px 0 16px #ffffff10,0 16px 26px #0009,10px 10px 0 #00000020;overflow:visible;transform:perspective(500px) rotateY(-13deg) rotateZ(var(--spin));transform-style:preserve-3d}
+.soda-can::before{content:'';position:absolute;left:0;right:0;top:0;height:22px;background:linear-gradient(180deg,#f0f2f5,#8f98a4);border-bottom:1px solid #6c7684;border-radius:20px 20px 8px 8px}.soda-can::after{content:'';position:absolute;left:50%;top:5px;transform:translateX(-50%);width:36px;height:10px;border-radius:10px;background:linear-gradient(180deg,#8d96a3,#d5dae0);box-shadow:0 0 0 2px #c8cdd3 inset}
+.can-shine{position:absolute;left:10px;top:18px;bottom:18px;width:18px;background:linear-gradient(180deg,#ffffffa0,#ffffff10 35%,#ffffff40 80%,#ffffff00);border-radius:16px;transform:skew(-10deg)}.can-rim{position:absolute;left:0;right:0;bottom:0;height:16px;background:linear-gradient(180deg,#b8c0cb,#767f8d);border-radius:0 0 24px 24px}
+.can-label{position:absolute;left:9px;right:9px;top:33px;bottom:18px;border-radius:18px;background:radial-gradient(circle at 20% 20%,#ffffff1c,#ffffff03 34%),linear-gradient(180deg,#ffffff12,#00000011 30%,#00000020 100%);border:1px solid #ffffff26;overflow:hidden}
+.can-label::before{content:'';position:absolute;inset:0;background:linear-gradient(130deg,transparent 0 45%,#ffffff18 45% 48%,transparent 48% 100%);mix-blend-mode:screen;pointer-events:none}
+.can-band{position:absolute;left:8px;right:8px;top:8px;text-align:center;color:#fffef9;font:900 9px/1 Consolas,monospace;letter-spacing:1.6px;text-transform:uppercase;text-shadow:0 1px 0 #0008;opacity:.88}
+.can-pop{position:absolute;display:grid;place-items:center;min-width:26px;height:26px;padding:0 8px;border-radius:999px;background:var(--accent);color:#111824;font:900 11px/1 Impact,'Arial Black',sans-serif;letter-spacing:.8px;box-shadow:0 3px 0 #0004,0 0 0 2px #ffffff22 inset}
+.can-scene{position:absolute;left:12px;right:12px;top:34px;height:64px;filter:drop-shadow(0 3px 0 #0004)}
+.can-name{position:absolute;display:flex;flex-direction:column;gap:0;align-items:center;justify-content:center;text-align:center;color:#fff;max-width:100%;text-transform:uppercase;text-shadow:0 2px 0 #0007,0 0 8px #0006}.can-name span{display:block}
+.soda-can.ribbon .can-scene{top:34px;height:66px}.soda-can.ribbon .can-name{left:10px;right:10px;bottom:12px;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 72%,#000 28%));color:#101728;padding:6px 8px 7px;border-radius:10px;transform:rotate(-4deg);box-shadow:0 4px 0 #0003;font:900 15px/.9 Impact,'Arial Black',sans-serif;letter-spacing:.35px}.soda-can.ribbon .can-name span+span{font-size:13px}
+.soda-can.diag .can-scene{top:78px;height:56px}.soda-can.diag .can-name{left:-6px;right:-6px;top:42px;background:linear-gradient(90deg,var(--accent),#fff3);padding:7px 8px;border-radius:12px;transform:rotate(-16deg);color:#0f1626;font:900 14px/.88 Impact,'Arial Black',sans-serif;box-shadow:0 4px 0 #0003}.soda-can.diag .can-name span+span{font-size:15px}
+.soda-can.topbadge .can-scene{top:72px;height:58px}.soda-can.topbadge .can-name{left:10px;right:10px;top:24px;background:#131c2ccf;border:2px solid var(--accent);padding:4px 6px 5px;border-radius:12px;font:900 13px/.88 Impact,'Arial Black',sans-serif;color:var(--accent);box-shadow:0 4px 0 #0004}.soda-can.topbadge .can-name span+span{font-size:16px;color:#fff}
+.soda-can.side .can-scene{left:38px;right:10px;top:44px;height:66px}.soda-can.side .can-name{left:-10px;top:35px;bottom:20px;width:30px;writing-mode:vertical-rl;transform:rotate(180deg);background:linear-gradient(180deg,var(--accent),#fffb);color:#0f1420;border-radius:10px;padding:8px 3px;font:900 13px/1 Impact,'Arial Black',sans-serif;letter-spacing:.6px;box-shadow:0 4px 0 #0003}.soda-can.side .can-name span+span{display:none}
+.soda-can.burst .can-scene{top:50px;height:68px}.soda-can.burst .can-name{right:6px;bottom:10px;width:64px;height:64px;padding:10px 8px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff6 0 20%,var(--accent) 20% 100%);color:#0f1626;font:900 12px/.85 Impact,'Arial Black',sans-serif;box-shadow:0 6px 0 #0003;clip-path:polygon(50% 0%,61% 16%,79% 5%,78% 25%,96% 22%,85% 38%,100% 50%,85% 61%,96% 79%,77% 75%,79% 95%,61% 84%,50% 100%,38% 84%,21% 95%,23% 75%,4% 79%,16% 61%,0 50%,15% 38%,4% 22%,22% 25%,21% 5%,39% 16%)}.soda-can.burst .can-name span+span{font-size:11px}
+.soda-can.split .can-scene{top:60px;height:50px}.soda-can.split .can-name{left:8px;right:8px;top:24px;bottom:11px;justify-content:space-between;font:900 14px/.9 Impact,'Arial Black',sans-serif}.soda-can.split .can-name span{background:#121d2bcf;padding:4px 6px;border-radius:10px;border:2px solid var(--accent);box-shadow:0 3px 0 #0003}.soda-can.split .can-name span:first-child{align-self:flex-start;color:var(--accent);transform:rotate(-8deg)}.soda-can.split .can-name span:last-child{align-self:flex-end;color:#fff;transform:rotate(7deg)}
+.soda-can.neon .can-name{filter:drop-shadow(0 0 5px var(--accent))}
+.soda-can.wobble{--spin:6deg}.soda-can.wobble .can-shine{left:auto;right:12px}
+.soda-can .deco{position:absolute;opacity:.75;background:#ffffff24;border:1px solid #ffffff2b}.soda-can .deco.dot{width:9px;height:9px;border-radius:50%}.soda-can .deco.slash{width:28px;height:4px;border-radius:4px;transform:rotate(-25deg)}.soda-can .deco.zig{width:22px;height:22px;clip-path:polygon(0 25%,35% 25%,17% 54%,49% 54%,20% 100%,31% 65%,0 65%)}
+.soda-can.ribbon .deco.dot{right:14px;top:31px}.soda-can.diag .deco.slash{left:10px;top:26px}.soda-can.topbadge .deco.dot{right:12px;top:55px}.soda-can.side .deco.zig{right:9px;top:26px}.soda-can.burst .deco.slash{left:12px;bottom:24px}.soda-can.split .deco.dot{left:14px;bottom:30px}
 .sq{position:absolute;width:20px;height:20px;border-radius:5px;background:var(--can);border:2px solid #0d1a2c;box-shadow:inset 4px 4px 0 #ffffff20}.sq::before,.sq::after{content:'';position:absolute;top:6px;width:3px;height:4px;background:#0d1a2c;border-radius:2px}.sq::before{left:4px}.sq::after{right:4px}.sq .mouth{position:absolute;left:5px;right:5px;bottom:4px;height:3px;background:#0d1a2c;border-radius:3px}
 .sq.scared .mouth{left:6px;right:6px;bottom:3px;height:7px;border:2px solid #0d1a2c;background:transparent;border-radius:8px}.sq.flat .mouth{left:5px;right:5px;height:2px;bottom:4px}.sq.smile .mouth{left:4px;right:4px;bottom:4px;height:6px;border:2px solid #0d1a2c;border-top:none;background:transparent;border-radius:0 0 9px 9px}.sq.grit .mouth{left:4px;right:4px;bottom:5px;height:2px;background:#0d1a2c}
 .can-bullet{position:absolute;border-radius:999px;background:#1d2a3b;box-shadow:inset -5px -2px 0 #657488}.can-bullet::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);border-left:11px solid #1d2a3b;border-top:6px solid transparent;border-bottom:6px solid transparent}
@@ -136,13 +150,54 @@ body{padding:0 !important;display:block;background:#071223}
 .scene-vamp .sq{left:13px;bottom:3px}.scene-vamp .can-heart{left:54px;top:9px;scale:.9}.scene-vamp .can-arrow{left:42px;top:28px;width:18px;transform:rotate(-35deg)}.scene-bounce .sq{left:9px;bottom:2px}.scene-bounce .can-bullet{left:49px;top:10px;width:26px;height:10px;transform:rotate(18deg)}.scene-bounce .can-arrow{left:52px;top:34px;width:4px;height:20px;transform:rotate(80deg)}.scene-bounce .can-arrow::after{right:-5px;top:-7px;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:10px solid #ffffffde;border-top:none;transform:rotate(-90deg)}
 .scene-double .sq{left:17px;bottom:4px}.scene-double .sq.two{left:58px;bottom:22px}.scene-double .can-wing{left:10px;top:10px}.scene-double .can-wing.two{left:59px;top:6px;transform:scaleX(-1) skewX(-24deg)}
 .bot-cola-wrap{display:flex;justify-content:center;margin:16px auto 10px}.bot-cola .cola-card{cursor:default;max-width:310px;margin:0 auto}.bot-cola .cola-card:hover{transform:none}
-@media (max-width:920px){.cola-grid{grid-template-columns:1fr;gap:12px}.cola-card{display:grid;grid-template-columns:128px 1fr;gap:12px;align-items:center;padding:14px}.cola-stage{height:auto;margin:0}.cola-title{margin-top:0}.cola-desc{min-height:0}.cola-footer{grid-column:1/-1;margin:4px -14px -14px;padding:11px 14px}.soda-can{width:104px;height:146px}.can-name{font-size:14px}}
+@media (max-width:920px){.cola-grid{grid-template-columns:1fr;gap:12px}.cola-card{display:grid;grid-template-columns:136px 1fr;gap:12px;align-items:center;padding:14px}.cola-stage{height:auto;margin:0}.cola-title{margin-top:0}.cola-desc{min-height:0}.cola-footer{grid-column:1/-1;margin:4px -14px -14px;padding:11px 14px}.soda-can{width:112px;height:158px}.soda-can.side .can-name{width:26px}.soda-can.burst .can-name{width:56px;height:56px;font-size:10px}}
+
+/* 1.62: unmistakably new collector-can packaging. Clear no-overlap zones. */
+.cola-grid{gap:24px;margin:18px auto 10px;max-width:1100px}
+.cola-card{border:2px solid #385374;border-radius:17px;background:radial-gradient(circle at 50% 12%,#244562 0,#101f35 64%,#0d182a);box-shadow:0 18px 30px #0008;display:flex;align-items:center;flex-direction:column;overflow:hidden;padding:14px 18px 0;gap:2px}
+.cola-card:hover{border-color:var(--yellow);transform:translateY(-8px);box-shadow:0 22px 40px #000c}
+.cola-meta,.cola-title,.cola-desc,.cola-footer{width:100%}
+.cola-meta{font-size:10px}
+.cola-stage{height:286px;width:100%;margin:0;perspective:700px;filter:drop-shadow(10px 18px 10px #0008)}
+.soda-can{width:177px;height:253px;transform:rotate(-5deg) rotateY(-10deg);transition:transform .3s ease;--accent:#ffe46b;border-radius:34px 34px 39px 39px;overflow:hidden;border:0;box-shadow:inset -17px 0 24px #0005,inset 14px 0 22px #fff5,8px 14px 0 #0002,14px 22px 25px #0008;background:linear-gradient(90deg,#14192799 0%,transparent 15%,#ffffff6b 30%,transparent 43%,#1016238c 94%),linear-gradient(140deg,var(--can) 10%,var(--can-deep) 98%)}
+.cola-card:hover .soda-can{transform:rotate(1deg) rotateY(6deg) translateY(-5px)}
+.soda-can.wobble{transform:rotate(5deg) rotateY(10deg)}
+.cola-card:hover .soda-can.wobble{transform:rotate(-1deg) rotateY(-4deg) translateY(-5px)}
+.soda-can:before{height:24px;border-radius:50% / 55%;background:linear-gradient(180deg,#fff 0,#a8b0bd 43%,#65707c 80%,#edf0f4 100%);border:2px solid #d6d9de;z-index:10}
+.soda-can:after{z-index:11;top:6px;background:linear-gradient(180deg,#7b8592,#e7eaef);height:12px;width:48px;box-shadow:0 0 0 2px #868f9c inset}
+.can-rim{z-index:10;bottom:0;height:17px;border-radius:0 0 40px 40px;background:linear-gradient(180deg,#e2e7ef,#929aa6,#e1e4e9)}
+.can-shine{z-index:6;pointer-events:none;top:20px;bottom:17px;left:19px;width:13px;background:linear-gradient(180deg,#fff9,#fff0 45%,#fff4 55%,#fff0);filter:blur(2px)}
+.can-label{position:absolute;inset:30px 6px 14px;border:0;border-radius:16px;overflow:hidden;background:repeating-linear-gradient(135deg,#ffffff00 0 9px,#ffffff13 9px 11px,#ffffff00 11px 21px),radial-gradient(ellipse at 50% 35%,#fff4 0,transparent 70%)}
+.can-label:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 40%,transparent 0 35%,#0002 80%);pointer-events:none}
+.can-band{z-index:2;top:5px;left:8px;right:8px;font:900 10px Impact,'Arial Black',sans-serif;letter-spacing:1.2px;color:#fff;text-shadow:1px 2px 1px #0008}
+/* Scene and title occupy their own, non-overlapping sections */
+.soda-can.ribbon .can-scene,.soda-can.diag .can-scene,.soda-can.topbadge .can-scene,.soda-can.side .can-scene,.soda-can.burst .can-scene,.soda-can.split .can-scene{position:absolute;top:40px;left:25px;right:15px;width:auto;height:101px;filter:drop-shadow(2px 4px 0 #0004);transform:scale(1.3);transform-origin:50% 35%}
+.can-scene .sq{z-index:4}
+.soda-can.ribbon .can-name,.soda-can.diag .can-name,.soda-can.topbadge .can-name,.soda-can.side .can-name,.soda-can.burst .can-name,.soda-can.split .can-name{position:absolute;left:9px;right:9px;top:auto;bottom:10px;width:auto;height:50px;max-width:none;transform:none;clip-path:none;writing-mode:horizontal-tb;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 5px;z-index:5;border-radius:6px;box-shadow:0 5px 0 #0005;color:#0d1730;background:var(--accent);border:2px solid #fff6;text-shadow:none;font:900 20px/.93 Impact,'Arial Black',sans-serif;letter-spacing:-.3px;filter:none}
+.can-name span+span,.soda-can.ribbon .can-name span+span,.soda-can.diag .can-name span+span,.soda-can.topbadge .can-name span+span,.soda-can.side .can-name span+span,.soda-can.burst .can-name span+span,.soda-can.split .can-name span+span{display:block;font-size:19px;color:inherit}
+.soda-can.diag .can-name{transform:rotate(-5deg);background:#162333;color:var(--accent);border-radius:14px;border-color:var(--accent);font-style:italic}
+.soda-can.topbadge .can-name{border-radius:25px;background:#fafafa;color:var(--can-deep);font-style:italic;letter-spacing:-1px}
+.soda-can.side .can-name{transform:rotate(4deg);border-radius:3px;background:#071628;color:var(--accent);font-family:'Arial Black',Impact,sans-serif;font-size:16px;letter-spacing:-.7px}
+.soda-can.burst .can-name{border-radius:32px;background:var(--accent);border:4px dotted #fff;color:#151622;transform:rotate(5deg);font-style:italic}
+.soda-can.split .can-name{background:#151d2e;color:#fff;border-left:8px solid var(--accent);border-right:8px solid var(--accent);border-radius:3px;transform:skew(-6deg)}
+.soda-can.split .can-name span,.soda-can.split .can-name span:first-child,.soda-can.split .can-name span:last-child{align-self:center;transform:none;box-shadow:none;padding:0;background:none;border:0;color:#fff;font-size:18px}
+.soda-can.ribbon .can-name{transform:rotate(-3deg)}
+/* Loud illustrated seal, safely above labels */
+.can-pop{left:auto;right:8px;top:24px;min-width:33px;height:28px;padding:0 5px;border:2px solid #ffffff8e;box-shadow:0 4px 0 #0005;font-size:12px;transform:rotate(12deg);z-index:7}
+.can-label .deco{z-index:1;opacity:1;background:var(--accent);box-shadow:0 0 13px var(--accent)}
+.can-label:after{content:'SQUARE OFF  //  POWERED POP';position:absolute;bottom:65px;left:0;right:0;text-align:center;color:#fff;opacity:.8;font:800 6px Consolas,monospace;letter-spacing:.5px}
+.cola-title{font-size:21px;margin:8px 0 3px;line-height:1.1}
+.cola-desc{font-size:13px;min-height:36px;margin-bottom:8px}
+.cola-footer{margin:8px -18px 0;padding:12px 17px}
+.bot-cola-wrap .cola-stage{height:270px}
+@media(max-height:820px) and (min-width:921px){.cola-stage{height:220px}.soda-can{scale:.79}.cola-card{padding-top:10px}.cola-grid{gap:13px;margin:8px auto}.cola-title{font-size:19px}.cola-desc{font-size:11px;min-height:25px}.draft-top .roundheading{font-size:36px;margin:6px 0}.overlay{padding:6px}}
+@media(max-width:920px){.cola-grid{grid-template-columns:1fr}.cola-card{display:grid;grid-template-columns:160px 1fr;gap:8px}.cola-stage{grid-row:1/4;height:234px}.soda-can{scale:.82}.cola-footer{grid-column:1/-1}.cola-card .cola-meta,.cola-card .cola-title,.cola-card .cola-desc{grid-column:2}.cola-title{font-size:19px}}
 
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.6</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.62</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -156,7 +211,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 1.6</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 1.62</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -175,18 +230,18 @@ const maps=[
  {name:'CROSSFIRE',seed:5,platforms:[{x:160,y:458,w:170,h:17},{x:375,y:380,w:150,h:17},{x:595,y:380,w:150,h:17},{x:790,y:458,w:170,h:17},{x:470,y:266,w:180,h:17}]}
 ];
 const ITEMS=[
- {id:'damage',code:'DMG',name:'Lead Storm Cola',desc:'+30% bullet damage.',type:'FIREPOWER',can:'#d45454',deep:'#9e2d2d',scene:'damage'},
- {id:'rate',code:'RAP',name:'Rapid Pop',desc:'Shoot 22% faster.',type:'FIREPOWER',can:'#ffd34f',deep:'#c99716',scene:'rate'},
- {id:'hp',code:'HP+',name:'Brickhouse Brew',desc:'+35 maximum health.',type:'SURVIVAL',can:'#37b97c',deep:'#248e5d',scene:'hp'},
- {id:'speed',code:'SPD',name:'Side Step Soda',desc:'+13% movement speed.',type:'MOBILITY',can:'#67df80',deep:'#33a149',scene:'speed'},
- {id:'jump',code:'JMP',name:'Moon Hop Soda',desc:'+15% jump power.',type:'MOBILITY',can:'#9f74ff',deep:'#6b43cb',scene:'jump'},
- {id:'ammo',code:'MAG',name:'Six Pack Soda',desc:'+3 shots before reload.',type:'FIREPOWER',can:'#5c92ff',deep:'#3769cd',scene:'ammo'},
- {id:'bullet',code:'BIG',name:'Big Shot Soda',desc:'Bullets become 45% larger.',type:'BALLISTICS',can:'#ff972d',deep:'#d16813',scene:'bullet'},
- {id:'reload',code:'RLD',name:'Quick Crack Cola',desc:'Reload 25% faster.',type:'FIREPOWER',can:'#f278b2',deep:'#c95389',scene:'reload'},
- {id:'shield',code:'DEF',name:'Guard Pop',desc:'Shield recharges 22% faster.',type:'SURVIVAL',can:'#4ec8d6',deep:'#29909c',scene:'shield'},
- {id:'vamp',code:'LIF',name:'Last Sip Soda',desc:'Heal 8 HP when you hit.',type:'SURVIVAL',can:'#ee5d74',deep:'#ba394f',scene:'vamp'},
- {id:'bounce',code:'BNC',name:'Bank Shot Fizz',desc:'Bullets bounce one more time.',type:'BALLISTICS',can:'#79d8d0',deep:'#3ca89f',scene:'bounce'},
- {id:'double',code:'2UP',name:'Double Up Soda',desc:'Unlock one double jump.',type:'MOBILITY',can:'#9fb6d8',deep:'#6d85a7',scene:'double'},
+ {id:'damage',code:'DMG',name:'Lead Storm Cola',desc:'+30% bullet damage.',type:'FIREPOWER',can:'#fb5252',deep:'#aa2020',accent:'#ffd765',scene:'damage',layout:'diag',tilt:'-8deg',tag:'DANGER FLAVOR'},
+ {id:'rate',code:'RAP',name:'Rapid Pop',desc:'Shoot 22% faster.',type:'FIREPOWER',can:'#ffe24d',deep:'#d49b00',accent:'#ff6ea9',scene:'rate',layout:'burst',tilt:'6deg',tag:'SHAKE WELL'},
+ {id:'hp',code:'HP+',name:'Brickhouse Brew',desc:'+35 maximum health.',type:'SURVIVAL',can:'#1fd47a',deep:'#167f4b',accent:'#9df7c6',scene:'hp',layout:'topbadge',tilt:'-6deg',tag:'HEAVY DUTY'},
+ {id:'speed',code:'SPD',name:'Side Step Soda',desc:'+13% movement speed.',type:'MOBILITY',can:'#77ff8d',deep:'#26a444',accent:'#e6ff6d',scene:'speed',layout:'side',tilt:'-5deg',tag:'MOVE JUICE'},
+ {id:'jump',code:'JMP',name:'Moon Hop Soda',desc:'+15% jump power.',type:'MOBILITY',can:'#a86cff',deep:'#6630c8',accent:'#87efff',scene:'jump',layout:'split',tilt:'7deg',tag:'LOW GRAV'},
+ {id:'ammo',code:'MAG',name:'Six Pack Soda',desc:'+3 shots before reload.',type:'FIREPOWER',can:'#5a9eff',deep:'#245ec5',accent:'#f8fbff',scene:'ammo',layout:'ribbon',tilt:'-7deg',tag:'LOCKED IN'},
+ {id:'bullet',code:'BIG',name:'Big Shot Soda',desc:'Bullets become 45% larger.',type:'BALLISTICS',can:'#ff972d',deep:'#d16813',accent:'#fff17b',scene:'bullet',layout:'diag',tilt:'-9deg',tag:'OVERSIZED'},
+ {id:'reload',code:'RLD',name:'Quick Crack Cola',desc:'Reload 25% faster.',type:'FIREPOWER',can:'#ff73b8',deep:'#bf3c83',accent:'#fff5a3',scene:'reload',layout:'topbadge',tilt:'6deg',tag:'CRACK OPEN'},
+ {id:'shield',code:'DEF',name:'Guard Pop',desc:'Shield recharges 22% faster.',type:'SURVIVAL',can:'#3ee4ff',deep:'#168ba5',accent:'#b8fff9',scene:'shield',layout:'ribbon',tilt:'-6deg',tag:'REFLECTOR'},
+ {id:'vamp',code:'LIF',name:'Last Sip Soda',desc:'Heal 8 HP when you hit.',type:'SURVIVAL',can:'#ff5a78',deep:'#b32747',accent:'#ffd1dc',scene:'vamp',layout:'burst',tilt:'7deg',tag:'LIFE STEAL'},
+ {id:'bounce',code:'BNC',name:'Bank Shot Fizz',desc:'Bullets bounce one more time.',type:'BALLISTICS',can:'#5de0da',deep:'#1f948e',accent:'#e9ff74',scene:'bounce',layout:'side',tilt:'-5deg',tag:'ANGLE JUICE'},
+ {id:'double',code:'2UP',name:'Double Up Soda',desc:'Unlock one double jump.',type:'MOBILITY',can:'#d6dcff',deep:'#6d79b2',accent:'#fff07b',scene:'double',layout:'split',tilt:'5deg',tag:'TWO TIMES'},
 ];
 function renderScene(scene){
  switch(scene){
@@ -205,7 +260,10 @@ function renderScene(scene){
  }
  return '';
 }
-function renderColaCan(c){return `<div class="soda-can" style="--can:${c.can};--can-deep:${c.deep}"><div class="can-shine"></div><div class="can-rim"></div><div class="can-label"><div class="can-band">PERK COLA</div>${renderScene(c.scene)}<div class="can-name">${c.name.replace(' ','<br>')}</div></div></div>`}
+function nameMarkup(name,layout){const words=name.split(' ');if(layout==='side')return `<span>${words.join(' ')}</span>`;if(words.length===2)return `<span>${words[0]}</span><span>${words[1]}</span>`;if(words.length===3)return `<span>${words[0]} ${words[1]}</span><span>${words[2]}</span>`;return `<span>${name}</span>`}
+function decoMarkup(layout){if(layout==='diag')return '<i class="deco slash"></i>';if(layout==='topbadge')return '<i class="deco dot"></i>';if(layout==='side')return '<i class="deco zig"></i>';if(layout==='burst')return '<i class="deco slash"></i>';if(layout==='split')return '<i class="deco dot"></i>';return '<i class="deco dot"></i>'}
+function renderColaCan(c){return `<div class="soda-can ${c.layout} ${['burst','split'].includes(c.layout)?'neon':''}${['burst','topbadge'].includes(c.layout)?' wobble':''}" style="--can:${c.can};--can-deep:${c.deep};--accent:${c.accent};--spin:${c.tilt||'-6deg'}"><div class="can-shine"></div><div class="can-rim"></div><div class="can-label"><div class="can-band">${c.tag||'PERK COLA'}</div>${decoMarkup(c.layout)}${renderScene(c.scene)}<div class="can-name">${nameMarkup(c.name,c.layout)}</div><div class="can-pop">${c.code}</div></div></div>`}
+function renderColaCard(c,i){return `<button class="cola-card" data-i="${i}"><div class="cola-meta"><span><b>COLA 0${i+1}</b></span><span>${c.type}</span></div><div class="cola-stage">${renderColaCan(c)}</div><strong class="cola-title">${c.name}</strong><span class="cola-desc">${c.desc}</span><div class="cola-footer"><strong>[ ${i+1} ]</strong><span>GRAB THE CAN</span><i>+</i></div></button>`}
 function renderColaCard(c,i){return `<button class="cola-card" data-i="${i}"><div class="cola-meta"><span><b>COLA 0${i+1}</b></span><span>${c.type}</span></div><div class="cola-stage">${renderColaCan(c)}</div><strong class="cola-title">${c.name}</strong><span class="cola-desc">${c.desc}</span><div class="cola-footer"><strong>[ ${i+1} ]</strong><span>GRAB THE CAN</span><i>+</i></div></button>`}
 
 function defaultStats(){return {damage:23,rate:.29,maxHp:100,speed:300,jump:920,ammo:7,bullet:850,bulletSize:1,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
@@ -220,7 +278,7 @@ function fullMenu(html){overlay.classList.add('menu-screen');showOverlay(html)}
 function menu(){
  state='menu';keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.6</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.62</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
