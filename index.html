@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 2.1</title>
+<title>SQUARE OFF | PC 2.2</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -350,7 +350,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.1</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.2</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -364,7 +364,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 2.1</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 2.2</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -372,7 +372,7 @@ body{padding:0 !important;display:block;background:#071223}
 const W=1120,H=630,GRAV=1750,GROUND=564,TAU=Math.PI*2;
 // A level shot fired from the ground reaches roughly 3/8 of the arena width
 // before hitting the floor. Character gravity stays independent.
-const BULLET_GRAVITY=270;
+const BULLET_GRAVITY=2430;
 const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');
 const $=id=>document.getElementById(id), overlay=$('overlay'),panel=$('panel'),hud=$('hud'),hint=$('bottomHint'),toasts=$('toasts'),touchEl=$('touch');
 const keys=new Set(), touch={left:false,right:false,jump:false,shoot:false,block:false};
@@ -561,7 +561,7 @@ function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classLis
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.1</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.2</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
