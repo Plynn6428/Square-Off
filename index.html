@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 2.5</title>
+<title>SQUARE OFF | PC 2.6</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -354,11 +354,39 @@ body{padding:0 !important;display:block;background:#071223}
 #hud .centerhud .score{font-size:26px}
 #hud .centerhud .roundtext{font-size:11px}
 #hud .centerhud .maptag{font-size:10px}
+
+/* 2.6 / selection fighter matches gameplay and crisp canvas */
+.rounds-hero-wrap{width:min(31vw,395px)!important;height:min(56vh,470px)!important;bottom:5.5%!important}
+.rounds-hero{filter:drop-shadow(8px 14px 0 #06101e55)!important}
+.rounds-hero .hero-body{
+  top:17%!important;left:18%!important;right:auto!important;bottom:auto!important;
+  width:64%!important;height:auto!important;aspect-ratio:1/1!important;
+  background:var(--fighter-color)!important;border:none!important;border-radius:8px!important;
+  box-shadow:inset 7px 7px 0 #ffffff16!important;transform:none!important;
+}
+.rounds-hero .hero-eyes{top:38%!important;left:25%!important;right:25%!important}
+.rounds-hero .hero-eyes b{width:clamp(10px,1vw,16px)!important;height:clamp(10px,1vw,16px)!important;background:#101728!important;border-radius:50%!important}
+.rounds-hero .hero-mouth{left:39%!important;bottom:18%!important;width:22%!important;height:10%!important;border:clamp(3px,.32vw,5px) solid #101728!important;border-top:0!important;background:transparent!important;border-radius:0 0 50% 50%!important;box-shadow:none!important;transform:none!important}
+.rounds-bot .rounds-hero .hero-mouth{height:0!important;bottom:24%!important;border:0!important;background:#101728!important;border-radius:3px!important}
+.rounds-hero .hero-limb{background:var(--fighter-color)!important;border:none!important;box-shadow:none!important;border-radius:999px!important}
+.rounds-hero .hero-limb.arm{top:43%!important;height:8%!important;width:34%!important}
+.rounds-hero .hero-limb.arm.left{left:-8%!important;transform:rotate(-12deg)!important;opacity:1!important}
+.rounds-hero .hero-limb.arm.right{display:none!important}
+.rounds-hero .hero-limb.leg{top:74%!important;height:18%!important;width:12%!important}
+.rounds-hero .hero-limb.leg.left{left:32%!important;transform:rotate(8deg)!important}
+.rounds-hero .hero-limb.leg.right{right:32%!important;transform:rotate(-8deg)!important}
+.rounds-hero .hero-orb{position:absolute;left:4%;top:44%;width:clamp(18px,2vw,28px);height:clamp(18px,2vw,28px);border-radius:50%;background:#fffaf2;box-shadow:0 0 0 2px #ffd84b inset,0 0 14px #ffe45b88;z-index:8}
+.rounds-hero-wrap .reach-arm{--reach-color:#ff5965;position:absolute;left:82%!important;top:44%!important;width:34%!important;height:8%!important;opacity:1!important;z-index:15;background:var(--reach-color)!important;border:none!important;box-shadow:none!important;border-radius:999px!important;transform:translateY(-50%) rotate(-14deg);transform-origin:0 50%;transition:transform .09s ease-out;pointer-events:none}
+.rounds-hero-wrap .reach-hand{position:absolute;right:-1px!important;top:50%!important;transform:translateY(-50%)!important;width:clamp(16px,1.8vw,24px)!important;height:clamp(16px,1.8vw,24px)!important;background:var(--reach-color)!important;border:none!important;box-shadow:none!important;border-radius:50%!important}
+.rounds-hero-wrap .reach-hand::before{content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:12px;height:5px;background:#0b1018;border-radius:2px}
+.rounds-hero-wrap .reach-hand::after{content:'';position:absolute;right:1px;top:3px;width:5px;height:3px;background:#0b1018;border-radius:1px}
+.rounds-hero-wrap.reaching .hero-limb.arm.left{opacity:1!important}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.5</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.6</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -372,7 +400,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 2.5</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 2.6</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -381,7 +409,20 @@ const W=1120,H=630,GRAV=1930,GROUND=564,TAU=Math.PI*2;
 // A level shot fired from the ground reaches roughly 3/8 of the arena width
 // before hitting the floor. Character gravity stays independent.
 const BULLET_GRAVITY=2430;
-const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');
+const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d',{alpha:true});
+let renderScaleX=1,renderScaleY=1;
+function resizeGameCanvas(){
+ const dpr=Math.min(window.devicePixelRatio||1,2);
+ const cssW=Math.max(1,Math.round(canvas.clientWidth||window.innerWidth));
+ const cssH=Math.max(1,Math.round(canvas.clientHeight||window.innerHeight));
+ canvas.width=Math.round(cssW*dpr);
+ canvas.height=Math.round(cssH*dpr);
+ renderScaleX=canvas.width/W;
+ renderScaleY=canvas.height/H;
+ ctx.imageSmoothingEnabled=true;
+}
+resizeGameCanvas();
+window.addEventListener('resize',resizeGameCanvas);
 const $=id=>document.getElementById(id), overlay=$('overlay'),panel=$('panel'),hud=$('hud'),hint=$('bottomHint'),toasts=$('toasts'),touchEl=$('touch');
 const keys=new Set(), touch={left:false,right:false,jump:false,shoot:false,block:false};
 let state='menu',difficulty=1,shakeEnabled=true,round=1,scores=[0,0],p1,p2,bullets=[],particles=[],texts=[],arenaIndex=0,arena,shake=0,last=performance.now(),clock=0,roundEndTime=0,winner=null,loser=null,muted=false,mouse={x:800,y:430,down:false,used:false},audio=null,aiThink=0,aiPlan={move:0,jump:false,block:false};
@@ -491,7 +532,7 @@ function renderColaCan(c){
 function renderColaCard(c,i){return `<button class="vend-slot" data-i="${i}" aria-label="${c.name}. ${c.desc}"><div class="cola-stage">${renderColaCan(c)}</div><div class="vend-details"><span class="vend-number">0${i+1} // ${c.type}</span><strong class="vend-name">${c.name}</strong><span class="vend-desc">${c.desc}</span></div><div class="vend-rail"></div></button>`}
 function vendingMarkup(opts,isBot=false){
  const color=isBot?'#5fa7ff':'#ff5965',name=isBot?'BLUE BOT':'RED FIGHTER';
- const fig=`<div class="rounds-hero" style="--fighter-color:${color}" aria-hidden="true"><div class="hero-aura"></div><div class="hero-limb leg left"></div><div class="hero-limb leg right"></div><div class="hero-limb arm left"></div><div class="hero-limb arm right"></div><div class="hero-body"><div class="hero-eyes"><b></b><b></b></div><div class="hero-mouth"></div></div><div class="hero-shadow"></div></div>`;
+ const fig=`<div class="rounds-hero" style="--fighter-color:${color}" aria-hidden="true"><div class="hero-aura"></div><div class="hero-limb leg left"></div><div class="hero-limb leg right"></div><div class="hero-limb arm left"></div><div class="hero-limb arm right"></div><div class="hero-body"><div class="hero-eyes"><b></b><b></b></div><div class="hero-mouth"></div></div><div class="hero-orb"></div><div class="hero-shadow"></div></div>`;
  const slots=opts.map((c,i)=>`<div class="rounds-product rounds-pos-${isBot?1:i}">${renderColaCard(c,i)}</div>`).join('');
  return `<div class="rounds-draft ${isBot?'rounds-bot':''}">
   <div class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF // PERK BREAK</div><div>ROUND ${round} / ${isBot?'BOT IS UPGRADING':'YOUR COMEBACK'}</div></div>
@@ -569,7 +610,7 @@ function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classLis
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.5</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.6</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -656,7 +697,7 @@ function pointColaHand(clientX,clientY){
  const hero=panel.querySelector('.rounds-hero-wrap'),arm=panel.querySelector('#colaReachArm');
  if(!hero||!arm)return;
  const hr=hero.getBoundingClientRect();
- const shoulderX=hr.left+hr.width*.78,shoulderY=hr.top+hr.height*.45;
+ const shoulderX=hr.left+hr.width*.74,shoulderY=hr.top+hr.height*.45;
  // The arm is a fixed-length segment anchored to the shoulder.
  // Only its rotation changes; the hand moves on a short circular arc.
  const theta=Math.atan2(clientY-shoulderY,clientX-shoulderX);
@@ -879,7 +920,7 @@ function drawPlayer(p){
 }
 function drawBullets(){ctx.lineCap='round';for(const b of bullets){ctx.strokeStyle=b.col;ctx.globalAlpha=.3;ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(b.x-b.vx*.025,b.y-b.vy*.025);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(b.x-b.vx*.018,b.y-b.vy*.018);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill()}}
 function drawParticles(){for(const p of particles){ctx.globalAlpha=cap(p.life/.5,0,1);ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.r*cap(p.life/.5,.1,1),0,TAU);ctx.fill()}ctx.globalAlpha=1;for(const t of texts){ctx.globalAlpha=cap(t.life,0,1);ctx.font='900 19px Impact, Arial Black, sans-serif';ctx.textAlign='center';ctx.strokeStyle='#111a2d';ctx.lineWidth=5;ctx.strokeText(t.msg,t.x,t.y);ctx.fillStyle=t.col;ctx.fillText(t.msg,t.x,t.y)}ctx.globalAlpha=1}
-function render(){ctx.clearRect(0,0,W,H);ctx.save();if(shakeEnabled&&shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();drawBullets();drawPlayer(p1);drawPlayer(p2);drawParticles();ctx.restore();
+function render(){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(renderScaleX,0,0,renderScaleY,0,0);ctx.save();if(shakeEnabled&&shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();drawBullets();drawPlayer(p1);drawPlayer(p2);drawParticles();ctx.restore();
  if(state==='playing'&&mouse.used&&p1){ctx.save();ctx.strokeStyle='#ffd44aaa';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(mouse.x,mouse.y,9,0,TAU);ctx.moveTo(mouse.x-15,mouse.y);ctx.lineTo(mouse.x-5,mouse.y);ctx.moveTo(mouse.x+5,mouse.y);ctx.lineTo(mouse.x+15,mouse.y);ctx.moveTo(mouse.x,mouse.y-15);ctx.lineTo(mouse.x,mouse.y-5);ctx.moveTo(mouse.x,mouse.y+5);ctx.lineTo(mouse.x,mouse.y+15);ctx.stroke();ctx.restore()}
  if(state==='roundover'&&winner!==null){ctx.fillStyle='#07101abb';ctx.fillRect(0,190,W,142);ctx.font='900 65px Impact, Arial Black, sans-serif';ctx.fillStyle=winner===0?'#ff595b':'#4594ff';ctx.textAlign='center';ctx.fillText((winner===0?'RED':'BLUE BOT')+' WINS ROUND!',W/2,275);ctx.fillStyle='#d1def0';ctx.font='800 17px monospace';ctx.fillText('UPGRADE DRAFT INCOMING',W/2,306)}
 }
