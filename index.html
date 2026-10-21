@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 2.2</title>
+<title>SQUARE OFF | PC 2.3</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -346,11 +346,19 @@ body{padding:0 !important;display:block;background:#071223}
 .rounds-hero-wrap .reach-arm{position:absolute;left:78%;top:45%;width:28%;height:10%;opacity:1;z-index:15;transform:translateY(-50%) rotate(-18deg);transform-origin:0 50%;transition:transform .09s ease-out;pointer-events:none}
 .rounds-hero-wrap .reach-hand{width:35%;height:115%;right:-8%;top:50%;border-radius:38%;transform:translateY(-50%)}
 .rounds-hero-wrap .hero-limb.arm.right{opacity:0!important}
+
+/* 2.3: Character-mounted HUD. Keep only round score in the top HUD. */
+#hud.show{justify-content:center}
+#hud .fighterhud{display:none!important}
+#hud .centerhud{background:#0a1a2bbb;border:1px solid #5d769065;border-radius:9px;padding:7px 19px;min-width:140px}
+#hud .centerhud .score{font-size:26px}
+#hud .centerhud .roundtext{font-size:11px}
+#hud .centerhud .maptag{font-size:10px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.2</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.3</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -364,7 +372,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 2.2</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 2.3</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -495,7 +503,7 @@ function vendingMarkup(opts,isBot=false){
   ${isBot?'<div class="buttonrow rounds-next"><button class="btn" id="continueBtn">NEXT ROUND / ENTER</button></div>':''}
  </div>`;
 }
-function defaultStats(){return {damage:23,rate:.29,maxHp:100,speed:300,jump:920,ammo:7,bullet:850,bulletSize:1,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
+function defaultStats(){return {damage:34,rate:.29,maxHp:100,speed:300,jump:920,ammo:7,bullet:850,bulletSize:1,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
 function makePlayer(id){let x=id===0?140:946;return {id,x,y:GROUND-60,w:48,h:60,vx:0,vy:0,dir:id===0?1:-1,grounded:true,jumps:0,hp:100,ammo:7,reload:0,shootCD:0,shieldTime:0,shieldCD:0,hitflash:0,faceHit:0,faceShoot:0,invuln:0,aim:0,aimTilt:0,dead:false,stats:defaultStats(),upgrades:[],color:id===0?'#ff595b':'#4594ff',aiHop:0,dropTime:0,dropHeld:false};}
 function cap(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
 function rand(a,b){return a+Math.random()*(b-a)}
@@ -561,7 +569,7 @@ function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classLis
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.2</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.3</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -617,7 +625,12 @@ function hideOverlay(){overlay.classList.remove('menu-screen','vend-screen');ove
 function startMatch(){colaSelectionPending=false;mouse.down=false;mouse.used=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);startRound(true)}
 function startRound(first=false){mouse.down=false;arena=maps[arenaIndex];const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.x=i===0?138:948;p.y=GROUND-p.h;p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;});bullets=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;aiThink=0;aiPlan={move:0,jump:false,block:false};state='playing';setMusicTheme('battle');hideOverlay();hud.classList.add('show');hint.classList.add('show');hint.textContent='A/D MOVE • W JUMP • S DROP • MOUSE AIM • SPACE / CLICK SHOOT • E/F SHIELD • ESC PAUSE';$('name1').textContent='RED • PLAYER 1';$('name2').textContent='BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS • LOSE A ROUND TO PICK A COLA');else toast(`ROUND ${round} • ${arena.name}`);
  const coarse=window.matchMedia('(pointer:coarse)').matches;touchEl.style.display='none';updateHUD();}
-function updateHUD(){if(!p1||!p2)return;$('hp1').style.width=`${100*cap(p1.hp/p1.stats.maxHp,0,1)}%`;$('hp2').style.width=`${100*cap(p2.hp/p2.stats.maxHp,0,1)}%`;$('stats1').textContent=`${Math.ceil(Math.max(0,p1.hp))} HP  •  ${p1.reload>0?'RELOADING':p1.ammo+' / '+p1.stats.ammo+' AMMO'}`;$('stats2').textContent=`${Math.ceil(Math.max(0,p2.hp))} HP  •  ${p2.reload>0?'RELOADING':p2.ammo+' / '+p2.stats.ammo+' AMMO'}`}
+function updateHUD(){
+ if(!p1||!p2)return;
+ $('hp1').style.width=`${100*cap(p1.hp/p1.stats.maxHp,0,1)}%`;
+ $('hp2').style.width=`${100*cap(p2.hp/p2.stats.maxHp,0,1)}%`;
+ $('stats1').textContent='';$('stats2').textContent='';
+}
 function toast(msg,red=false){const e=document.createElement('div');e.className='toast'+(red?' red':'');e.textContent=msg;toasts.appendChild(e);setTimeout(()=>e.remove(),1800)}
 function burst(x,y,col,n=12,power=210){for(let i=0;i<n;i++){let a=rand(0,TAU),speed=rand(power*.25,power);particles.push({x,y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,life:rand(.25,.67),max:.67,r:rand(2,5),col})}if(particles.length>500)particles.splice(0,100)}
 function poptext(x,y,msg,col='#fff'){texts.push({x,y,msg,col,life:1.05})}
@@ -826,13 +839,49 @@ function drawPlayer(p){
  }
  if(p.hitflash>0){ctx.strokeStyle='#fff7';ctx.lineWidth=2.4;roundRect(4,3,w-8,43,8);ctx.stroke()}
  ctx.restore();
- // Minimal weapon. Always sits in front of the matching-color aiming hand.
+ // The compact green health bar floats directly above this fighter (no numbers).
+ if(!p.dead){
+   const barW=60,barH=8,hpFrac=cap(p.hp/p.stats.maxHp,0,1),bx=x+w/2-barW/2,by=y-26;
+   ctx.fillStyle='#051624d9';roundRect(bx-3,by-3,barW+6,barH+6,4);ctx.fill();
+   ctx.strokeStyle='#d2efec88';ctx.lineWidth=1;roundRect(bx-3,by-3,barW+6,barH+6,4);ctx.stroke();
+   ctx.fillStyle='#183c32';roundRect(bx,by,barW,barH,2);ctx.fill();
+   if(hpFrac>0){ctx.fillStyle=hpFrac>.35?'#58ed79':'#afe55a';roundRect(bx,by,Math.max(2,barW*hpFrac),barH,2);ctx.fill();}
+   ctx.fillStyle='#d9ffe462';ctx.fillRect(bx+2,by+1,Math.max(0,barW*hpFrac-4),1.5);
+ }
+ // Off-hand shield charge. It glows gold only when fully charged.
+ if(!p.dead){
+   const ready=p.shieldCD<=0;
+   const handX=x+w/2-facing*25,handY=y+h*.46+7;
+   const full=cap(1-p.shieldCD/p.stats.shield,0,1);
+   ctx.save();ctx.translate(handX,handY);
+   if(ready){ctx.shadowColor='#ffe64b';ctx.shadowBlur=18+5*Math.sin(t*8);}
+   ctx.fillStyle=ready?'#ffdc4b':'#192b3b';ctx.strokeStyle=ready?'#fff2a5':'#527182';
+   ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,8,0,TAU);ctx.fill();ctx.stroke();
+   ctx.shadowBlur=0;ctx.lineWidth=3;ctx.strokeStyle=ready?'#ffdc4b':'#81aeca';
+   ctx.beginPath();ctx.arc(0,0,11,-Math.PI/2,-Math.PI/2+TAU*full);ctx.stroke();
+   ctx.restore();
+ }
+ // Updated gun with yellow ammo pips directly above it.
  if(!p.dead){ctx.save();ctx.translate(x+w/2,y+h*.46);ctx.rotate(p.aim);
- ctx.fillStyle='#152235';ctx.strokeStyle='#a9bfdc';ctx.lineWidth=1.5;roundRect(17,-4,22,8,3);ctx.fill();ctx.stroke();
- ctx.fillStyle='#e1ebfa';ctx.fillRect(31,-2.5,8,5);ctx.restore()}
+ // Compact blaster with dark receiver, grip, barrel and colored muzzle.
+ ctx.fillStyle='#162739';ctx.strokeStyle='#071421';ctx.lineWidth=2.2;
+ roundRect(10,-7,34,13,3);ctx.fill();ctx.stroke();
+ ctx.fillStyle='#627a92';ctx.fillRect(15,-7,14,3);
+ ctx.fillStyle='#0c1b2a';ctx.beginPath();ctx.moveTo(19,5);ctx.lineTo(28,5);ctx.lineTo(24,18);ctx.lineTo(16,17);ctx.closePath();ctx.fill();ctx.stroke();
+ ctx.fillStyle=p.color;ctx.fillRect(38,-4,9,7);ctx.fillStyle='#e2edfa';ctx.fillRect(43,-2,8,3);
+ // Yellow rounds: bright = loaded; dim = spent.
+ const total=p.stats.ammo,visible=Math.min(14,total),gap=Math.min(6.2,39/Math.max(1,visible-1)),startX=12;
+ for(let i=0;i<visible;i++){
+   ctx.beginPath();ctx.arc(startX+i*gap,-15,2.5,0,TAU);
+   ctx.fillStyle=i<p.ammo?'#ffdc4b':'#3d4c5e';
+   ctx.fill();
+   ctx.strokeStyle=i<p.ammo?'#fff1a6':'#748293';ctx.lineWidth=.7;ctx.stroke();
+ }
+ if(p.reload>0){ctx.fillStyle='#ffce4699';ctx.fillRect(13,-23,36*cap(1-p.reload/p.stats.reload,0,1),2)}
+ ctx.restore()}
  if(p.shieldTime>0){ctx.strokeStyle=p.color;ctx.lineWidth=5;ctx.globalAlpha=.55+.25*Math.sin(t*22);ctx.beginPath();ctx.arc(x+w/2,y+h/2,49,0,TAU);ctx.stroke();ctx.lineWidth=2;ctx.globalAlpha=.9;ctx.beginPath();ctx.arc(x+w/2,y+h/2,56,0,TAU);ctx.stroke()}
  ctx.globalAlpha=1;
- ctx.strokeStyle='#ffffff66';ctx.lineWidth=3;ctx.beginPath();ctx.arc(x+w/2,y-13,8,0,TAU);ctx.stroke();ctx.strokeStyle=p.color;ctx.beginPath();ctx.arc(x+w/2,y-13,8,-Math.PI/2,-Math.PI/2+TAU*(1-cap(p.shieldCD/p.stats.shield,0,1)));ctx.stroke();ctx.restore();
+ctx.restore();
  
 }
 function drawBullets(){ctx.lineCap='round';for(const b of bullets){ctx.strokeStyle=b.col;ctx.globalAlpha=.3;ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(b.x-b.vx*.025,b.y-b.vy*.025);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(b.x-b.vx*.018,b.y-b.vy*.018);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill()}}
