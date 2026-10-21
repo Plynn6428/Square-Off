@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 1.63</title>
+<title>SQUARE OFF | PC 1.7</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -201,11 +201,47 @@ body{padding:0 !important;display:block;background:#071223}
 .cola-card:hover .soda-illustration{transform:translateY(-9px) rotate(1deg) scale(1.05)}
 @media(max-height:820px) and (min-width:921px){.cola-stage{height:232px;min-height:232px}.soda-illustration{width:152px;height:225px}}
 @media(max-width:920px){.cola-stage{height:238px;min-height:238px}.soda-illustration{width:151px;height:228px}}
+
+/* SQUARE OFF 1.7 / NEON VENDING MACHINE */
+.overlay.vend-screen{background:radial-gradient(ellipse at 50% 18%,#1f4164e8,#071225fa 70%);z-index:15;overflow-y:auto;padding:16px 30px}
+.overlay.vend-screen::before{background:repeating-linear-gradient(0deg,transparent 0 45px,#40e2ff0b 45px 47px);opacity:1}
+.overlay.vend-screen .panel{width:min(1320px,98%);max-height:none}
+.vend{width:100%;text-align:center}
+.vend-top{display:flex;justify-content:space-between;align-items:center;color:#bceaf8;font:800 12px Consolas,monospace;letter-spacing:3px;margin:0 4px 10px}
+.vend-lamp{display:inline-block;background:#91ffcc;width:10px;height:10px;box-shadow:0 0 16px #4bffc4;border-radius:50%;margin-right:7px}
+.vend h2{font:italic 900 clamp(44px,5vw,72px)/.96 Impact,'Arial Black',sans-serif;letter-spacing:1px;margin:2px 0 8px;color:#ffe275;text-shadow:4px 5px 0 #091328,0 0 25px #ffd84b40}
+.vend-sub{font-size:15px;color:#d4e6f5;margin:6px 0 16px;font-weight:700}
+.vend-machine{border:8px solid #17283d;border-radius:25px;background:linear-gradient(125deg,#2d536f,#0c1a2e 26%,#172e48 80%,#091729);box-shadow:0 0 0 3px #426985,0 20px 55px #000c,inset 0 2px 0 #a6ddfb55;padding:14px 21px 17px;position:relative}
+.vend-machine::before{content:'';position:absolute;top:4px;left:4%;right:4%;height:6px;background:linear-gradient(90deg,transparent,#71dbffab,transparent);border-radius:9px}
+.vend-machine-header{display:flex;justify-content:space-between;gap:12px;padding:5px 5px 14px;color:#9be6ed;font:800 12px Consolas,monospace;letter-spacing:2px}
+.vend-machine-header strong{color:#ffe078}
+.vend-shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;align-items:stretch;border:5px solid #071525;border-radius:14px;padding:15px 13px 14px;background:linear-gradient(#173850,#091523 75%);box-shadow:inset 0 13px 30px #0009,inset 0 0 35px #5ad2ff26;position:relative}
+.vend-shelf::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#ffffff12,transparent 14%,transparent 84%,#ffffff18);pointer-events:none;border-radius:10px}
+.vend-slot{border:0;appearance:none;background:transparent;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:5px 7px 0;min-width:0;color:white;cursor:pointer;transition:transform .19s,filter .19s}
+.vend-slot:hover,.vend-slot:focus-visible{transform:translateY(-6px) scale(1.055);z-index:2;outline:none}
+.vend-slot::before{content:'';position:absolute;top:18px;bottom:38px;left:8%;right:8%;background:radial-gradient(ellipse,#55d9fc25,transparent 71%);border-radius:18px;opacity:.5;transition:opacity .2s;pointer-events:none}
+.vend-slot:hover::before,.vend-slot:focus-visible::before{opacity:1;background:radial-gradient(ellipse,#ffe7874d,#38d5ff20 54%,transparent 72%)}
+.vend-slot:hover .soda-illustration,.vend-slot:focus-visible .soda-illustration{filter:drop-shadow(0 0 18px #fff390a0) drop-shadow(8px 14px 7px #000b);transform:rotate(0) scale(1.06)}
+.vend-slot .cola-stage{height:clamp(188px,29vh,275px);min-height:0;position:relative;width:100%;margin:0 0 4px;filter:none}
+.vend-slot .soda-illustration{height:100%;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(8px 15px 7px #000a);transition:transform .22s,filter .22s}
+.vend-slot:nth-child(2) .soda-illustration{transform:rotate(4deg)}
+.vend-slot:nth-child(3) .soda-illustration{transform:rotate(-3deg)}
+.vend-details{display:flex;flex-direction:column;gap:4px;width:100%;padding:8px 5px 9px;min-height:98px;justify-content:center;background:linear-gradient(180deg,#08162600,#071624c9 25%);border-radius:9px}
+.vend-name{font:900 clamp(20px,2.1vw,29px) Impact,'Arial Black',sans-serif;line-height:1;letter-spacing:.8px;color:#fff;text-shadow:0 2px 4px #000f}
+.vend-desc{font:800 clamp(13px,1.25vw,17px)/1.3 'Trebuchet MS',Arial,sans-serif;color:#ffe183;text-shadow:0 1px 3px #000e}
+.vend-number{font:800 10px Consolas,monospace;letter-spacing:1px;color:#a8d5e5}
+.vend-rail{height:13px;margin:7px -7px -6px;width:calc(100% + 14px);border-radius:4px;background:linear-gradient(180deg,#9aaebc,#364f63 45%,#131f2c 70%,#829caf);box-shadow:0 3px 8px #000a}
+.vend-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:15px 4px 0;color:#b2d2e7;font:800 12px Consolas,monospace;letter-spacing:.8px}
+.vend-foot b{color:#ffe078}
+.vend-display{display:flex;align-items:center;gap:8px;background:#071627;border:2px solid #385d76;border-radius:5px;padding:9px 13px;color:#83ffcc}
+.vend-bot .vend-shelf{grid-template-columns:1fr;max-width:325px;margin:auto}.vend-bot .vend-slot{cursor:default;pointer-events:none}.vend-bot .vend-slot .cola-stage{height:190px}.vend-bot .vend-details{min-height:75px}
+@media(max-height:770px) and (min-width:800px){.vend h2{font-size:42px}.vend-sub{margin-bottom:6px}.vend-machine{padding:8px 15px}.vend-shelf{padding:6px 10px}.vend-slot .cola-stage{height:clamp(155px,27vh,205px)}.vend-details{min-height:78px}.vend-name{font-size:22px}.vend-desc{font-size:14px}.vend-foot{margin-top:8px}.vend-machine-header{padding-bottom:7px}}
+@media(max-width:760px){.overlay.vend-screen{padding:12px}.vend-top{font-size:9px;letter-spacing:1px}.vend h2{font-size:43px}.vend-sub{font-size:12px}.vend-machine{padding:7px;border-width:5px}.vend-shelf{gap:3px;padding:5px}.vend-slot{padding:1px}.vend-slot .cola-stage{height:clamp(120px,24vh,205px)}.vend-name{font-size:15px}.vend-desc{font-size:11px}.vend-details{min-height:95px}.vend-foot{font-size:9px;flex-wrap:wrap}.vend-number{font-size:8px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.63</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.7</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -219,7 +255,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 1.63</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 1.7</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -331,9 +367,9 @@ function renderColaCan(c){
  <path d="M20 267 Q100 284 180 267 L181 276 Q100 295 19 276Z" fill="url(#${uid}-metal)" stroke="#525d6d" stroke-width="2"/>
  </svg>`;
 }
-function renderColaCard(c,i){return `<button class="cola-card" data-i="${i}"><div class="cola-meta"><span><b>COLA 0${i+1}</b></span><span>${c.type}</span></div><div class="cola-stage">${renderColaCan(c)}</div><strong class="cola-title">${c.name}</strong><span class="cola-desc">${c.desc}</span><div class="cola-footer"><strong>[ ${i+1} ]</strong><span>GRAB THE CAN</span><i>+</i></div></button>`}
-function renderColaCard(c,i){return `<button class="cola-card" data-i="${i}"><div class="cola-meta"><span><b>COLA 0${i+1}</b></span><span>${c.type}</span></div><div class="cola-stage">${renderColaCan(c)}</div><strong class="cola-title">${c.name}</strong><span class="cola-desc">${c.desc}</span><div class="cola-footer"><strong>[ ${i+1} ]</strong><span>GRAB THE CAN</span><i>+</i></div></button>`}
 
+function renderColaCard(c,i){return `<button class="vend-slot" data-i="${i}" aria-label="${c.name}. ${c.desc}"><div class="cola-stage">${renderColaCan(c)}</div><div class="vend-details"><span class="vend-number">0${i+1} // ${c.type}</span><strong class="vend-name">${c.name}</strong><span class="vend-desc">${c.desc}</span></div><div class="vend-rail"></div></button>`}
+function vendingMarkup(opts,isBot=false){return `<div class="vend ${isBot?'vend-bot':''}"><div class="vend-top"><span><i class="vend-lamp"></i> SQUARE OFF / PERK DISPENSER</span><span>ROUND ${round} // ${isBot?'RIVAL PURCHASE':'BONUS POWER'}</span></div><h2>${isBot?'THE BOT GOT A COLA!':'PICK YOUR POP!'}</h2><p class="vend-sub">${isBot?'Your rival just powered up.':'You lost the round. Choose one permanent perk. Hover a can to inspect it.'}</p><section class="vend-machine"><div class="vend-machine-header"><strong>POWER UP YOUR COMEBACK</strong><span>FRESHLY STOCKED / ICE COLD</span></div><div class="vend-shelf">${opts.map((c,i)=>renderColaCard(c,i)).join('')}</div><div class="vend-foot"><span>PERK COLAS STACK ALL MATCH LONG</span><span class="vend-display">${isBot?'NEXT ROUND TO CONTINUE':'PRESS 1 / 2 / 3 OR CLICK A CAN'}</span></div></section>${isBot?'<div class="buttonrow"><button class="btn" id="continueBtn">NEXT ROUND / ENTER</button></div>':''}</div>`}
 function defaultStats(){return {damage:23,rate:.29,maxHp:100,speed:300,jump:920,ammo:7,bullet:850,bulletSize:1,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
 function makePlayer(id){let x=id===0?140:946;return {id,x,y:GROUND-60,w:48,h:60,vx:0,vy:0,dir:id===0?1:-1,grounded:true,jumps:0,hp:100,ammo:7,reload:0,shootCD:0,shieldTime:0,shieldCD:0,hitflash:0,faceHit:0,faceShoot:0,invuln:0,aim:0,aimTilt:0,dead:false,stats:defaultStats(),upgrades:[],color:id===0?'#ff595b':'#4594ff',aiHop:0,dropTime:0,dropHeld:false};}
 function cap(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
@@ -342,11 +378,60 @@ function mix(a,b,t){return a+(b-a)*t}
 function towards(v,target,amount){return v<target?Math.min(v+amount,target):Math.max(v-amount,target)}
 function inPlay(){return state==='playing'}
 function sound(freq=440,dur=.1,type='sine',vol=.06,slide=1){if(muted)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();const osc=audio.createOscillator(),gain=audio.createGain(),t=audio.currentTime;osc.type=type;osc.frequency.setValueAtTime(freq,t);osc.frequency.exponentialRampToValueAtTime(Math.max(30,freq*slide),t+dur);gain.gain.setValueAtTime(vol,t);gain.gain.exponentialRampToValueAtTime(.0001,t+dur);osc.connect(gain);gain.connect(audio.destination);osc.start(t);osc.stop(t+dur+.02)}catch(e){}}
-function fullMenu(html){overlay.classList.add('menu-screen');showOverlay(html)}
+
+// Original procedural electronic soundtracks: three different 16-step themes.
+// Web Audio starts only after a mouse / keyboard gesture to respect autoplay rules.
+let musicEnabled=true,musicTheme='menu',musicStarted=false,musicTimer=null,musicStep=0,musicNext=0;
+try{const pref=JSON.parse(localStorage.getItem('square-off-pc-settings')||'{}');if(typeof pref.musicEnabled==='boolean')musicEnabled=pref.musicEnabled}catch(e){}
+const BEATS={
+ menu:{bpm:114,bass:[43,null,43,46,48,null,46,null,43,null,50,48,46,null,41,null],lead:[null,67,null,70,null,72,70,null,null,74,null,72,null,70,67,null],kick:[0,8],snare:[4,12],hat:[0,2,4,6,8,10,12,14]},
+ battle:{bpm:154,bass:[41,41,48,41,43,43,50,43,41,41,48,41,36,36,38,39],lead:[65,null,68,70,null,72,70,null,75,null,72,70,68,null,65,63],kick:[0,4,8,10,12],snare:[4,12],hat:[0,2,3,4,6,7,8,10,11,12,14,15]},
+ cola:{bpm:128,bass:[48,null,48,55,51,null,51,58,46,null,46,53,43,null,43,50],lead:[72,75,79,null,82,79,75,null,70,74,77,null,79,77,74,null],kick:[0,4,8,12],snare:[4,12],hat:[0,2,4,6,8,10,12,14]}
+};
+function noteHz(n){return 440*Math.pow(2,(n-69)/12)}
+function synthTone(freq,t,dur,type,vol,filterHz=0){
+ const osc=audio.createOscillator(),vca=audio.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,t);
+ vca.gain.setValueAtTime(.0001,t);vca.gain.exponentialRampToValueAtTime(Math.max(.0001,vol),t+.008);
+ vca.gain.exponentialRampToValueAtTime(.0001,t+dur);
+ if(filterHz){const lp=audio.createBiquadFilter();lp.type='lowpass';lp.frequency.value=filterHz;osc.connect(lp);lp.connect(vca)}else osc.connect(vca);
+ vca.connect(audio.destination);osc.start(t);osc.stop(t+dur+.02);
+}
+function musicKick(t,level=.065){const osc=audio.createOscillator(),amp=audio.createGain();osc.type='sine';osc.frequency.setValueAtTime(145,t);osc.frequency.exponentialRampToValueAtTime(43,t+.12);amp.gain.setValueAtTime(level,t);amp.gain.exponentialRampToValueAtTime(.0001,t+.18);osc.connect(amp);amp.connect(audio.destination);osc.start(t);osc.stop(t+.2)}
+function noiseTap(t,dur,level,highpass){const len=Math.max(100,Math.floor(audio.sampleRate*dur));const buf=audio.createBuffer(1,len,audio.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len);const src=audio.createBufferSource(),hp=audio.createBiquadFilter(),amp=audio.createGain();src.buffer=buf;hp.type='highpass';hp.frequency.value=highpass;amp.gain.value=level;src.connect(hp);hp.connect(amp);amp.connect(audio.destination);src.start(t);src.stop(t+dur)}
+function musicSchedule(){
+ if(!audio||audio.state!=='running'||!musicEnabled||muted)return;
+ const track=BEATS[musicTheme]||BEATS.menu;
+ const stepLen=60/track.bpm/4;
+ if(musicNext<audio.currentTime-.2)musicNext=audio.currentTime+.025;
+ let ahead=0;
+ while(musicNext<audio.currentTime+.15&&ahead++<16){
+  const j=musicStep%16,t=musicNext,b=track.bass[j],n=track.lead[j];
+  if(track.kick.includes(j))musicKick(t,musicTheme==='battle'?.061:.046);
+  if(track.snare.includes(j))noiseTap(t+.002,.105,.021,1000);
+  if(track.hat.includes(j))noiseTap(t,.035,.009,5700);
+  if(b!==null)synthTone(noteHz(b),t,stepLen*2.5,'sawtooth',musicTheme==='battle'?.032:.026,400);
+  if(n!==null)synthTone(noteHz(n),t,stepLen*.85,musicTheme==='cola'?'square':'triangle',musicTheme==='cola'?.028:.018,2300);
+  // Gentle backbeat chord sparkle on menu; rhythmic extra arp for soda shop.
+  if(musicTheme==='menu'&&j%8===0){synthTone(noteHz(j?55:53),t,stepLen*6,'sine',.017)}
+  if(musicTheme==='cola'&&j%4===2)synthTone(noteHz([79,82,75,77][Math.floor(j/4)]),t,stepLen*.65,'triangle',.018);
+  musicNext+=stepLen;musicStep++;
+ }
+}
+function beginMusic(){
+ if(!musicEnabled||muted)return;
+ try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();
+  if(!musicStarted){musicStarted=true;musicStep=0;musicNext=audio.currentTime+.07;musicTimer=setInterval(musicSchedule,85)}
+ }catch(e){/* unavailable audio device */}
+}
+function setMusicTheme(theme){if(musicTheme===theme)return;musicTheme=theme;musicStep=0;if(audio)musicNext=audio.currentTime+.09;beginMusic()}
+function refreshMusic(){if(!muted&&musicEnabled)beginMusic();musicStep=0;if(audio)musicNext=audio.currentTime+.11}
+// First interaction unlocks Web Audio so the menu gets its own track.
+window.addEventListener('pointerdown',beginMusic,{capture:true});window.addEventListener('keydown',beginMusic,{capture:true});
+function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classList.add('menu-screen');showOverlay(html)}
 function menu(){
- state='menu';keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
+ state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.63</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.7</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -370,17 +455,19 @@ function menu(){
  </main>`);
  $('playBtn').onclick=()=>startMatch();$('settingsBtn').onclick=settings;$('helpBtn').onclick=help;
 }
-function savePrefs(){try{localStorage.setItem('square-off-pc-settings',JSON.stringify({difficulty,muted,shakeEnabled}))}catch(e){}}
+function savePrefs(){try{localStorage.setItem('square-off-pc-settings',JSON.stringify({difficulty,muted,shakeEnabled,musicEnabled}))}catch(e){}}
 function syncSound(){const b=$('soundBtn');if(b)b.textContent=muted?'SOUND: OFF':'SOUND: ON'}
 function settings(){state='settings';fullMenu(`<section class="splash-page" aria-label="Game settings"><div class="page-card">
  <div class="page-marker">SQUARE OFF / OPTIONS</div><h2 class="page-title">SET<span>TINGS.</span></h2>
  <div class="setting-row"><div><h3>BOT DIFFICULTY</h3><p>How hard should your rival fight?</p></div><div class="option-row" role="group" aria-label="Bot difficulty">
  ${['CASUAL','NORMAL','TOUGH'].map((name,i)=>`<button class="option ${difficulty===i?'active':''}" data-difficulty="${i}" aria-pressed="${difficulty===i}">${name}</button>`).join('')}</div></div>
  <div class="setting-row"><div><h3>SOUND EFFECTS</h3><p>Hits, shields, shots, and upgrades.</p></div><div class="option-row"><button class="option ${!muted?'active':''}" id="soundOn" aria-pressed="${!muted}">ON</button><button class="option ${muted?'active':''}" id="soundOff" aria-pressed="${muted}">OFF</button></div></div>
+ <div class="setting-row"><div><h3>ELECTRONIC SOUNDTRACK</h3><p>Original looping rave tracks for menu, battle and the soda machine.</p></div><div class="option-row"><button class="option ${musicEnabled?'active':''}" id="musicOn">ON</button><button class="option ${!musicEnabled?'active':''}" id="musicOff">OFF</button></div></div>
  <div class="setting-row"><div><h3>SCREEN SHAKE</h3><p>Camera impact when shots land.</p></div><div class="option-row"><button class="option ${shakeEnabled?'active':''}" id="shakeOn" aria-pressed="${shakeEnabled}">ON</button><button class="option ${!shakeEnabled?'active':''}" id="shakeOff" aria-pressed="${!shakeEnabled}">OFF</button></div></div>
  <button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);
  panel.querySelectorAll('[data-difficulty]').forEach(b=>b.onclick=()=>{difficulty=Number(b.dataset.difficulty);savePrefs();settings()});
- $('soundOn').onclick=()=>{muted=false;syncSound();savePrefs();sound(520,.09);settings()};$('soundOff').onclick=()=>{muted=true;syncSound();savePrefs();settings()};
+ $('soundOn').onclick=()=>{muted=false;syncSound();savePrefs();sound(520,.09);refreshMusic();settings()};$('soundOff').onclick=()=>{muted=true;syncSound();savePrefs();settings()};
+ $('musicOn').onclick=()=>{musicEnabled=true;savePrefs();refreshMusic();settings()};$('musicOff').onclick=()=>{musicEnabled=false;savePrefs();settings()};
  $('shakeOn').onclick=()=>{shakeEnabled=true;savePrefs();settings()};$('shakeOff').onclick=()=>{shakeEnabled=false;savePrefs();settings()};$('backBtn').onclick=menu;
 }
 function help(){state='help';fullMenu(`<section class="splash-page" aria-label="Game help"><div class="page-card">
@@ -396,9 +483,9 @@ function help(){state='help';fullMenu(`<section class="splash-page" aria-label="
  </div><div class="help-tile"><h3>WIN THE FIGHT</h3><p><strong>First to five rounds</strong> wins the match.</p><p>Beat the <strong>bot</strong> in a fast 1v1 shootout.</p><p>Lose a round? Choose <strong>one of three perk colas</strong> to turn the tables. The bot grabs one too.</p><p>Time your shield to <strong>reflect bullets</strong>.</p></div></div>
  <button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('backBtn').onclick=menu}
 function showOverlay(html){panel.innerHTML=html;overlay.classList.remove('hidden')}
-function hideOverlay(){overlay.classList.remove('menu-screen');overlay.classList.add('hidden')}
+function hideOverlay(){overlay.classList.remove('menu-screen','vend-screen');overlay.classList.add('hidden')}
 function startMatch(){mouse.down=false;mouse.used=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);startRound(true)}
-function startRound(first=false){mouse.down=false;arena=maps[arenaIndex];const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.x=i===0?138:948;p.y=GROUND-p.h;p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;});bullets=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;aiThink=0;aiPlan={move:0,jump:false,block:false};state='playing';hideOverlay();hud.classList.add('show');hint.classList.add('show');hint.textContent='A/D MOVE • W JUMP • S DROP • MOUSE AIM • SPACE / CLICK SHOOT • E/F SHIELD • ESC PAUSE';$('name1').textContent='RED • PLAYER 1';$('name2').textContent='BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS • LOSE A ROUND TO PICK A COLA');else toast(`ROUND ${round} • ${arena.name}`);
+function startRound(first=false){mouse.down=false;arena=maps[arenaIndex];const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.x=i===0?138:948;p.y=GROUND-p.h;p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;});bullets=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;aiThink=0;aiPlan={move:0,jump:false,block:false};state='playing';setMusicTheme('battle');hideOverlay();hud.classList.add('show');hint.classList.add('show');hint.textContent='A/D MOVE • W JUMP • S DROP • MOUSE AIM • SPACE / CLICK SHOOT • E/F SHIELD • ESC PAUSE';$('name1').textContent='RED • PLAYER 1';$('name2').textContent='BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS • LOSE A ROUND TO PICK A COLA');else toast(`ROUND ${round} • ${arena.name}`);
  const coarse=window.matchMedia('(pointer:coarse)').matches;touchEl.style.display='none';updateHUD();}
 function updateHUD(){if(!p1||!p2)return;$('hp1').style.width=`${100*cap(p1.hp/p1.stats.maxHp,0,1)}%`;$('hp2').style.width=`${100*cap(p2.hp/p2.stats.maxHp,0,1)}%`;$('stats1').textContent=`${Math.ceil(Math.max(0,p1.hp))} HP  •  ${p1.reload>0?'RELOADING':p1.ammo+' / '+p1.stats.ammo+' AMMO'}`;$('stats2').textContent=`${Math.ceil(Math.max(0,p2.hp))} HP  •  ${p2.reload>0?'RELOADING':p2.ammo+' / '+p2.stats.ammo+' AMMO'}`}
 function toast(msg,red=false){const e=document.createElement('div');e.className='toast'+(red?' red':'');e.textContent=msg;toasts.appendChild(e);setTimeout(()=>e.remove(),1800)}
@@ -408,12 +495,10 @@ function applyCard(p,card){const s=p.stats;switch(card.id){case'damage':s.damage
 function cardOptions(){let arr=ITEMS.slice();for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr.slice(0,3)}
 function finishRound(win){if(state!=='playing')return;winner=win;loser=1-win;scores[win]++;shake=14;burst(win===0?p2.x+p2.w/2:p1.x+p1.w/2,win===0?p2.y+p2.h*.47:p1.y+p1.h*.47,win===0?'#ff595b':'#4594ff',32,370);sound(250,.32,'sawtooth',.1,.25);state='roundover';roundEndTime=.95;updateHUD();}
 function postRound(){const champ=scores[0]>=5||scores[1]>=5;
- if(champ){state='gameover';const name=winner===0?'RED':'BLUE BOT';showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> FINAL WHISTLE / MATCH COMPLETE</div><div class="result-kicker">FIRST TO FIVE</div><h2 class="roundheading ${winner===0?'cyan':'coral'}">${name} <span>TAKES IT.</span></h2><div class="result-score"><span>${scores[0]}</span><em>—</em><span>${scores[1]}</span></div><p class="subtitle">PLAYER 1: ${p1.upgrades.length} COLAS <span class="sep">//</span> BOT: ${p2.upgrades.length} COLAS</p><div class="buttonrow"><button class="btn" id="rematch">RUN IT BACK</button><button class="btn secondary" id="toMenu">MAIN MENU</button></div></div>`);$('rematch').onclick=startMatch;$('toMenu').onclick=menu;return}
+ if(champ){state='gameover';setMusicTheme('menu');const name=winner===0?'RED':'BLUE BOT';showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> FINAL WHISTLE / MATCH COMPLETE</div><div class="result-kicker">FIRST TO FIVE</div><h2 class="roundheading ${winner===0?'cyan':'coral'}">${name} <span>TAKES IT.</span></h2><div class="result-score"><span>${scores[0]}</span><em>—</em><span>${scores[1]}</span></div><p class="subtitle">PLAYER 1: ${p1.upgrades.length} COLAS <span class="sep">//</span> BOT: ${p2.upgrades.length} COLAS</p><div class="buttonrow"><button class="btn" id="rematch">RUN IT BACK</button><button class="btn secondary" id="toMenu">MAIN MENU</button></div></div>`);$('rematch').onclick=startMatch;$('toMenu').onclick=menu;return}
  const opts=cardOptions();const lose=loser===0?'RED':'BLUE BOT';
- if(loser===1){const choice=opts[Math.floor(Math.random()*opts.length)];applyCard(p2,choice);state='botdraft';showOverlay(`<div class="result-panel bot-result"><div class="eyebrow"><span class="nib"></span> COLA BREAK / ROUND ${round}</div><div class="result-kicker">BOT PERK UNLOCKED</div><h2 class="roundheading coral">THE BOT <span>CRACKED ONE OPEN.</span></h2><div class="bot-cola-wrap bot-cola">${renderColaCard(choice,0).replace('data-i="0"','').replace('button class="cola-card"','div class="cola-card"').replace('</button>','</div>')}</div><div class="buttonrow"><button class="btn" id="continueBtn">NEXT ROUND <span> / ENTER</span></button></div></div>`);$('continueBtn').onclick=nextRound;return}
- state='draft';showOverlay(`<div class="draft-panel"><div class="draft-top"><div><div class="eyebrow"><span class="nib"></span> PERK COLA / ROUND ${round}</div><h2 class="roundheading ${loser===0?'cyan':'coral'}">${lose}, <span>PICK YOUR POP.</span></h2><p class="subtitle">You lost the round. Grab one permanent cola perk and swing the fight back your way.</p></div><div class="pick-indicator"><small>YOUR CHOICE</small><b>01 <span>OF</span> 03</b></div></div><div class="cola-grid">${opts.map((c,i)=>renderColaCard(c,i)).join('')}</div><div class="draft-footer"><span>PERMANENT PERK COLAS STACK ALL MATCH LONG</span><span>SELECT WITH <b>1, 2, 3</b> OR CLICK</span></div></div>`);
- panel.querySelectorAll('.cola-card').forEach(b=>b.onclick=()=>pickCard(opts,Number(b.dataset.i)));
- window.currentOptions=opts;
+ if(loser===1){const choice=opts[Math.floor(Math.random()*opts.length)];applyCard(p2,choice);state='botdraft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup([choice],true));$('continueBtn').onclick=nextRound;setMusicTheme('cola');return}
+ state='draft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup(opts,false));panel.querySelectorAll('.vend-slot').forEach(b=>b.onclick=()=>pickCard(opts,Number(b.dataset.i)));window.currentOptions=opts;setMusicTheme('cola');
 }
 function pickCard(opts,i){if(state!=='draft'||!opts[i])return;applyCard(loser===0?p1:p2,opts[i]);sound(680,.15,'triangle',.07,1.5);nextRound()}
 function nextRound(){if(state!=='draft'&&state!=='botdraft')return;round++;arenaIndex=(arenaIndex+1+Math.floor(rand(0,2)))%maps.length;startRound()}
@@ -567,10 +652,10 @@ function canvasMouse(e){let r=canvas.getBoundingClientRect();mouse.x=(e.clientX-
 canvas.addEventListener('mousemove',canvasMouse);canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'){canvasMouse(e);if(e.button===0)mouse.down=true;else if(e.button===2&&inPlay())block(p1)}else if(inPlay()){canvasMouse(e);mouse.down=true}});window.addEventListener('pointerup',()=>mouse.down=false);canvas.addEventListener('contextmenu',e=>e.preventDefault());
 window.addEventListener('keydown',e=>{if(['Space','KeyW','KeyA','KeyS','KeyD','KeyE','KeyF','Digit1','Digit2','Digit3'].includes(e.code))e.preventDefault();keys.add(e.code);if(state==='draft'&&['Digit1','Digit2','Digit3'].includes(e.code)){pickCard(window.currentOptions,Number(e.code.slice(-1))-1)}if(e.code==='Escape'){e.preventDefault();if(state==='playing')pause();else if(state==='paused')resume();else if(state==='settings'||state==='help'||state==='gameover')menu()}});
 window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>{keys.clear();mouse.down=false;Object.keys(touch).forEach(k=>touch[k]=false);if(state==='playing')pause()});
-function pause(){state='paused';showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> TIMEOUT / GAME PAUSED</div><div class="result-kicker">TAKE FIVE.</div><h2 class="roundheading">BACK <span>AT IT?</span></h2><p class="subtitle">Your fight is right where you left it. Press Escape to resume.</p><div class="buttonrow"><button class="btn" id="resumeBtn">RESUME FIGHT</button><button class="btn secondary" id="exitBtn">MAIN MENU</button></div></div>`);$('resumeBtn').onclick=resume;$('exitBtn').onclick=menu}
-function resume(){state='playing';hideOverlay()}
+function pause(){state='paused';setMusicTheme('menu');showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> TIMEOUT / GAME PAUSED</div><div class="result-kicker">TAKE FIVE.</div><h2 class="roundheading">BACK <span>AT IT?</span></h2><p class="subtitle">Your fight is right where you left it. Press Escape to resume.</p><div class="buttonrow"><button class="btn" id="resumeBtn">RESUME FIGHT</button><button class="btn secondary" id="exitBtn">MAIN MENU</button></div></div>`);$('resumeBtn').onclick=resume;$('exitBtn').onclick=menu}
+function resume(){state='playing';setMusicTheme('battle');hideOverlay()}
 for(const btn of document.querySelectorAll('[data-touch]')){const kind=btn.dataset.touch;const set=(v)=>{touch[kind]=v;btn.classList.toggle('pressed',v)};btn.addEventListener('pointerdown',e=>{e.preventDefault();btn.setPointerCapture(e.pointerId);set(true)});btn.addEventListener('pointerup',e=>{e.preventDefault();set(false)});btn.addEventListener('pointercancel',()=>set(false));btn.addEventListener('lostpointercapture',()=>set(false))}
-$('soundBtn').onclick=()=>{muted=!muted;syncSound();savePrefs();if(!muted)sound(610,.08)};syncSound();$('menuBtn').onclick=()=>{if(state==='playing')pause();else menu()};
+$('soundBtn').onclick=()=>{muted=!muted;syncSound();savePrefs();if(!muted)sound(610,.08);refreshMusic()};syncSound();$('menuBtn').onclick=()=>{if(state==='playing')pause();else menu()};
 menu();requestAnimationFrame(frame);
 })();
 </script>
