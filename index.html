@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 2.0</title>
+<title>SQUARE OFF | PC 2.1</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -282,9 +282,9 @@ body{padding:0 !important;display:block;background:#071223}
 .reach-arm{--reach-color:#ff5965;position:absolute;top:0;left:0;width:0;height:clamp(26px,3.2vw,46px);z-index:8;background:linear-gradient(180deg,color-mix(in srgb,var(--reach-color) 82%,white 18%),var(--reach-color) 54%,color-mix(in srgb,var(--reach-color) 73%,black 27%));border:clamp(4px,.5vw,7px) solid #121725;border-radius:100px;box-shadow:inset 0 5px 0 #fff3,4px 8px 0 #0005;transform-origin:0 50%;transform:translateY(-50%) rotate(0);opacity:0;pointer-events:none;transition:left .21s ease,top .21s ease,width .21s ease,transform .21s ease,opacity .16s ease}
 .reach-arm.is-reaching{opacity:1}
 .reach-hand{position:absolute;right:-10px;top:50%;transform:translateY(-50%);width:clamp(36px,4vw,56px);height:clamp(36px,4vw,56px);background:var(--reach-color);border:clamp(4px,.5vw,7px) solid #121725;border-radius:38%;box-shadow:inset 5px 4px 0 #fff4}
-.rounds-hero-wrap.reaching .hero-limb.arm.right{opacity:.03}
+.rounds-hero-wrap.reaching .hero-limb.arm.right{opacity:0}
 .rounds-hero-wrap.reaching.left-reach .hero-limb.arm.left{opacity:.03}
-.rounds-hero-wrap.reaching.left-reach .hero-limb.arm.right{opacity:1}
+.rounds-hero-wrap.reaching.left-reach .hero-limb.arm.right{opacity:0}
 .rounds-product.chosen .vend-slot{transform:translateY(-11px) scale(1.1)!important;filter:drop-shadow(0 0 22px #ffe781)!important}
 .rounds-product.chosen .vend-details{border-color:#ffe781!important}
 .rounds-display.drinking .rounds-hero{animation:cola-chug .4s ease-in-out 2}
@@ -315,7 +315,7 @@ body{padding:0 !important;display:block;background:#071223}
 .rounds-hero .hero-limb.arm.right{right:-3%;transform:rotate(25deg)}
 .rounds-hero .hero-limb.leg{top:73%;bottom:auto;height:22%;width:13%}
 .rounds-hero .hero-limb.leg.left{left:30%}.rounds-hero .hero-limb.leg.right{right:30%}
-.reach-arm{width:100px;height:clamp(26px,3vw,39px);transition:left .2s ease,top .2s ease,transform .2s ease,opacity .18s ease}
+.reach-arm{width:28%;height:10%;left:78%;top:45%;transition:transform .12s ease,opacity .18s ease}
 .reach-hand{width:clamp(28px,2.9vw,41px);height:clamp(28px,2.9vw,41px);right:-5px}
 /* Never put text over the square fighter: reserve the upper center for option 2. */
 .rounds-pos-1{top:14%;}
@@ -341,11 +341,16 @@ body{padding:0 !important;display:block;background:#071223}
  .rounds-pos-1 .vend-name{font-size:16px}
  .rounds-pos-1 .vend-desc{font-size:12px}
 }
+
+/* 2.1: Single rigid arm. It is parented to the square fighter and never stretches. */
+.rounds-hero-wrap .reach-arm{position:absolute;left:78%;top:45%;width:28%;height:10%;opacity:1;z-index:15;transform:translateY(-50%) rotate(-18deg);transform-origin:0 50%;transition:transform .09s ease-out;pointer-events:none}
+.rounds-hero-wrap .reach-hand{width:35%;height:115%;right:-8%;top:50%;border-radius:38%;transform:translateY(-50%)}
+.rounds-hero-wrap .hero-limb.arm.right{opacity:0!important}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.0</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.1</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -359,12 +364,15 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 2.0</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 2.1</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
 'use strict';
 const W=1120,H=630,GRAV=1750,GROUND=564,TAU=Math.PI*2;
+// A level shot fired from the ground reaches roughly 3/8 of the arena width
+// before hitting the floor. Character gravity stays independent.
+const BULLET_GRAVITY=270;
 const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');
 const $=id=>document.getElementById(id), overlay=$('overlay'),panel=$('panel'),hud=$('hud'),hint=$('bottomHint'),toasts=$('toasts'),touchEl=$('touch');
 const keys=new Set(), touch={left:false,right:false,jump:false,shoot:false,block:false};
@@ -480,7 +488,7 @@ function vendingMarkup(opts,isBot=false){
  return `<div class="rounds-draft ${isBot?'rounds-bot':''}">
   <div class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF // PERK BREAK</div><div>ROUND ${round} / ${isBot?'BOT IS UPGRADING':'YOUR COMEBACK'}</div></div>
   <div class="rounds-title"><h2>${isBot?'RIVAL REFILL':'PICK YOUR POP'}</h2><p>${isBot?'The bot cracked open a new perk.':'Pick one of three sodas to power up your fighter.'}</p></div>
-  <div class="rounds-display"><div class="rounds-rays"></div><div class="reach-arm" id="colaReachArm" aria-hidden="true"><div class="reach-hand"></div></div><div class="rounds-hero-wrap">${fig}</div>${slots}
+  <div class="rounds-display"><div class="rounds-rays"></div><div class="rounds-hero-wrap">${fig}<div class="reach-arm" id="colaReachArm" aria-hidden="true"><div class="reach-hand"></div></div></div>${slots}
    <div class="rounds-floor"></div>
   </div>
   <div class="rounds-controls"><span>PERKS STACK FOR THE WHOLE MATCH</span><strong>${isBot?'NEXT ROUND TO CONTINUE':'HOVER TO INSPECT · CLICK OR PRESS 1 / 2 / 3'}</strong></div>
@@ -553,7 +561,7 @@ function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classLis
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.0</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.1</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -630,24 +638,33 @@ function postRound(){const champ=scores[0]>=5||scores[1]>=5;
  });window.currentOptions=opts;setMusicTheme('cola');
 }
 let colaSelectionPending=false,colaReachTarget=null;
+function pointColaHand(clientX,clientY){
+ if(!['draft','botdraft','drinking'].includes(state))return;
+ const hero=panel.querySelector('.rounds-hero-wrap'),arm=panel.querySelector('#colaReachArm');
+ if(!hero||!arm)return;
+ const hr=hero.getBoundingClientRect();
+ const shoulderX=hr.left+hr.width*.78,shoulderY=hr.top+hr.height*.45;
+ // The arm is a fixed-length segment anchored to the shoulder.
+ // Only its rotation changes; the hand moves on a short circular arc.
+ const theta=Math.atan2(clientY-shoulderY,clientX-shoulderX);
+ arm.style.transform=`translateY(-50%) rotate(${theta}rad)`;
+ arm.style.setProperty('--reach-color',state==='botdraft'?'#5fa7ff':'#ff5965');
+ arm.classList.add('is-reaching');hero.classList.add('reaching');
+}
 function reachForCola(i,isBot=false){
- if(state!=='draft'&&state!=='botdraft'&&state!=='drinking')return;
- const display=panel.querySelector('.rounds-display'),hero=panel.querySelector('.rounds-hero-wrap'),arm=panel.querySelector('#colaReachArm');
- const slot=panel.querySelector(isBot?'.rounds-pos-1':`.rounds-pos-${i}`),can=slot?.querySelector('.cola-stage');
- if(!display||!hero||!arm||!can)return;
- const dr=display.getBoundingClientRect(),hr=hero.getBoundingClientRect(),cr=can.getBoundingClientRect();
- const targetX=cr.left+cr.width*.5-dr.left,targetY=cr.top+cr.height*.61-dr.top;
- const center=hr.left+hr.width*.5-dr.left,left=targetX<center;
- const x=hr.left+hr.width*(left?.19:.81)-dr.left,y=hr.top+hr.height*.49-dr.top;
- const dx=targetX-x,dy=targetY-y,dist=Math.hypot(dx,dy);
- arm.style.setProperty('--reach-color',isBot?'#5fa7ff':'#ff5965');
- arm.style.left=`${x}px`;arm.style.top=`${y}px`;arm.style.width=`${Math.round(Math.min(125,Math.max(58,hr.width*.28)))}px`;
- arm.style.transform=`translateY(-50%) rotate(${Math.atan2(dy,dx)}rad)`;
- arm.classList.add('is-reaching');hero.classList.add('reaching');hero.classList.toggle('left-reach',left);
+ const item=panel.querySelector(isBot?'.rounds-pos-1':`.rounds-pos-${i}`),stage=item?.querySelector('.cola-stage');
+ if(!stage)return;
+ const rect=stage.getBoundingClientRect();
+ pointColaHand(rect.left+rect.width/2,rect.top+rect.height/2);
  colaReachTarget=i;
 }
-function resetColaReach(){if(colaSelectionPending||state==='drinking')return;const arm=panel.querySelector('#colaReachArm'),hero=panel.querySelector('.rounds-hero-wrap');if(arm)arm.classList.remove('is-reaching');hero?.classList.remove('reaching','left-reach');colaReachTarget=null}
-window.addEventListener('resize',()=>{if(colaReachTarget!==null&&(state==='draft'||state==='botdraft'))reachForCola(colaReachTarget,state==='botdraft')});
+function resetColaReach(){colaReachTarget=null}
+document.addEventListener('pointermove',e=>{
+ if(state==='draft'||state==='botdraft')pointColaHand(e.clientX,e.clientY);
+});
+window.addEventListener('resize',()=>{
+ if(colaReachTarget!==null&&(state==='draft'||state==='botdraft'))reachForCola(colaReachTarget,state==='botdraft');
+});
 function sodaDrinkSound(){
  if(muted)return;
  try{
@@ -698,7 +715,13 @@ function aiControl(dt){const p=p2,enemy=p1,dist=enemy.x-p.x,dy=enemy.y-p.y;p.aiH
  if(p.grounded&&(aiPlan.jump||ahead)&&p.aiHop<=0){jump(p);p.aiHop=rand(.45,1.2)}
  if(aiPlan.block&&p.shieldCD<=0&&Math.random()<(difficulty===0?.02:.13))block(p);
  const lead=difficulty===0?.03:difficulty===1?.115:.17,tx=enemy.x+enemy.w/2+enemy.vx*lead,ty=enemy.y+enemy.h*.47+enemy.vy*lead+.5*GRAV*lead*lead;
- p.aim=Math.atan2(ty-(p.y+p.h*.47),tx-(p.x+p.w/2));const miss=difficulty===0?.17:difficulty===1?.08:.027;
+ // Aim above a moving target to compensate for gravity while preserving
+ // the existing bot difficulty spread.
+ const shotX=p.x+p.w/2,shotY=p.y+p.h*.47;
+ const dxBall=tx-shotX,dyBall=ty-shotY;
+ let travel=Math.hypot(dxBall,dyBall)/p.stats.bullet;
+ for(let k=0;k<3;k++)travel=Math.hypot(dxBall,dyBall-.5*BULLET_GRAVITY*travel*travel)/p.stats.bullet;
+ p.aim=Math.atan2(dyBall-.5*BULLET_GRAVITY*travel*travel,dxBall);const miss=difficulty===0?.17:difficulty===1?.08:.027;
  if(p.aimErrorTime===undefined)p.aimErrorTime=0;p.aimErrorTime-=dt;if(p.aimErrorTime<=0){p.aimErrorTime=rand(.18,.55);p.aimError=rand(-miss,miss)}p.aim+=p.aimError||0;
  if(!lineObscured(p.x+p.w/2,p.y+p.h*.47,tx,ty)&&Math.random()<dt*(difficulty===0?3:difficulty===1?7:14))shoot(p);
 }
@@ -708,9 +731,9 @@ function physicsPlayer(p,dt){p.dropTime=Math.max(0,p.dropTime-dt);p.shootCD=Math
  if(p.y<10){p.y=10;p.vy=Math.max(0,p.vy)}if(p.y+p.h>H-12){p.y=H-12-p.h;p.vy=0;p.grounded=true;p.jumps=0}
 }
 function intersectsCircleRect(b,p){let xx=cap(b.x,p.x,p.x+p.w),yy=cap(b.y,p.y,p.y+p.h);return (b.x-xx)**2+(b.y-yy)**2<(b.r+1)**2}
-function bulletPhysics(dt){for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];b.px=b.x;b.py=b.y;b.x+=b.vx*dt;b.y+=b.vy*dt;b.vy+=175*dt;b.life-=dt;let gone=b.life<=0;
+function bulletPhysics(dt){for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];b.px=b.x;b.py=b.y;b.x+=b.vx*dt;b.y+=b.vy*dt;b.vy+=BULLET_GRAVITY*dt;b.life-=dt;let gone=b.life<=0;
  for(const pl of arena.platforms){if(b.x+b.r>pl.x&&b.x-b.r<pl.x+pl.w&&b.y+b.r>pl.y&&b.y-b.r<pl.y+pl.h){if(b.bounces>0){b.bounces--;if(b.py<pl.y||b.py>pl.y+pl.h)b.vy*=-.85;else b.vx*=-.85;b.x=b.px;b.y=b.py;burst(b.x,b.y,b.col,4,110);sound(580,.08,'triangle',.02,.8)}else{gone=true;burst(b.x,b.y,'#8baac9',4,90)}break}}
- if(b.x<10||b.x>W-10||b.y<12||b.y>GROUND+15)gone=true;
+ if(b.x<10||b.x>W-10||b.y<12||b.y+b.r>=GROUND)gone=true;
  const target=b.owner===0?p2:p1,source=b.owner===0?p1:p2;
  if(!gone&&intersectsCircleRect(b,target)){
   if(target.shieldTime>0){b.owner=target.id;b.vx*=-1.16;b.vy*=-1.16;b.damage*=.9;b.col=target.color;b.x=b.px;b.y=b.py;b.life=.9;b.bounces=0;burst(target.x+target.w/2,target.y+target.h*.47,target.color,13,220);shake=6;poptext(target.x+target.w/2,target.y-18,'REFLECT!',target.color);sound(820,.22,'sine',.07,.52)}
