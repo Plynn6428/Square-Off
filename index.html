@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 1.62</title>
+<title>SQUARE OFF | PC 1.63</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -193,11 +193,19 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:820px) and (min-width:921px){.cola-stage{height:220px}.soda-can{scale:.79}.cola-card{padding-top:10px}.cola-grid{gap:13px;margin:8px auto}.cola-title{font-size:19px}.cola-desc{font-size:11px;min-height:25px}.draft-top .roundheading{font-size:36px;margin:6px 0}.overlay{padding:6px}}
 @media(max-width:920px){.cola-grid{grid-template-columns:1fr}.cola-card{display:grid;grid-template-columns:160px 1fr;gap:8px}.cola-stage{grid-row:1/4;height:234px}.soda-can{scale:.82}.cola-footer{grid-column:1/-1}.cola-card .cola-meta,.cola-card .cola-title,.cola-card .cola-desc{grid-column:2}.cola-title{font-size:19px}}
 
+
+/* 1.63: SVG collector cans. Aluminum rim is drawn last, above paint. */
+.cola-stage{height:295px;min-height:295px;display:flex;align-items:center;justify-content:center;overflow:visible}
+.soda-illustration{width:198px;height:293px;display:block;overflow:visible;filter:drop-shadow(10px 16px 9px #000a);transition:transform .25s ease;transform:rotate(-4deg) perspective(700px) rotateY(-7deg)}
+.cola-card:nth-child(even) .soda-illustration{transform:rotate(4deg) perspective(700px) rotateY(7deg)}
+.cola-card:hover .soda-illustration{transform:translateY(-9px) rotate(1deg) scale(1.05)}
+@media(max-height:820px) and (min-width:921px){.cola-stage{height:232px;min-height:232px}.soda-illustration{width:152px;height:225px}}
+@media(max-width:920px){.cola-stage{height:238px;min-height:238px}.soda-illustration{width:151px;height:228px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.62</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.63</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -211,7 +219,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 1.62</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 1.63</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -262,7 +270,67 @@ function renderScene(scene){
 }
 function nameMarkup(name,layout){const words=name.split(' ');if(layout==='side')return `<span>${words.join(' ')}</span>`;if(words.length===2)return `<span>${words[0]}</span><span>${words[1]}</span>`;if(words.length===3)return `<span>${words[0]} ${words[1]}</span><span>${words[2]}</span>`;return `<span>${name}</span>`}
 function decoMarkup(layout){if(layout==='diag')return '<i class="deco slash"></i>';if(layout==='topbadge')return '<i class="deco dot"></i>';if(layout==='side')return '<i class="deco zig"></i>';if(layout==='burst')return '<i class="deco slash"></i>';if(layout==='split')return '<i class="deco dot"></i>';return '<i class="deco dot"></i>'}
-function renderColaCan(c){return `<div class="soda-can ${c.layout} ${['burst','split'].includes(c.layout)?'neon':''}${['burst','topbadge'].includes(c.layout)?' wobble':''}" style="--can:${c.can};--can-deep:${c.deep};--accent:${c.accent};--spin:${c.tilt||'-6deg'}"><div class="can-shine"></div><div class="can-rim"></div><div class="can-label"><div class="can-band">${c.tag||'PERK COLA'}</div>${decoMarkup(c.layout)}${renderScene(c.scene)}<div class="can-name">${nameMarkup(c.name,c.layout)}</div><div class="can-pop">${c.code}</div></div></div>`}
+function colaSceneSvg(c){
+ const peach='#fff5d8', ink='#172033';
+ const mascot=(x=58,y=177,scale=1,face='happy')=>`<g transform="translate(${x} ${y}) scale(${scale})" stroke="${ink}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M8 43 L-2 60 M43 43 L55 60 M3 19 L-10 29 M48 19 L61 9" fill="none"/><rect x="0" y="0" width="49" height="49" rx="9" fill="${c.can}" stroke-width="4"/><path d="M5 10 Q15 1 25 5" stroke="#ffffff9a" fill="none" stroke-width="5"/><circle cx="15" cy="19" r="3.5" fill="${ink}" stroke="none"/><circle cx="35" cy="19" r="3.5" fill="${ink}" stroke="none"/>${face==='scared'?`<ellipse cx="25" cy="35" rx="6" ry="9" fill="${ink}" stroke="none"/>`:face==='tough'?`<path d="M16 36 L35 34" fill="none"/>`:`<path d="M15 31 Q25 43 36 31" fill="none"/>`}</g>`;
+ const star=(x,y,r=8)=>`<path d="M${x} ${y-r} L${x+r*.25} ${y-r*.24} L${x+r} ${y} L${x+r*.25} ${y+r*.25} L${x} ${y+r} L${x-r*.25} ${y+r*.25} L${x-r} ${y} L${x-r*.25} ${y-r*.25}Z" fill="${c.accent}" stroke="#ffffffb0" stroke-width="1"/>`;
+ const bullet=(x,y,scale=1)=>`<g transform="translate(${x} ${y}) scale(${scale}) rotate(-12)"><path d="M0 -11 H36 Q53 -11 58 0 Q53 11 36 11 H0 Q-6 0 0 -11Z" fill="#26334a" stroke="${peach}" stroke-width="3"/><path d="M12 -8 H33" stroke="#9fc5eb" stroke-width="4" stroke-linecap="round"/></g>`;
+ const heart=`<path d="M132 176 C110 152 100 187 132 210 C164 188 153 153 132 176Z" fill="#fff1eb" stroke="${ink}" stroke-width="4"/>`;
+ let subject='';
+ switch(c.scene){
+ case 'bullet':subject=mascot(39,187,.94,'scared')+bullet(112,192,1.1)+star(158,168,12);break;
+ case 'damage':subject=mascot(43,183,1,'tough')+bullet(124,190,.8)+star(137,169,13);break;
+ case 'rate':subject=mascot(37,188,.91)+bullet(106,177,.53)+bullet(118,198,.5)+bullet(125,219,.49);break;
+ case 'hp':subject=mascot(38,193,.92)+heart+star(144,177,7);break;
+ case 'speed':subject=mascot(83,190,.91)+`<path d="M30 189 H73 M14 207 H65 M40 223 H79" stroke="${peach}" stroke-width="7" stroke-linecap="round"/>`+star(155,177,9);break;
+ case 'jump':subject=mascot(69,176,.9)+`<path d="M60 248 Q29 236 52 215 M56 188 L56 207" stroke="${peach}" stroke-width="7" fill="none" stroke-linecap="round"/>`+star(146,198,10);break;
+ case 'ammo':subject=mascot(34,192,.89)+`<g fill="${peach}" stroke="${ink}" stroke-width="3"><rect x="116" y="182" width="20" height="49" rx="5"/><rect x="137" y="196" width="18" height="36" rx="5"/></g>`;break;
+ case 'reload':subject=mascot(46,187,.93)+`<path d="M121 192 A28 28 0 1 1 119 232" fill="none" stroke="${peach}" stroke-width="9" stroke-linecap="round"/><path d="M121 174 L139 197 L109 201" fill="${peach}"/>`;break;
+ case 'shield':subject=mascot(33,193,.89)+`<path d="M136 175 L160 187 L157 213 L135 235 L112 214 L110 187Z" fill="${peach}" stroke="${ink}" stroke-width="4"/>`+star(136,203,10);break;
+ case 'vamp':subject=mascot(39,192,.88)+heart+`<path d="M119 221 Q102 234 93 215" fill="none" stroke="${peach}" stroke-width="5"/>`;break;
+ case 'bounce':subject=mascot(38,193,.9)+bullet(131,188,.58)+`<path d="M121 224 L158 231 L167 201" fill="none" stroke="${peach}" stroke-width="6" stroke-dasharray="7 4"/>`;break;
+ case 'double':subject=mascot(34,195,.82)+mascot(112,177,.75)+star(99,168,11);break;
+ default:subject=mascot();
+ }
+ return subject+star(28,174,7)+star(171,236,6);
+}
+function renderColaCan(c){
+ const uid='cola-'+c.id,parts=c.name.toUpperCase().split(' ');
+ // The brand lockup sits entirely within y=69..129; art begins below at y=160.
+ const first=parts.length>2?parts.slice(0,-1).join(' '):parts[0];
+ const second=parts.length>1?parts.at(-1):'SODA';
+ const nameSize=first.length>12?15:first.length>8?18:23;
+ const secondSize=second.length>8?18:second.length>5?21:26;
+ const rot={damage:-5,rate:5,hp:0,speed:-4,jump:4,ammo:-2,bullet:-7,reload:5,shield:0,vamp:3,bounce:-4,double:5}[c.id]||0;
+ return `<svg class="soda-illustration" viewBox="0 0 200 300" role="img" aria-label="${c.name}: collector soda can artwork" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+ <linearGradient id="${uid}-metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset=".45" stop-color="#98a2b1"/><stop offset=".75" stop-color="#5f6877"/><stop offset="1" stop-color="#e8edf3"/></linearGradient>
+ <linearGradient id="${uid}-body" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${c.deep}"/><stop offset=".19" stop-color="${c.can}"/><stop offset=".36" stop-color="${c.can}"/><stop offset=".72" stop-color="${c.deep}"/><stop offset="1" stop-color="#152033"/></linearGradient>
+ <linearGradient id="${uid}-gloss" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff00"/><stop offset=".12" stop-color="#ffffff55"/><stop offset=".26" stop-color="#ffffff0a"/><stop offset=".77" stop-color="#00000000"/><stop offset="1" stop-color="#00000066"/></linearGradient>
+ <clipPath id="${uid}-clip"><path d="M16 25 Q100 8 184 25 L180 269 Q100 284 20 269Z"/></clipPath>
+ </defs>
+ <ellipse cx="102" cy="287" rx="79" ry="9" fill="#020916" opacity=".45"/>
+ <path d="M16 25 Q100 8 184 25 L180 269 Q100 284 20 269Z" fill="url(#${uid}-body)" stroke="#0c1726" stroke-width="2"/>
+ <g clip-path="url(#${uid}-clip)">
+ <path d="M0 53 L200 53 L200 67 L0 67 Z" fill="#0b1729" opacity=".85"/>
+ <path d="M-8 139 L208 139 L208 151 L-8 151Z" fill="${c.accent}" stroke="#142038" stroke-width="4"/>
+ <path d="M0 244 L200 244 L200 260 L0 260Z" fill="#0c182b" opacity=".83"/>
+ <g opacity=".18" stroke="${c.accent}" stroke-width="5" fill="none"><circle cx="29" cy="197" r="64"/><circle cx="164" cy="195" r="59"/><path d="M-30 235 L220 157 M-30 195 L220 117"/></g>
+ <path d="M29 153 Q100 139 172 153 L170 241 Q100 258 30 241Z" fill="#ffffff10"/>
+ ${colaSceneSvg(c)}
+ <rect x="0" y="20" width="200" height="260" fill="url(#${uid}-gloss)"/>
+ <text x="100" y="48" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-size="10" font-weight="900" letter-spacing="2" fill="${c.accent}">SQUARE OFF // PERK COLA</text>
+ <g transform="rotate(${rot} 100 98)"><ellipse cx="100" cy="100" rx="74" ry="45" fill="#101928" stroke="${c.accent}" stroke-width="6"/><ellipse cx="100" cy="100" rx="69" ry="40" fill="none" stroke="#ffffffac" stroke-width="1.5" stroke-dasharray="4 4"/><text x="100" y="91" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-weight="900" font-size="${nameSize}" fill="#ffffff" paint-order="stroke" stroke="#000000" stroke-width="1.5">${first}</text><text x="100" y="120" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-weight="900" font-size="${secondSize}" fill="${c.accent}" paint-order="stroke" stroke="#000000" stroke-width="1.6">${second}</text></g>
+ <text x="100" y="255" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="9" font-weight="900" letter-spacing="1" fill="#ffffff">${c.tag}</text>
+ </g>
+ <!-- Complete metal seal: lid overlays all colored paint with no open gaps. -->
+ <path d="M16 25 Q100 9 184 25 L184 39 Q100 27 16 39Z" fill="url(#${uid}-metal)" stroke="#677382" stroke-width="2"/>
+ <ellipse cx="100" cy="25" rx="84" ry="17" fill="url(#${uid}-metal)" stroke="#dce0e5" stroke-width="2"/>
+ <ellipse cx="100" cy="24" rx="68" ry="10" fill="#7b8593" stroke="#e0e4e9" stroke-width="2"/>
+ <path d="M84 20 H117 Q125 22 119 28 H86 Q78 26 84 20Z" fill="#ccd2da" stroke="#606c7c" stroke-width="2"/>
+ <path d="M20 267 Q100 284 180 267 L181 276 Q100 295 19 276Z" fill="url(#${uid}-metal)" stroke="#525d6d" stroke-width="2"/>
+ </svg>`;
+}
 function renderColaCard(c,i){return `<button class="cola-card" data-i="${i}"><div class="cola-meta"><span><b>COLA 0${i+1}</b></span><span>${c.type}</span></div><div class="cola-stage">${renderColaCan(c)}</div><strong class="cola-title">${c.name}</strong><span class="cola-desc">${c.desc}</span><div class="cola-footer"><strong>[ ${i+1} ]</strong><span>GRAB THE CAN</span><i>+</i></div></button>`}
 function renderColaCard(c,i){return `<button class="cola-card" data-i="${i}"><div class="cola-meta"><span><b>COLA 0${i+1}</b></span><span>${c.type}</span></div><div class="cola-stage">${renderColaCan(c)}</div><strong class="cola-title">${c.name}</strong><span class="cola-desc">${c.desc}</span><div class="cola-footer"><strong>[ ${i+1} ]</strong><span>GRAB THE CAN</span><i>+</i></div></button>`}
 
@@ -278,7 +346,7 @@ function fullMenu(html){overlay.classList.add('menu-screen');showOverlay(html)}
 function menu(){
  state='menu';keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.62</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.63</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
