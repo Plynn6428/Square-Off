@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 1.5</title>
+<title>SQUARE OFF | PC 1.6</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -95,11 +95,54 @@ body{padding:19px 16px;background:radial-gradient(ellipse 40% 60% at 77% 0%,#213
 @media(max-height:670px) and (min-width:701px){.splash-main{min-height:100vh;padding-top:75px;padding-bottom:30px}.splash-title{font-size:clamp(66px,10.5vw,135px);margin:19px 0}.splash-actions{margin-top:20px}.splash-action.primary{height:70px;font-size:37px}.splash-subactions .splash-action{height:50px}.splash-scene{max-height:500px}.splash-mascot{scale:.78;transform-origin:center bottom}}
 @media(prefers-reduced-motion:reduce){.splash-mascot,.splash-vs{animation:none}}
 
+
+/* SQUARE OFF 1.6 -----------------------------------------------------------
+   Fullscreen PC gameplay and perk cola reward system.
+------------------------------------------------------------------------- */
+html,body{width:100%;height:100%;overflow:hidden}
+body{padding:0 !important;display:block;background:#071223}
+.wrap{width:100vw !important;height:100vh !important;position:relative}
+.topline,.foot{display:none !important}
+.game{position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;aspect-ratio:auto !important;border:0 !important;border-radius:0 !important;box-shadow:none !important}
+#hud{padding:18px 24px}
+#bottomHint{bottom:14px;font-size:12px}
+.game::after{opacity:.28}
+.overlay{padding:18px}
+.cola-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:24px 0 10px}
+.cola-card{position:relative;border:1px solid #556983;background:linear-gradient(180deg,#112135,#0d1728);border-radius:4px;padding:14px 14px 0;box-shadow:6px 6px 0 #06101d;cursor:pointer;text-align:left;transition:transform .16s,background .16s,border-color .16s}
+.cola-card:hover{transform:translateY(-6px);background:linear-gradient(180deg,#162b45,#111e31);border-color:#ffd34f}.cola-card:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.cola-meta{display:flex;justify-content:space-between;gap:8px;color:#afc2d9;font:800 10px Consolas,monospace;letter-spacing:.8px;text-transform:uppercase}.cola-meta b{color:#ffe07a}
+.cola-title{display:block;margin:12px 0 4px;font:900 clamp(18px,2.2vw,24px) Impact,'Arial Black',sans-serif;letter-spacing:.4px;color:#fff;text-transform:uppercase}
+.cola-desc{display:block;color:#b8c7d8;font:600 12px/1.5 'Trebuchet MS',sans-serif;min-height:52px}
+.cola-footer{display:flex;justify-content:space-between;align-items:center;margin:15px -14px 0;padding:11px 14px;background:#21364e;border-top:1px solid #4d637b;color:#e7edf3;font:800 10px Consolas,monospace;letter-spacing:1px}.cola-footer strong{color:#ffe07a}.cola-footer i{font-style:normal;color:#ffd34f;font-size:18px;line-height:1}
+.cola-stage{display:flex;justify-content:center;align-items:center;height:180px;margin:8px 0 10px}
+.soda-can{--can:#ff8f2e;--can-deep:#d86d11;position:relative;width:118px;height:164px;border-radius:20px 20px 28px 28px;background:linear-gradient(180deg,#ffffff14 0 6%,var(--can) 6%,var(--can-deep) 100%);border:2px solid #ffe7bd36;box-shadow:inset 0 0 0 2px #ffffff12,0 16px 30px #0007;overflow:hidden}
+.soda-can::before{content:'';position:absolute;left:0;right:0;top:0;height:20px;background:linear-gradient(180deg,#edf0f4,#8f98a4);border-bottom:1px solid #6c7684}.soda-can::after{content:'';position:absolute;left:50%;top:4px;transform:translateX(-50%);width:34px;height:10px;border-radius:10px;background:linear-gradient(180deg,#8d96a3,#d5dae0);box-shadow:0 0 0 2px #c8cdd3 inset}
+.can-shine{position:absolute;left:12px;top:16px;bottom:19px;width:18px;background:linear-gradient(180deg,#ffffff8a,#ffffff08 40%,#ffffff3b 82%,#ffffff00);border-radius:16px;transform:skew(-7deg)}.can-rim{position:absolute;left:0;right:0;bottom:0;height:16px;background:linear-gradient(180deg,#b8c0cb,#767f8d)}
+.can-label{position:absolute;left:10px;right:10px;top:33px;bottom:18px;border-radius:16px;background:linear-gradient(180deg,#ffffff18,#00000010 30%,#00000018 100%);border:1px solid #ffffff24;overflow:hidden}.can-band{position:absolute;left:0;right:0;top:8px;text-align:center;color:#ffffffea;font:900 10px/1 Consolas,monospace;letter-spacing:1.2px;text-transform:uppercase}
+.can-scene{position:absolute;left:12px;right:12px;top:28px;height:58px}.can-name{position:absolute;left:8px;right:8px;bottom:14px;text-align:center;color:#fff;font:900 16px/.96 Impact,'Arial Black',sans-serif;letter-spacing:.35px;text-transform:uppercase;text-shadow:0 2px 0 #0006}
+.sq{position:absolute;width:20px;height:20px;border-radius:5px;background:var(--can);border:2px solid #0d1a2c;box-shadow:inset 4px 4px 0 #ffffff20}.sq::before,.sq::after{content:'';position:absolute;top:6px;width:3px;height:4px;background:#0d1a2c;border-radius:2px}.sq::before{left:4px}.sq::after{right:4px}.sq .mouth{position:absolute;left:5px;right:5px;bottom:4px;height:3px;background:#0d1a2c;border-radius:3px}
+.sq.scared .mouth{left:6px;right:6px;bottom:3px;height:7px;border:2px solid #0d1a2c;background:transparent;border-radius:8px}.sq.flat .mouth{left:5px;right:5px;height:2px;bottom:4px}.sq.smile .mouth{left:4px;right:4px;bottom:4px;height:6px;border:2px solid #0d1a2c;border-top:none;background:transparent;border-radius:0 0 9px 9px}.sq.grit .mouth{left:4px;right:4px;bottom:5px;height:2px;background:#0d1a2c}
+.can-bullet{position:absolute;border-radius:999px;background:#1d2a3b;box-shadow:inset -5px -2px 0 #657488}.can-bullet::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);border-left:11px solid #1d2a3b;border-top:6px solid transparent;border-bottom:6px solid transparent}
+.can-heart,.can-shield,.can-wing,.can-arrow,.can-mag,.can-spark{position:absolute}.can-heart{width:20px;height:18px;left:40px;top:18px;transform:rotate(-45deg);background:#ffffffcf}.can-heart:before,.can-heart:after{content:'';position:absolute;width:20px;height:18px;border-radius:50%;background:#ffffffcf}.can-heart:before{top:-9px;left:0}.can-heart:after{left:9px;top:0}
+.can-shield{left:38px;top:10px;width:26px;height:31px;background:#ffffffcc;clip-path:polygon(50% 0%,100% 18%,100% 60%,50% 100%,0 60%,0 18%)}.can-wing{width:24px;height:12px;border-top:3px solid #ffffffd6;border-bottom:3px solid #ffffffd6;border-radius:20px;transform:skewX(-24deg)}
+.can-arrow{width:22px;height:4px;background:#ffffffde}.can-arrow::after{content:'';position:absolute;right:-8px;top:-4px;border-left:10px solid #ffffffde;border-top:6px solid transparent;border-bottom:6px solid transparent}.can-mag{width:15px;height:26px;background:#ffffffdc;border-radius:4px 4px 6px 6px;border:2px solid #d8dde2}.can-mag::before{content:'';position:absolute;left:2px;right:2px;top:5px;height:2px;background:#adb4be;box-shadow:0 5px 0 #adb4be,0 10px 0 #adb4be}.can-spark{width:8px;height:8px;background:#ffffffd8;transform:rotate(45deg)}
+.scene-damage .sq{left:10px;bottom:4px}.scene-damage .can-bullet{left:49px;top:13px;width:34px;height:12px;transform:rotate(-18deg)}.scene-damage .can-spark{left:82px;top:4px;box-shadow:12px 10px 0 #ffffffd8,-2px 15px 0 #ffffffd8}
+.scene-rate .sq{left:12px;bottom:3px}.scene-rate .can-bullet.one{left:52px;top:8px;width:24px;height:9px;transform:rotate(-8deg)}.scene-rate .can-bullet.two{left:60px;top:24px;width:24px;height:9px;transform:rotate(4deg)}.scene-rate .can-bullet.three{left:46px;top:39px;width:24px;height:9px;transform:rotate(14deg)}
+.scene-hp .sq{left:31px;bottom:0px}.scene-hp .can-heart{left:48px;top:8px}.scene-speed .sq{left:18px;bottom:3px}.scene-speed .can-arrow{left:45px;top:21px}.scene-speed .can-spark{left:73px;top:17px;box-shadow:-52px 16px 0 #ffffff80,-40px 19px 0 #ffffff80,-28px 22px 0 #ffffff80}
+.scene-jump .sq{left:18px;bottom:4px}.scene-jump .sq.two{left:58px;top:2px;scale:.95}.scene-jump .can-arrow{left:46px;top:8px;width:4px;height:24px}.scene-jump .can-arrow::after{right:-6px;top:-10px;transform:none;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #ffffffde;border-top:none}
+.scene-ammo .sq{left:9px;bottom:3px}.scene-ammo .can-mag{left:43px;top:10px;box-shadow:20px 8px 0 -2px #ffffffdc,40px 16px 0 -2px #ffffffdc}.scene-bullet .sq{left:8px;bottom:4px}.scene-bullet .sq.scared{left:18px;bottom:8px}.scene-bullet .can-bullet{left:43px;top:20px;width:46px;height:18px;transform:rotate(-8deg)}
+.scene-reload .sq{left:14px;bottom:4px}.scene-reload .can-arrow{left:46px;top:16px;width:20px;transform:rotate(20deg)}.scene-reload .can-arrow.two{left:39px;top:31px;transform:rotate(205deg)}.scene-shield .sq{left:13px;bottom:3px}.scene-shield .can-shield{left:46px;top:10px}.scene-shield .can-spark{left:78px;top:17px;box-shadow:-40px 8px 0 #ffffff80,-24px 20px 0 #ffffff80}
+.scene-vamp .sq{left:13px;bottom:3px}.scene-vamp .can-heart{left:54px;top:9px;scale:.9}.scene-vamp .can-arrow{left:42px;top:28px;width:18px;transform:rotate(-35deg)}.scene-bounce .sq{left:9px;bottom:2px}.scene-bounce .can-bullet{left:49px;top:10px;width:26px;height:10px;transform:rotate(18deg)}.scene-bounce .can-arrow{left:52px;top:34px;width:4px;height:20px;transform:rotate(80deg)}.scene-bounce .can-arrow::after{right:-5px;top:-7px;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:10px solid #ffffffde;border-top:none;transform:rotate(-90deg)}
+.scene-double .sq{left:17px;bottom:4px}.scene-double .sq.two{left:58px;bottom:22px}.scene-double .can-wing{left:10px;top:10px}.scene-double .can-wing.two{left:59px;top:6px;transform:scaleX(-1) skewX(-24deg)}
+.bot-cola-wrap{display:flex;justify-content:center;margin:16px auto 10px}.bot-cola .cola-card{cursor:default;max-width:310px;margin:0 auto}.bot-cola .cola-card:hover{transform:none}
+@media (max-width:920px){.cola-grid{grid-template-columns:1fr;gap:12px}.cola-card{display:grid;grid-template-columns:128px 1fr;gap:12px;align-items:center;padding:14px}.cola-stage{height:auto;margin:0}.cola-title{margin-top:0}.cola-desc{min-height:0}.cola-footer{grid-column:1/-1;margin:4px -14px -14px;padding:11px 14px}.soda-can{width:104px;height:146px}.can-name{font-size:14px}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.5</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.6</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -113,7 +156,7 @@ body{padding:19px 16px;background:radial-gradient(ellipse 40% 60% at 77% 0%,#213
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 1.5</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 1.6</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -132,20 +175,40 @@ const maps=[
  {name:'CROSSFIRE',seed:5,platforms:[{x:160,y:458,w:170,h:17},{x:375,y:380,w:150,h:17},{x:595,y:380,w:150,h:17},{x:790,y:458,w:170,h:17},{x:470,y:266,w:180,h:17}]}
 ];
 const ITEMS=[
- {id:'damage',mark:'DMG',name:'Heavy Rounds',desc:'+30% bullet damage.',type:'FIREPOWER'},
- {id:'rate',mark:'RPM',name:'Rapid Fire',desc:'Shoot 22% faster.',type:'FIREPOWER'},
- {id:'hp',mark:'HP+',name:'Big Heart',desc:'+35 maximum health.',type:'SURVIVAL'},
- {id:'speed',mark:'SPD',name:'Quick Feet',desc:'+13% movement speed.',type:'MOBILITY'},
- {id:'jump',mark:'JMP',name:'Spring Loaded',desc:'+15% jump power.',type:'MOBILITY'},
- {id:'ammo',mark:'MAG',name:'Extended Mag',desc:'+3 shots before reload.',type:'FIREPOWER'},
- {id:'bullet',mark:'VEL',name:'Hyper Velocity',desc:'+24% bullet speed.',type:'FIREPOWER'},
- {id:'reload',mark:'RLD',name:'Fast Hands',desc:'Reload 25% faster.',type:'FIREPOWER'},
- {id:'shield',mark:'DEF',name:'Shield Tech',desc:'Shield recharges 22% faster.',type:'SURVIVAL'},
- {id:'vamp',mark:'LIF',name:'Vampire',desc:'Heal 8 HP when you hit.',type:'SURVIVAL'},
- {id:'bounce',mark:'BNC',name:'Ricochet',desc:'Your bullets can bounce once.',type:'BALLISTICS'},
- {id:'double',mark:'2X',name:'Second Wind',desc:'Unlock one double jump.',type:'MOBILITY'},
+ {id:'damage',code:'DMG',name:'Lead Storm Cola',desc:'+30% bullet damage.',type:'FIREPOWER',can:'#d45454',deep:'#9e2d2d',scene:'damage'},
+ {id:'rate',code:'RAP',name:'Rapid Pop',desc:'Shoot 22% faster.',type:'FIREPOWER',can:'#ffd34f',deep:'#c99716',scene:'rate'},
+ {id:'hp',code:'HP+',name:'Brickhouse Brew',desc:'+35 maximum health.',type:'SURVIVAL',can:'#37b97c',deep:'#248e5d',scene:'hp'},
+ {id:'speed',code:'SPD',name:'Side Step Soda',desc:'+13% movement speed.',type:'MOBILITY',can:'#67df80',deep:'#33a149',scene:'speed'},
+ {id:'jump',code:'JMP',name:'Moon Hop Soda',desc:'+15% jump power.',type:'MOBILITY',can:'#9f74ff',deep:'#6b43cb',scene:'jump'},
+ {id:'ammo',code:'MAG',name:'Six Pack Soda',desc:'+3 shots before reload.',type:'FIREPOWER',can:'#5c92ff',deep:'#3769cd',scene:'ammo'},
+ {id:'bullet',code:'BIG',name:'Big Shot Soda',desc:'Bullets become 45% larger.',type:'BALLISTICS',can:'#ff972d',deep:'#d16813',scene:'bullet'},
+ {id:'reload',code:'RLD',name:'Quick Crack Cola',desc:'Reload 25% faster.',type:'FIREPOWER',can:'#f278b2',deep:'#c95389',scene:'reload'},
+ {id:'shield',code:'DEF',name:'Guard Pop',desc:'Shield recharges 22% faster.',type:'SURVIVAL',can:'#4ec8d6',deep:'#29909c',scene:'shield'},
+ {id:'vamp',code:'LIF',name:'Last Sip Soda',desc:'Heal 8 HP when you hit.',type:'SURVIVAL',can:'#ee5d74',deep:'#ba394f',scene:'vamp'},
+ {id:'bounce',code:'BNC',name:'Bank Shot Fizz',desc:'Bullets bounce one more time.',type:'BALLISTICS',can:'#79d8d0',deep:'#3ca89f',scene:'bounce'},
+ {id:'double',code:'2UP',name:'Double Up Soda',desc:'Unlock one double jump.',type:'MOBILITY',can:'#9fb6d8',deep:'#6d85a7',scene:'double'},
 ];
-function defaultStats(){return {damage:23,rate:.29,maxHp:100,speed:300,jump:920,ammo:7,bullet:850,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
+function renderScene(scene){
+ switch(scene){
+  case 'damage': return `<div class="can-scene scene-damage"><div class="sq grit"><i class="mouth"></i></div><div class="can-bullet"></div><div class="can-spark"></div></div>`;
+  case 'rate': return `<div class="can-scene scene-rate"><div class="sq"><i class="mouth"></i></div><div class="can-bullet one"></div><div class="can-bullet two"></div><div class="can-bullet three"></div></div>`;
+  case 'hp': return `<div class="can-scene scene-hp"><div class="sq smile"><i class="mouth"></i></div><div class="can-heart"></div></div>`;
+  case 'speed': return `<div class="can-scene scene-speed"><div class="sq"><i class="mouth"></i></div><div class="can-arrow"></div><div class="can-spark"></div></div>`;
+  case 'jump': return `<div class="can-scene scene-jump"><div class="sq flat"><i class="mouth"></i></div><div class="sq two smile"><i class="mouth"></i></div><div class="can-arrow"></div></div>`;
+  case 'ammo': return `<div class="can-scene scene-ammo"><div class="sq"><i class="mouth"></i></div><div class="can-mag"></div></div>`;
+  case 'bullet': return `<div class="can-scene scene-bullet"><div class="sq scared"><i class="mouth"></i></div><div class="can-bullet"></div></div>`;
+  case 'reload': return `<div class="can-scene scene-reload"><div class="sq flat"><i class="mouth"></i></div><div class="can-arrow"></div><div class="can-arrow two"></div></div>`;
+  case 'shield': return `<div class="can-scene scene-shield"><div class="sq"><i class="mouth"></i></div><div class="can-shield"></div><div class="can-spark"></div></div>`;
+  case 'vamp': return `<div class="can-scene scene-vamp"><div class="sq"><i class="mouth"></i></div><div class="can-heart"></div><div class="can-arrow"></div></div>`;
+  case 'bounce': return `<div class="can-scene scene-bounce"><div class="sq"><i class="mouth"></i></div><div class="can-bullet"></div><div class="can-arrow"></div></div>`;
+  case 'double': return `<div class="can-scene scene-double"><div class="sq flat"><i class="mouth"></i></div><div class="sq two smile"><i class="mouth"></i></div><div class="can-wing"></div><div class="can-wing two"></div></div>`;
+ }
+ return '';
+}
+function renderColaCan(c){return `<div class="soda-can" style="--can:${c.can};--can-deep:${c.deep}"><div class="can-shine"></div><div class="can-rim"></div><div class="can-label"><div class="can-band">PERK COLA</div>${renderScene(c.scene)}<div class="can-name">${c.name.replace(' ','<br>')}</div></div></div>`}
+function renderColaCard(c,i){return `<button class="cola-card" data-i="${i}"><div class="cola-meta"><span><b>COLA 0${i+1}</b></span><span>${c.type}</span></div><div class="cola-stage">${renderColaCan(c)}</div><strong class="cola-title">${c.name}</strong><span class="cola-desc">${c.desc}</span><div class="cola-footer"><strong>[ ${i+1} ]</strong><span>GRAB THE CAN</span><i>+</i></div></button>`}
+
+function defaultStats(){return {damage:23,rate:.29,maxHp:100,speed:300,jump:920,ammo:7,bullet:850,bulletSize:1,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
 function makePlayer(id){let x=id===0?140:946;return {id,x,y:GROUND-60,w:48,h:60,vx:0,vy:0,dir:id===0?1:-1,grounded:true,jumps:0,hp:100,ammo:7,reload:0,shootCD:0,shieldTime:0,shieldCD:0,hitflash:0,faceHit:0,faceShoot:0,invuln:0,aim:0,aimTilt:0,dead:false,stats:defaultStats(),upgrades:[],color:id===0?'#ff595b':'#4594ff',aiHop:0,dropTime:0,dropHeld:false};}
 function cap(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
 function rand(a,b){return a+Math.random()*(b-a)}
@@ -157,7 +220,7 @@ function fullMenu(html){overlay.classList.add('menu-screen');showOverlay(html)}
 function menu(){
  state='menu';keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.5</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.6</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -204,26 +267,26 @@ function help(){state='help';fullMenu(`<section class="splash-page" aria-label="
  <div class="help-line"><span>Shoot</span><div class="kbd-list"><span class="key">SPACE</span><span class="key">CLICK</span></div></div>
  <div class="help-line"><span>Shield</span><div class="kbd-list"><span class="key">E</span><span class="key">F</span></div></div>
  <div class="help-line"><span>Pause</span><div class="kbd-list"><span class="key">ESC</span></div></div>
- </div><div class="help-tile"><h3>WIN THE FIGHT</h3><p><strong>First to five rounds</strong> wins the match.</p><p>Beat the <strong>bot</strong> in a fast 1v1 shootout.</p><p>Lose a round? Choose <strong>one of three upgrade cards</strong> to turn the tables. The bot upgrades too.</p><p>Time your shield to <strong>reflect bullets</strong>.</p></div></div>
+ </div><div class="help-tile"><h3>WIN THE FIGHT</h3><p><strong>First to five rounds</strong> wins the match.</p><p>Beat the <strong>bot</strong> in a fast 1v1 shootout.</p><p>Lose a round? Choose <strong>one of three perk colas</strong> to turn the tables. The bot grabs one too.</p><p>Time your shield to <strong>reflect bullets</strong>.</p></div></div>
  <button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('backBtn').onclick=menu}
 function showOverlay(html){panel.innerHTML=html;overlay.classList.remove('hidden')}
 function hideOverlay(){overlay.classList.remove('menu-screen');overlay.classList.add('hidden')}
 function startMatch(){mouse.down=false;mouse.used=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);startRound(true)}
-function startRound(first=false){mouse.down=false;arena=maps[arenaIndex];const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.x=i===0?138:948;p.y=GROUND-p.h;p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;});bullets=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;aiThink=0;aiPlan={move:0,jump:false,block:false};state='playing';hideOverlay();hud.classList.add('show');hint.classList.add('show');hint.textContent='A/D MOVE • W JUMP • S DROP • MOUSE AIM • SPACE / CLICK SHOOT • E/F SHIELD • ESC PAUSE';$('name1').textContent='RED • PLAYER 1';$('name2').textContent='BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS');else toast(`ROUND ${round} • ${arena.name}`);
+function startRound(first=false){mouse.down=false;arena=maps[arenaIndex];const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.x=i===0?138:948;p.y=GROUND-p.h;p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;});bullets=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;aiThink=0;aiPlan={move:0,jump:false,block:false};state='playing';hideOverlay();hud.classList.add('show');hint.classList.add('show');hint.textContent='A/D MOVE • W JUMP • S DROP • MOUSE AIM • SPACE / CLICK SHOOT • E/F SHIELD • ESC PAUSE';$('name1').textContent='RED • PLAYER 1';$('name2').textContent='BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS • LOSE A ROUND TO PICK A COLA');else toast(`ROUND ${round} • ${arena.name}`);
  const coarse=window.matchMedia('(pointer:coarse)').matches;touchEl.style.display='none';updateHUD();}
 function updateHUD(){if(!p1||!p2)return;$('hp1').style.width=`${100*cap(p1.hp/p1.stats.maxHp,0,1)}%`;$('hp2').style.width=`${100*cap(p2.hp/p2.stats.maxHp,0,1)}%`;$('stats1').textContent=`${Math.ceil(Math.max(0,p1.hp))} HP  •  ${p1.reload>0?'RELOADING':p1.ammo+' / '+p1.stats.ammo+' AMMO'}`;$('stats2').textContent=`${Math.ceil(Math.max(0,p2.hp))} HP  •  ${p2.reload>0?'RELOADING':p2.ammo+' / '+p2.stats.ammo+' AMMO'}`}
 function toast(msg,red=false){const e=document.createElement('div');e.className='toast'+(red?' red':'');e.textContent=msg;toasts.appendChild(e);setTimeout(()=>e.remove(),1800)}
 function burst(x,y,col,n=12,power=210){for(let i=0;i<n;i++){let a=rand(0,TAU),speed=rand(power*.25,power);particles.push({x,y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,life:rand(.25,.67),max:.67,r:rand(2,5),col})}if(particles.length>500)particles.splice(0,100)}
 function poptext(x,y,msg,col='#fff'){texts.push({x,y,msg,col,life:1.05})}
-function applyCard(p,card){const s=p.stats;switch(card.id){case'damage':s.damage*=1.3;break;case'rate':s.rate=Math.max(.07,s.rate*.78);break;case'hp':s.maxHp+=35;break;case'speed':s.speed*=1.13;break;case'jump':s.jump*=1.15;break;case'ammo':s.ammo+=3;break;case'bullet':s.bullet*=1.24;break;case'reload':s.reload*=.75;break;case'shield':s.shield*=.78;break;case'vamp':s.vamp+=8;break;case'bounce':s.bounce+=1;break;case'double':s.double=1;break;}p.upgrades.push(card.name)}
+function applyCard(p,card){const s=p.stats;switch(card.id){case'damage':s.damage*=1.3;break;case'rate':s.rate=Math.max(.07,s.rate*.78);break;case'hp':s.maxHp+=35;break;case'speed':s.speed*=1.13;break;case'jump':s.jump*=1.15;break;case'ammo':s.ammo+=3;break;case'bullet':s.bulletSize*=1.45;break;case'reload':s.reload*=.75;break;case'shield':s.shield*=.78;break;case'vamp':s.vamp+=8;break;case'bounce':s.bounce+=1;break;case'double':s.double=1;break;}p.upgrades.push(card.name)}
 function cardOptions(){let arr=ITEMS.slice();for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr.slice(0,3)}
 function finishRound(win){if(state!=='playing')return;winner=win;loser=1-win;scores[win]++;shake=14;burst(win===0?p2.x+p2.w/2:p1.x+p1.w/2,win===0?p2.y+p2.h*.47:p1.y+p1.h*.47,win===0?'#ff595b':'#4594ff',32,370);sound(250,.32,'sawtooth',.1,.25);state='roundover';roundEndTime=.95;updateHUD();}
 function postRound(){const champ=scores[0]>=5||scores[1]>=5;
- if(champ){state='gameover';const name=winner===0?'RED':'BLUE BOT';showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> FINAL WHISTLE / MATCH COMPLETE</div><div class="result-kicker">FIRST TO FIVE</div><h2 class="roundheading ${winner===0?'cyan':'coral'}">${name} <span>TAKES IT.</span></h2><div class="result-score"><span>${scores[0]}</span><em>—</em><span>${scores[1]}</span></div><p class="subtitle">PLAYER 1: ${p1.upgrades.length} UPGRADES <span class="sep">//</span> BOT: ${p2.upgrades.length} UPGRADES</p><div class="buttonrow"><button class="btn" id="rematch">RUN IT BACK</button><button class="btn secondary" id="toMenu">MAIN MENU</button></div></div>`);$('rematch').onclick=startMatch;$('toMenu').onclick=menu;return}
+ if(champ){state='gameover';const name=winner===0?'RED':'BLUE BOT';showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> FINAL WHISTLE / MATCH COMPLETE</div><div class="result-kicker">FIRST TO FIVE</div><h2 class="roundheading ${winner===0?'cyan':'coral'}">${name} <span>TAKES IT.</span></h2><div class="result-score"><span>${scores[0]}</span><em>—</em><span>${scores[1]}</span></div><p class="subtitle">PLAYER 1: ${p1.upgrades.length} COLAS <span class="sep">//</span> BOT: ${p2.upgrades.length} COLAS</p><div class="buttonrow"><button class="btn" id="rematch">RUN IT BACK</button><button class="btn secondary" id="toMenu">MAIN MENU</button></div></div>`);$('rematch').onclick=startMatch;$('toMenu').onclick=menu;return}
  const opts=cardOptions();const lose=loser===0?'RED':'BLUE BOT';
- if(loser===1){const choice=opts[Math.floor(Math.random()*opts.length)];applyCard(p2,choice);state='botdraft';showOverlay(`<div class="result-panel bot-result"><div class="eyebrow"><span class="nib"></span> UPGRADE PHASE / ROUND ${round}</div><div class="result-kicker">COMEBACK PROTOCOL</div><h2 class="roundheading coral">THE BOT <span>EVOLVED.</span></h2><div class="bot-pick"><div class="bot-pick-mark">${choice.mark}</div><div><small>${choice.type}</small><strong>${choice.name}</strong><p>${choice.desc}</p></div></div><div class="buttonrow"><button class="btn" id="continueBtn">NEXT ROUND <span> / ENTER</span></button></div></div>`);$('continueBtn').onclick=nextRound;return}
- state='draft';showOverlay(`<div class="draft-panel"><div class="draft-top"><div><div class="eyebrow"><span class="nib"></span> COMEBACK PROTOCOL / ROUND ${round}</div><h2 class="roundheading ${loser===0?'cyan':'coral'}">${lose}, <span>YOUR MOVE.</span></h2><p class="subtitle">You lost the round. Pick a permanent upgrade and change the game.</p></div><div class="pick-indicator"><small>YOUR CHOICE</small><b>01 <span>OF</span> 03</b></div></div><div class="cards">${opts.map((c,i)=>`<button class="card" data-i="${i}"><span class="card-top"><span>CHIP 0${i+1}</span><span>${c.type}</span></span><span class="cicon">${c.mark}</span><strong>${c.name}</strong><span class="desc">${c.desc}</span><span class="num"><b>[ ${i+1} ]</b> EQUIP UPGRADE <i>+</i></span></button>`).join('')}</div><div class="draft-footer"><span>BUILD YOUR OWN UNFAIR ADVANTAGE</span><span>SELECT WITH <b>1, 2, 3</b> OR CLICK</span></div></div>`);
- panel.querySelectorAll('.card').forEach(b=>b.onclick=()=>pickCard(opts,Number(b.dataset.i)));
+ if(loser===1){const choice=opts[Math.floor(Math.random()*opts.length)];applyCard(p2,choice);state='botdraft';showOverlay(`<div class="result-panel bot-result"><div class="eyebrow"><span class="nib"></span> COLA BREAK / ROUND ${round}</div><div class="result-kicker">BOT PERK UNLOCKED</div><h2 class="roundheading coral">THE BOT <span>CRACKED ONE OPEN.</span></h2><div class="bot-cola-wrap bot-cola">${renderColaCard(choice,0).replace('data-i="0"','').replace('button class="cola-card"','div class="cola-card"').replace('</button>','</div>')}</div><div class="buttonrow"><button class="btn" id="continueBtn">NEXT ROUND <span> / ENTER</span></button></div></div>`);$('continueBtn').onclick=nextRound;return}
+ state='draft';showOverlay(`<div class="draft-panel"><div class="draft-top"><div><div class="eyebrow"><span class="nib"></span> PERK COLA / ROUND ${round}</div><h2 class="roundheading ${loser===0?'cyan':'coral'}">${lose}, <span>PICK YOUR POP.</span></h2><p class="subtitle">You lost the round. Grab one permanent cola perk and swing the fight back your way.</p></div><div class="pick-indicator"><small>YOUR CHOICE</small><b>01 <span>OF</span> 03</b></div></div><div class="cola-grid">${opts.map((c,i)=>renderColaCard(c,i)).join('')}</div><div class="draft-footer"><span>PERMANENT PERK COLAS STACK ALL MATCH LONG</span><span>SELECT WITH <b>1, 2, 3</b> OR CLICK</span></div></div>`);
+ panel.querySelectorAll('.cola-card').forEach(b=>b.onclick=()=>pickCard(opts,Number(b.dataset.i)));
  window.currentOptions=opts;
 }
 function pickCard(opts,i){if(state!=='draft'||!opts[i])return;applyCard(loser===0?p1:p2,opts[i]);sound(680,.15,'triangle',.07,1.5);nextRound()}
@@ -231,7 +294,7 @@ function nextRound(){if(state!=='draft'&&state!=='botdraft')return;round++;arena
 function jump(p){if(p.dead)return;if(p.grounded||(p.stats.double>0&&p.jumps<=p.stats.double)){p.vy=-p.stats.jump;p.grounded=false;p.jumps++;burst(p.x+p.w/2,p.y+p.h,'#b6e4ff',7,120);sound(260,.10,'sine',.055,1.7)}}
 function block(p){if(p.shieldCD>0||p.dead)return;p.shieldTime=.5;p.shieldCD=p.stats.shield;burst(p.x+p.w/2,p.y+p.h/2,p.color,13,115);sound(440,.28,'triangle',.09,.5)}
 function shoot(p){if(p.dead||p.shootCD>0||p.shieldTime>0)return;if(p.ammo<=0){if(p.reload<=0)p.reload=p.stats.reload;return}p.shootCD=p.stats.rate;p.ammo--;if(p.ammo<=0)p.reload=p.stats.reload;const angle=p.aim+rand(-.016,.016),dx=Math.cos(angle),dy=Math.sin(angle),cx=p.x+p.w/2,cy=p.y+p.h*.47;
- const offset=27;bullets.push({x:cx+dx*offset,y:cy+dy*offset,px:cx,py:cy,vx:dx*p.stats.bullet,vy:dy*p.stats.bullet,owner:p.id,damage:p.stats.damage,life:1.85,bounces:p.stats.bounce,r:5.5,col:p.color});p.faceShoot=.16;p.vx-=dx*37;p.vy-=dy*19;burst(cx+dx*25,cy+dy*25,p.color,5,120);sound(p.id===0?300:260,.08,'square',.028,.52)}
+ const offset=27;bullets.push({x:cx+dx*offset,y:cy+dy*offset,px:cx,py:cy,vx:dx*p.stats.bullet,vy:dy*p.stats.bullet,owner:p.id,damage:p.stats.damage,life:1.85,bounces:p.stats.bounce,r:5.5*(p.stats.bulletSize||1),col:p.color});p.faceShoot=.16;p.vx-=dx*37;p.vy-=dy*19;burst(cx+dx*25,cy+dy*25,p.color,5,120);sound(p.id===0?300:260,.08,'square',.028,.52)}
 function handleHuman(p,dt){let left,right,jumpKey,dropKey,shootKey,blockKey,tiltUp,tiltDown;
  left=keys.has('KeyA')||touch.left;right=keys.has('KeyD')||touch.right;jumpKey=keys.has('KeyW')||touch.jump;dropKey=keys.has('KeyS');shootKey=keys.has('Space')||touch.shoot||mouse.down;blockKey=keys.has('KeyE')||keys.has('KeyF')||touch.block;tiltUp=keys.has('KeyQ');tiltDown=false;
  const dir=(right?1:0)-(left?1:0);p.vx=towards(p.vx,dir*p.stats.speed,(p.grounded?2700:1750)*dt);
