@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 1.7</title>
+<title>SQUARE OFF | PC 1.8</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -237,11 +237,58 @@ body{padding:0 !important;display:block;background:#071223}
 .vend-bot .vend-shelf{grid-template-columns:1fr;max-width:325px;margin:auto}.vend-bot .vend-slot{cursor:default;pointer-events:none}.vend-bot .vend-slot .cola-stage{height:190px}.vend-bot .vend-details{min-height:75px}
 @media(max-height:770px) and (min-width:800px){.vend h2{font-size:42px}.vend-sub{margin-bottom:6px}.vend-machine{padding:8px 15px}.vend-shelf{padding:6px 10px}.vend-slot .cola-stage{height:clamp(155px,27vh,205px)}.vend-details{min-height:78px}.vend-name{font-size:22px}.vend-desc{font-size:14px}.vend-foot{margin-top:8px}.vend-machine-header{padding-bottom:7px}}
 @media(max-width:760px){.overlay.vend-screen{padding:12px}.vend-top{font-size:9px;letter-spacing:1px}.vend h2{font-size:43px}.vend-sub{font-size:12px}.vend-machine{padding:7px;border-width:5px}.vend-shelf{gap:3px;padding:5px}.vend-slot{padding:1px}.vend-slot .cola-stage{height:clamp(120px,24vh,205px)}.vend-name{font-size:15px}.vend-desc{font-size:11px}.vend-details{min-height:95px}.vend-foot{font-size:9px;flex-wrap:wrap}.vend-number{font-size:8px}}
+
+/* PC 1.8 / FIGHTER-CENTERED PERK SELECTION */
+.overlay.vend-screen{background:radial-gradient(circle at 51% 74%,#2e435a,#121927 49%,#070d19 100%);padding:0;overflow:hidden;backdrop-filter:none}
+.overlay.vend-screen .panel{width:100%;height:100%;max-height:100%;padding:0;display:flex;align-items:center;justify-content:center}
+.rounds-draft{position:relative;width:100%;height:100%;min-height:580px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 88%,#68637180,transparent 50%),repeating-linear-gradient(120deg,#ffffff04 0 2px,transparent 2px 58px),#141825}
+.rounds-head{position:absolute;top:19px;left:3vw;right:3vw;z-index:12;display:flex;justify-content:space-between;gap:12px;font:800 clamp(10px,1vw,13px) Consolas,monospace;letter-spacing:2px;color:#d2def0}.rounds-id{color:#ffe17e}
+.rounds-title{position:absolute;top:5%;left:0;right:0;text-align:center;z-index:10;pointer-events:none}.rounds-title h2{font:italic 900 clamp(43px,5vw,77px)/.95 Impact,'Arial Black',sans-serif;color:#ffe17e;margin:0;text-shadow:5px 7px #070d18,0 0 18px #ffdc6333}.rounds-title p{font:700 clamp(13px,1.2vw,18px) 'Trebuchet MS',sans-serif;color:#e4e5ee;text-shadow:0 2px 7px #000e;margin:11px 0}
+.rounds-display{position:absolute;inset:0;overflow:hidden}
+.rounds-rays{position:absolute;inset:0;background:conic-gradient(from 0deg at 50% 88%,#ffd16d17 0deg,transparent 24deg,#ffcf7b0a 32deg,transparent 64deg,#9da9cb15 72deg,transparent 104deg,#ffc05d10 112deg,transparent 147deg,#4db2df14 165deg,transparent 208deg,#ffe07517 225deg,transparent 275deg,#ffdb6c18 290deg,transparent 336deg);opacity:.7}
+.rounds-floor{position:absolute;bottom:0;left:0;right:0;height:17%;background:linear-gradient(180deg,#26303f,#101725);border-top:5px solid #617383;box-shadow:0 -12px 40px #6b8a9b29;z-index:1}
+.rounds-hero-wrap{position:absolute;left:50%;bottom:3%;width:min(34vw,440px);height:min(62vh,600px);transform:translateX(-50%);z-index:5;pointer-events:none}
+.rounds-hero{position:absolute;inset:0;filter:drop-shadow(9px 16px 2px #05081683)}
+.hero-aura{position:absolute;inset:5%;border-radius:50%;background:radial-gradient(ellipse at 50% 50%,#ffc97948,transparent 69%);filter:blur(16px)}
+.hero-body{position:absolute;left:16%;right:16%;top:18%;bottom:12%;background:var(--fighter-color);border:clamp(5px,.7vw,10px) solid #121725;border-radius:20% 20% 25% 25%;box-shadow:inset 18px 15px 0 #ffffff25,inset -20px -24px 0 #00000020;z-index:5;transform:rotate(-5deg)}
+.hero-eyes{position:absolute;top:32%;left:23%;right:23%;display:flex;justify-content:space-between}.hero-eyes b{width:clamp(13px,2vw,24px);height:clamp(14px,2.3vw,29px);background:#111927;border-radius:50%;transform:rotate(4deg)}
+.hero-mouth{position:absolute;left:38%;bottom:21%;width:23%;height:12%;background:#0c1423;border-radius:18px;box-shadow:inset 0 -6px 0 #fbefe2;transform:rotate(-5deg)}
+.hero-limb{position:absolute;background:var(--fighter-color);border:clamp(4px,.6vw,9px) solid #111727;border-radius:30px;z-index:3}
+.hero-limb.arm{width:37%;height:12%;top:45%}.hero-limb.arm.left{left:-9%;transform:rotate(-37deg)}.hero-limb.arm.right{right:-9%;transform:rotate(28deg)}.hero-limb.leg{width:13%;height:22%;bottom:0}.hero-limb.leg.left{left:27%;transform:rotate(14deg)}.hero-limb.leg.right{right:27%;transform:rotate(-14deg)}
+.hero-shadow{position:absolute;bottom:0;left:16%;right:16%;height:6%;border-radius:50%;background:#04071099;filter:blur(10px)}
+.hero-anger{position:absolute;z-index:6;top:11%;right:12%;font:900 80px Impact,sans-serif;color:#ffdc5e;transform:rotate(28deg)}
+.rounds-nameplate{position:absolute;left:17%;right:17%;bottom:2%;background:#101929dc;border:2px solid #ffe089;color:#fff;text-align:center;padding:8px 10px;font:900 clamp(16px,2vw,25px) Impact,sans-serif;letter-spacing:2px;z-index:8;transform:rotate(-3deg)}
+.rounds-product{position:absolute;z-index:7;width:clamp(190px,20vw,300px);text-align:center}
+.rounds-pos-0{left:3%;top:24%;transform:rotate(-10deg)}
+.rounds-pos-1{left:50%;top:18%;transform:translateX(-50%) rotate(4deg)}
+.rounds-pos-2{right:3%;top:24%;transform:rotate(10deg)}
+.rounds-product .vend-slot{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0;background:transparent;filter:drop-shadow(0 8px 9px #0007)}
+.rounds-product .cola-stage{height:clamp(190px,29vh,300px);width:100%;margin:0}
+.rounds-product .soda-illustration{width:auto;height:100%;max-width:100%;filter:drop-shadow(7px 10px 6px #0008)}
+.rounds-product .vend-details{width:100%;min-height:0;background:#081425d9;border:2px solid #67809b;border-radius:7px;padding:12px 12px 14px;margin:1px 0 0;box-shadow:0 8px 0 #0004}
+.rounds-product .vend-name{font-size:clamp(22px,2.1vw,31px);color:#ffffff}
+.rounds-product .vend-desc{font-size:clamp(14px,1.25vw,19px);color:#ffe27d;margin-top:4px}
+.rounds-product .vend-number{font-size:11px;color:#b7d0e7}
+.rounds-product .vend-rail{display:none}
+.rounds-product .vend-slot:hover,.rounds-product .vend-slot:focus-visible{transform:translateY(-10px) scale(1.075);filter:drop-shadow(0 0 20px #ffe18b);z-index:15}
+.rounds-product .vend-slot:hover .vend-details,.rounds-product .vend-slot:focus-visible .vend-details{border-color:#ffed8d;background:#111f35}
+.rounds-controls{position:absolute;left:2%;right:2%;bottom:1%;display:flex;justify-content:space-between;gap:12px;z-index:12;color:#cbd8e6;font:800 12px Consolas,monospace;letter-spacing:1px;text-shadow:1px 2px #000}.rounds-controls strong{color:#ffe079}
+.rounds-bot .rounds-pos-1{left:50%;top:22%}.rounds-bot .rounds-hero-wrap{left:28%;width:30vw}.rounds-bot .rounds-pos-1{left:71%}.rounds-next{position:absolute;bottom:6%;left:40%;right:0;z-index:12}
+@media(max-width:950px){.rounds-hero-wrap{width:38vw;height:53vh}.rounds-pos-0{left:1%;top:26%}.rounds-pos-2{right:1%;top:26%}.rounds-product{width:28vw}.rounds-product .cola-stage{height:25vh}.rounds-product .vend-details{padding:7px}.rounds-product .vend-name{font-size:18px}.rounds-product .vend-desc{font-size:12px}.rounds-controls{font-size:9px}}
+@media(max-height:720px) and (min-width:800px){.rounds-title{top:3%}.rounds-title h2{font-size:45px}.rounds-title p{margin:5px}.rounds-pos-0,.rounds-pos-2{top:20%}.rounds-pos-1{top:17%}.rounds-product .cola-stage{height:25vh}.rounds-product .vend-details{padding:7px}.rounds-product .vend-name{font-size:21px}.rounds-product .vend-desc{font-size:13px}.rounds-hero-wrap{height:55vh}}
+
+/* Keep the fighter expressive and visible below the three cola choices. */
+.rounds-hero .hero-body{width:auto;height:auto}
+.rounds-hero-wrap{height:min(50vh,455px);width:min(36vw,460px);bottom:1%;z-index:8}
+.rounds-pos-1{top:16%}
+.rounds-product .cola-stage{height:clamp(176px,27vh,275px)}
+.rounds-pos-1 .vend-details{position:relative;z-index:10}
+@media(max-height:720px) and (min-width:800px){.rounds-hero-wrap{height:47vh}.rounds-product .cola-stage{height:23vh}.rounds-pos-1{top:14%}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.7</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.8</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -255,7 +302,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 1.7</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 1.8</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -369,7 +416,20 @@ function renderColaCan(c){
 }
 
 function renderColaCard(c,i){return `<button class="vend-slot" data-i="${i}" aria-label="${c.name}. ${c.desc}"><div class="cola-stage">${renderColaCan(c)}</div><div class="vend-details"><span class="vend-number">0${i+1} // ${c.type}</span><strong class="vend-name">${c.name}</strong><span class="vend-desc">${c.desc}</span></div><div class="vend-rail"></div></button>`}
-function vendingMarkup(opts,isBot=false){return `<div class="vend ${isBot?'vend-bot':''}"><div class="vend-top"><span><i class="vend-lamp"></i> SQUARE OFF / PERK DISPENSER</span><span>ROUND ${round} // ${isBot?'RIVAL PURCHASE':'BONUS POWER'}</span></div><h2>${isBot?'THE BOT GOT A COLA!':'PICK YOUR POP!'}</h2><p class="vend-sub">${isBot?'Your rival just powered up.':'You lost the round. Choose one permanent perk. Hover a can to inspect it.'}</p><section class="vend-machine"><div class="vend-machine-header"><strong>POWER UP YOUR COMEBACK</strong><span>FRESHLY STOCKED / ICE COLD</span></div><div class="vend-shelf">${opts.map((c,i)=>renderColaCard(c,i)).join('')}</div><div class="vend-foot"><span>PERK COLAS STACK ALL MATCH LONG</span><span class="vend-display">${isBot?'NEXT ROUND TO CONTINUE':'PRESS 1 / 2 / 3 OR CLICK A CAN'}</span></div></section>${isBot?'<div class="buttonrow"><button class="btn" id="continueBtn">NEXT ROUND / ENTER</button></div>':''}</div>`}
+function vendingMarkup(opts,isBot=false){
+ const color=isBot?'#5fa7ff':'#ff5965',name=isBot?'BLUE BOT':'RED FIGHTER';
+ const fig=`<div class="rounds-hero" style="--fighter-color:${color}" aria-hidden="true"><div class="hero-aura"></div><div class="hero-anger">〰</div><div class="hero-limb leg left"></div><div class="hero-limb leg right"></div><div class="hero-limb arm left"></div><div class="hero-limb arm right"></div><div class="hero-body"><div class="hero-eyes"><b></b><b></b></div><div class="hero-mouth"></div></div><div class="hero-shadow"></div></div>`;
+ const slots=opts.map((c,i)=>`<div class="rounds-product rounds-pos-${isBot?1:i}">${renderColaCard(c,i)}</div>`).join('');
+ return `<div class="rounds-draft ${isBot?'rounds-bot':''}">
+  <div class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF // PERK BREAK</div><div>ROUND ${round} / ${isBot?'BOT IS UPGRADING':'YOUR COMEBACK'}</div></div>
+  <div class="rounds-title"><h2>${isBot?'RIVAL REFILL':'PICK YOUR POP'}</h2><p>${isBot?'The bot cracked open a new perk.':'Pick one of three sodas to power up your fighter.'}</p></div>
+  <div class="rounds-display"><div class="rounds-rays"></div><div class="rounds-hero-wrap">${fig}<div class="rounds-nameplate">${name}</div></div>${slots}
+   <div class="rounds-floor"></div>
+  </div>
+  <div class="rounds-controls"><span>PERKS STACK FOR THE WHOLE MATCH</span><strong>${isBot?'NEXT ROUND TO CONTINUE':'HOVER TO INSPECT · CLICK OR PRESS 1 / 2 / 3'}</strong></div>
+  ${isBot?'<div class="buttonrow rounds-next"><button class="btn" id="continueBtn">NEXT ROUND / ENTER</button></div>':''}
+ </div>`;
+}
 function defaultStats(){return {damage:23,rate:.29,maxHp:100,speed:300,jump:920,ammo:7,bullet:850,bulletSize:1,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
 function makePlayer(id){let x=id===0?140:946;return {id,x,y:GROUND-60,w:48,h:60,vx:0,vy:0,dir:id===0?1:-1,grounded:true,jumps:0,hp:100,ammo:7,reload:0,shootCD:0,shieldTime:0,shieldCD:0,hitflash:0,faceHit:0,faceShoot:0,invuln:0,aim:0,aimTilt:0,dead:false,stats:defaultStats(),upgrades:[],color:id===0?'#ff595b':'#4594ff',aiHop:0,dropTime:0,dropHeld:false};}
 function cap(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
@@ -385,7 +445,7 @@ let musicEnabled=true,musicTheme='menu',musicStarted=false,musicTimer=null,music
 try{const pref=JSON.parse(localStorage.getItem('square-off-pc-settings')||'{}');if(typeof pref.musicEnabled==='boolean')musicEnabled=pref.musicEnabled}catch(e){}
 const BEATS={
  menu:{bpm:114,bass:[43,null,43,46,48,null,46,null,43,null,50,48,46,null,41,null],lead:[null,67,null,70,null,72,70,null,null,74,null,72,null,70,67,null],kick:[0,8],snare:[4,12],hat:[0,2,4,6,8,10,12,14]},
- battle:{bpm:154,bass:[41,41,48,41,43,43,50,43,41,41,48,41,36,36,38,39],lead:[65,null,68,70,null,72,70,null,75,null,72,70,68,null,65,63],kick:[0,4,8,10,12],snare:[4,12],hat:[0,2,3,4,6,7,8,10,11,12,14,15]},
+ battle:{bpm:132,bass:[29,null,29,29,32,null,29,27,29,null,36,34,27,null,27,32],lead:[null,null,null,null,null,null,53,null,null,null,null,null,51,null,null,null],kick:[0,3,6,8,10,14],snare:[4,12],hat:[0,2,4,6,8,10,12,14]},
  cola:{bpm:128,bass:[48,null,48,55,51,null,51,58,46,null,46,53,43,null,43,50],lead:[72,75,79,null,82,79,75,null,70,74,77,null,79,77,74,null],kick:[0,4,8,12],snare:[4,12],hat:[0,2,4,6,8,10,12,14]}
 };
 function noteHz(n){return 440*Math.pow(2,(n-69)/12)}
@@ -406,11 +466,11 @@ function musicSchedule(){
  let ahead=0;
  while(musicNext<audio.currentTime+.15&&ahead++<16){
   const j=musicStep%16,t=musicNext,b=track.bass[j],n=track.lead[j];
-  if(track.kick.includes(j))musicKick(t,musicTheme==='battle'?.061:.046);
-  if(track.snare.includes(j))noiseTap(t+.002,.105,.021,1000);
-  if(track.hat.includes(j))noiseTap(t,.035,.009,5700);
-  if(b!==null)synthTone(noteHz(b),t,stepLen*2.5,'sawtooth',musicTheme==='battle'?.032:.026,400);
-  if(n!==null)synthTone(noteHz(n),t,stepLen*.85,musicTheme==='cola'?'square':'triangle',musicTheme==='cola'?.028:.018,2300);
+  if(track.kick.includes(j))musicKick(t,musicTheme==='battle'?.14:.046);
+  if(track.snare.includes(j))noiseTap(t+.002,musicTheme==='battle'?.15:.105,musicTheme==='battle'?.042:.021,musicTheme==='battle'?400:1000);
+  if(track.hat.includes(j))noiseTap(t,.035,musicTheme==='battle'?.004:.009,5700);
+  if(b!==null){if(musicTheme==='battle'){synthTone(noteHz(b),t,stepLen*3.6,'sawtooth',.042,160);synthTone(noteHz(b-12),t,stepLen*3,'sine',.10)}else synthTone(noteHz(b),t,stepLen*2.5,'sawtooth',.026,400)}
+  if(n!==null)synthTone(noteHz(n),t,stepLen*(musicTheme==='battle'?1.9:.85),musicTheme==='cola'?'square':musicTheme==='battle'?'sawtooth':'triangle',musicTheme==='cola'?.028:musicTheme==='battle'?.007:.018,musicTheme==='battle'?700:2300);
   // Gentle backbeat chord sparkle on menu; rhythmic extra arp for soda shop.
   if(musicTheme==='menu'&&j%8===0){synthTone(noteHz(j?55:53),t,stepLen*6,'sine',.017)}
   if(musicTheme==='cola'&&j%4===2)synthTone(noteHz([79,82,75,77][Math.floor(j/4)]),t,stepLen*.65,'triangle',.018);
@@ -431,7 +491,7 @@ function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classLis
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.7</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.8</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -462,7 +522,7 @@ function settings(){state='settings';fullMenu(`<section class="splash-page" aria
  <div class="setting-row"><div><h3>BOT DIFFICULTY</h3><p>How hard should your rival fight?</p></div><div class="option-row" role="group" aria-label="Bot difficulty">
  ${['CASUAL','NORMAL','TOUGH'].map((name,i)=>`<button class="option ${difficulty===i?'active':''}" data-difficulty="${i}" aria-pressed="${difficulty===i}">${name}</button>`).join('')}</div></div>
  <div class="setting-row"><div><h3>SOUND EFFECTS</h3><p>Hits, shields, shots, and upgrades.</p></div><div class="option-row"><button class="option ${!muted?'active':''}" id="soundOn" aria-pressed="${!muted}">ON</button><button class="option ${muted?'active':''}" id="soundOff" aria-pressed="${muted}">OFF</button></div></div>
- <div class="setting-row"><div><h3>ELECTRONIC SOUNDTRACK</h3><p>Original looping rave tracks for menu, battle and the soda machine.</p></div><div class="option-row"><button class="option ${musicEnabled?'active':''}" id="musicOn">ON</button><button class="option ${!musicEnabled?'active':''}" id="musicOff">OFF</button></div></div>
+ <div class="setting-row"><div><h3>ELECTRONIC SOUNDTRACK</h3><p>Original electronic soundtracks, including a dark bass-heavy battle beat.</p></div><div class="option-row"><button class="option ${musicEnabled?'active':''}" id="musicOn">ON</button><button class="option ${!musicEnabled?'active':''}" id="musicOff">OFF</button></div></div>
  <div class="setting-row"><div><h3>SCREEN SHAKE</h3><p>Camera impact when shots land.</p></div><div class="option-row"><button class="option ${shakeEnabled?'active':''}" id="shakeOn" aria-pressed="${shakeEnabled}">ON</button><button class="option ${!shakeEnabled?'active':''}" id="shakeOff" aria-pressed="${!shakeEnabled}">OFF</button></div></div>
  <button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);
  panel.querySelectorAll('[data-difficulty]').forEach(b=>b.onclick=()=>{difficulty=Number(b.dataset.difficulty);savePrefs();settings()});
