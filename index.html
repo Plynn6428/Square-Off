@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 1.9</title>
+<title>SQUARE OFF | PC 2.0</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -292,11 +292,60 @@ body{padding:0 !important;display:block;background:#071223}
 .rounds-display.drinking .rounds-title{opacity:.65}
 @keyframes cola-chug{0%,100%{translate:0 0}50%{translate:0 -9px}}
 @media(prefers-reduced-motion:reduce){.reach-arm,.rounds-product .vend-slot{transition:none!important}.rounds-display.drinking .rounds-hero{animation:none}}
+
+/* SQUARE OFF 2.0 / FIXED SQUARE FIGHTER & DIRECTION-ONLY POINTING */
+.rounds-hero-wrap{width:min(30vw,390px);height:min(55vh,465px);bottom:6%;}
+.rounds-hero .hero-body{
+  top:12%;left:14%;right:14%;bottom:auto;
+  width:72%;height:auto;aspect-ratio:1/1;
+  background:var(--fighter-color);border:clamp(5px,.6vw,9px) solid #101728;
+  border-radius:17%;box-shadow:inset 10px 10px 0 #ffffff15;
+  transform:rotate(-3deg);
+}
+.rounds-hero .hero-eyes{top:36%;left:24%;right:24%;}
+.rounds-hero .hero-eyes b{width:clamp(10px,1.1vw,17px);height:clamp(10px,1.1vw,17px);border-radius:100%;transform:none}
+.rounds-hero .hero-mouth{
+ left:39%;bottom:18%;width:22%;height:10%;
+ border:clamp(3px,.35vw,5px) solid #101728;border-top:0;
+ background:transparent;box-shadow:none;border-radius:0 0 50% 50%;transform:none;
+}
+.rounds-bot .rounds-hero .hero-mouth{height:0;bottom:24%;border:0;background:#101728;border-radius:3px}
+.rounds-hero .hero-limb.arm{top:41%;height:10%;width:28%;border-width:clamp(4px,.45vw,7px)}
+.rounds-hero .hero-limb.arm.left{left:-3%;transform:rotate(-28deg)}
+.rounds-hero .hero-limb.arm.right{right:-3%;transform:rotate(25deg)}
+.rounds-hero .hero-limb.leg{top:73%;bottom:auto;height:22%;width:13%}
+.rounds-hero .hero-limb.leg.left{left:30%}.rounds-hero .hero-limb.leg.right{right:30%}
+.reach-arm{width:100px;height:clamp(26px,3vw,39px);transition:left .2s ease,top .2s ease,transform .2s ease,opacity .18s ease}
+.reach-hand{width:clamp(28px,2.9vw,41px);height:clamp(28px,2.9vw,41px);right:-5px}
+/* Never put text over the square fighter: reserve the upper center for option 2. */
+.rounds-pos-1{top:14%;}
+.rounds-pos-1 .cola-stage{height:clamp(130px,19vh,190px)}
+.rounds-pos-1 .vend-details{min-height:0;padding:9px 10px}
+.rounds-pos-1 .vend-name{font-size:clamp(19px,1.75vw,26px)}
+.rounds-pos-1 .vend-desc{font-size:clamp(12px,1.04vw,16px)}
+.rounds-product .vend-details{max-width:100%;box-sizing:border-box;}
+.rounds-bot .rounds-pos-1{top:25%}.rounds-bot .rounds-hero-wrap{left:28%;width:min(30vw,390px)}
+/* Headings and descriptions live outside the figure's silhouette. */
+.rounds-title{top:5%;}
+.rounds-controls{bottom:1%}
+@media(max-height:720px) and (min-width:800px){
+ .rounds-hero-wrap{height:53vh;bottom:5%}
+ .rounds-pos-1{top:12%}
+ .rounds-pos-1 .cola-stage{height:17vh}
+ .rounds-pos-1 .vend-details{padding:6px}
+ .rounds-title{top:2%}
+}
+@media(max-width:950px){
+ .rounds-hero-wrap{width:33vw;height:48vh}
+ .rounds-pos-1 .cola-stage{height:17vh}
+ .rounds-pos-1 .vend-name{font-size:16px}
+ .rounds-pos-1 .vend-desc{font-size:12px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 1.9</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.0</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -310,7 +359,7 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 1.9</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 2.0</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
@@ -431,7 +480,7 @@ function vendingMarkup(opts,isBot=false){
  return `<div class="rounds-draft ${isBot?'rounds-bot':''}">
   <div class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF // PERK BREAK</div><div>ROUND ${round} / ${isBot?'BOT IS UPGRADING':'YOUR COMEBACK'}</div></div>
   <div class="rounds-title"><h2>${isBot?'RIVAL REFILL':'PICK YOUR POP'}</h2><p>${isBot?'The bot cracked open a new perk.':'Pick one of three sodas to power up your fighter.'}</p></div>
-  <div class="rounds-display"><div class="rounds-rays"></div><div class="reach-arm" id="colaReachArm" aria-hidden="true"><div class="reach-hand"></div></div><div class="rounds-hero-wrap">${fig}<div class="rounds-nameplate">${name}</div></div>${slots}
+  <div class="rounds-display"><div class="rounds-rays"></div><div class="reach-arm" id="colaReachArm" aria-hidden="true"><div class="reach-hand"></div></div><div class="rounds-hero-wrap">${fig}</div>${slots}
    <div class="rounds-floor"></div>
   </div>
   <div class="rounds-controls"><span>PERKS STACK FOR THE WHOLE MATCH</span><strong>${isBot?'NEXT ROUND TO CONTINUE':'HOVER TO INSPECT · CLICK OR PRESS 1 / 2 / 3'}</strong></div>
@@ -504,7 +553,7 @@ function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classLis
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 1.9</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.0</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -592,7 +641,7 @@ function reachForCola(i,isBot=false){
  const x=hr.left+hr.width*(left?.19:.81)-dr.left,y=hr.top+hr.height*.49-dr.top;
  const dx=targetX-x,dy=targetY-y,dist=Math.hypot(dx,dy);
  arm.style.setProperty('--reach-color',isBot?'#5fa7ff':'#ff5965');
- arm.style.left=`${x}px`;arm.style.top=`${y}px`;arm.style.width=`${Math.max(25,dist)}px`;
+ arm.style.left=`${x}px`;arm.style.top=`${y}px`;arm.style.width=`${Math.round(Math.min(125,Math.max(58,hr.width*.28)))}px`;
  arm.style.transform=`translateY(-50%) rotate(${Math.atan2(dy,dx)}rad)`;
  arm.classList.add('is-reaching');hero.classList.add('reaching');hero.classList.toggle('left-reach',left);
  colaReachTarget=i;
