@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 2.3</title>
+<title>SQUARE OFF | PC 2.5</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -358,7 +358,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.3</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 2.5</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -372,12 +372,12 @@ body{padding:0 !important;display:block;background:#071223}
       <div class="panel" id="panel"></div>
     </div>
   </div>
-  <div class="foot"><span><b>SO / PC 2.3</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
+  <div class="foot"><span><b>SO / PC 2.5</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
 <script>
 (()=>{
 'use strict';
-const W=1120,H=630,GRAV=1750,GROUND=564,TAU=Math.PI*2;
+const W=1120,H=630,GRAV=1930,GROUND=564,TAU=Math.PI*2;
 // A level shot fired from the ground reaches roughly 3/8 of the arena width
 // before hitting the floor. Character gravity stays independent.
 const BULLET_GRAVITY=2430;
@@ -503,8 +503,8 @@ function vendingMarkup(opts,isBot=false){
   ${isBot?'<div class="buttonrow rounds-next"><button class="btn" id="continueBtn">NEXT ROUND / ENTER</button></div>':''}
  </div>`;
 }
-function defaultStats(){return {damage:34,rate:.29,maxHp:100,speed:300,jump:920,ammo:7,bullet:850,bulletSize:1,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
-function makePlayer(id){let x=id===0?140:946;return {id,x,y:GROUND-60,w:48,h:60,vx:0,vy:0,dir:id===0?1:-1,grounded:true,jumps:0,hp:100,ammo:7,reload:0,shootCD:0,shieldTime:0,shieldCD:0,hitflash:0,faceHit:0,faceShoot:0,invuln:0,aim:0,aimTilt:0,dead:false,stats:defaultStats(),upgrades:[],color:id===0?'#ff595b':'#4594ff',aiHop:0,dropTime:0,dropHeld:false};}
+function defaultStats(){return {damage:34,rate:.29,maxHp:100,speed:300,jump:920,ammo:3,bullet:850,bulletSize:1,reload:1.22,shield:4.1,vamp:0,bounce:0,double:0};}
+function makePlayer(id){let x=id===0?140:946;return {id,x,y:GROUND-60,w:48,h:60,vx:0,vy:0,dir:id===0?1:-1,grounded:true,jumps:0,hp:100,ammo:3,reload:0,shootCD:0,shieldTime:0,shieldCD:0,hitflash:0,faceHit:0,faceShoot:0,invuln:0,aim:0,aimTilt:0,dead:false,stats:defaultStats(),upgrades:[],color:id===0?'#ff595b':'#4594ff',aiHop:0,dropTime:0,dropHeld:false};}
 function cap(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
 function rand(a,b){return a+Math.random()*(b-a)}
 function mix(a,b,t){return a+(b-a)*t}
@@ -569,7 +569,7 @@ function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classLis
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.3</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.5</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">SOLO ARENA FIGHTER</div>
@@ -775,71 +775,70 @@ function drawBackground(){const seed=arena?.seed||1;const t=clock;let grad=ctx.c
 }
 function drawPlayer(p){
  if(!p)return;
- const x=p.x,y=p.y,w=p.w,h=p.h,t=clock,skin=p.color,outline='#101728';
+ const x=p.x,y=p.y,w=p.w,h=p.h,t=clock,skin=p.color;
  const facing=Math.cos(p.aim)>=0?1:-1, stride=cap(Math.abs(p.vx)/p.stats.speed,0,1)*Math.sin(t*18)*6;
  ctx.save();
  if(p.invuln>0&&Math.floor(t*15)%2===0)ctx.globalAlpha=.75;
- // Contact shadow stays on the surface below the square fighter.
  ctx.fillStyle='#0007';ctx.beginPath();ctx.ellipse(x+w/2,Math.min(GROUND-2,y+h+3),26,5,0,0,TAU);ctx.fill();
- // Local coordinates make it straightforward to animate the square's face and limbs.
  ctx.translate(x+w/2,y+h*.46);
  if(p.dead)ctx.rotate(facing*.35);
  else if(p.faceHit>0)ctx.rotate(Math.sin(t*44)*.045);
  else ctx.rotate(Math.sin(t*9)*.015*stride/6);
  ctx.translate(-w/2,-h*.46);
  ctx.lineCap='round';ctx.lineJoin='round';
- const limb=(x1,y1,x2,y2,width=7)=>{
-   ctx.strokeStyle=outline;ctx.lineWidth=width+2;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
-   ctx.strokeStyle=skin;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
- };
- const hand=(px,py)=>{
-   ctx.fillStyle=skin;ctx.strokeStyle=outline;ctx.lineWidth=2;
-   ctx.beginPath();ctx.arc(px,py,4.4,0,TAU);ctx.fill();ctx.stroke();
- };
- // Matching color everywhere: red body, red arms, red fists, and red feet.
+ const limb=(x1,y1,x2,y2,width=6)=>{ctx.strokeStyle=skin;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()};
+ const hand=(px,py,r=4.1)=>{ctx.fillStyle=skin;ctx.beginPath();ctx.arc(px,py,r,0,TAU);ctx.fill()};
  const step=p.dead?0:stride;
- limb(16,43,15+step,56,7);limb(33,43,33-step,56,7);
- limb(12+step,57,18+step,57,6);limb(30-step,57,36-step,57,6);
- const rearSide=-facing, rearShoulder=w/2+rearSide*17;
- const rearHand=w/2+rearSide*(p.dead?24:25), rearHandY=32+(p.grounded?Math.abs(step)*.3:2);
- limb(rearShoulder,25,rearHand,rearHandY,7);hand(rearHand,rearHandY);
- const armShoulder=w/2+facing*17;
- const aimHandX=w/2+Math.cos(p.aim)*23, aimHandY=h*.46+Math.sin(p.aim)*22;
- limb(armShoulder,26,aimHandX,aimHandY,7);hand(aimHandX,aimHandY);
- // Bold flat square body; no blush, gradients, pupils, or cartoon decorations.
- ctx.fillStyle=skin;ctx.strokeStyle=outline;ctx.lineWidth=2.8;
- roundRect(4,3,w-8,43,8);ctx.fill();ctx.stroke();
- // A very minimal stick-person face, drawn as native canvas strokes and dots.
- ctx.strokeStyle=outline;ctx.fillStyle=outline;ctx.lineWidth=3.1;
- const dot=(px,py,r=2.3)=>{ctx.beginPath();ctx.arc(px,py,r,0,TAU);ctx.fill()};
+ // Legs
+ limb(16,43,14+step*.8,59,6);limb(33,43,35-step*.8,59,6);
+ limb(12+step*.8,60,19+step*.8,60,5);limb(29-step*.8,60,36-step*.8,60,5);
+ // Off-hand: longer and more like ROUNDS, with shield ball visibly held beyond the hand.
+ const rearSide=-facing, rearShoulder=w/2+rearSide*16;
+ const runAmount=cap(Math.abs(p.vx)/Math.max(1,p.stats.speed),0,1);
+ const sway=p.dead?0:Math.sin(t*17)*runAmount*5;
+ const rearHand=w/2+rearSide*(30+sway*.6);
+ const rearHandY=30+(p.grounded?sway*.8:Math.sin(t*5)*1.4);
+ limb(rearShoulder,23,rearHand,rearHandY,6);
+ if(!p.dead){
+  const charge=cap(1-p.shieldCD/p.stats.shield,0,1),ready=p.shieldCD<=0;
+  const discX=rearHand+rearSide*10,discY=rearHandY;
+  ctx.save();ctx.translate(discX,discY);
+  if(ready){ctx.shadowColor='#ffe75a';ctx.shadowBlur=12+3*Math.sin(t*9)}
+  ctx.fillStyle=ready?'#ffe04e':'#f6f7fb';
+  ctx.beginPath();ctx.arc(0,0,5.3,0,TAU);ctx.fill();
+  ctx.shadowBlur=0;ctx.strokeStyle=ready?'#ffe55c':'#7fa3bd';ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.arc(0,0,7.3,-Math.PI/2,-Math.PI/2+TAU*charge);ctx.stroke();
+  ctx.restore();
+  // small hand behind/under the shield ball so it reads as being held
+  hand(rearHand+rearSide*3.7,rearHandY,3.6);
+ } else hand(rearHand,rearHandY,3.8);
+ // Aim arm: longer but fixed-length, no exaggerated extension.
+ const armShoulder=w/2+facing*16;
+ const armLen=31;
+ const aimHandX=w/2+Math.cos(p.aim)*armLen, aimHandY=h*.46+Math.sin(p.aim)*(armLen-1);
+ limb(armShoulder,24,aimHandX,aimHandY,6);
+ hand(aimHandX,aimHandY,3.7);
+ // Clean square body with no thick outline.
+ ctx.fillStyle=skin;
+ roundRect(5,4,w-10,41,8);ctx.fill();
+ // Minimal face.
+ ctx.strokeStyle='#0f1727';ctx.fillStyle='#0f1727';ctx.lineWidth=2.4;
+ const dot=(px,py,r=2.2)=>{ctx.beginPath();ctx.arc(px,py,r,0,TAU);ctx.fill()};
  const slash=(x1,y1,x2,y2)=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()};
- const mouth=(type)=>{ctx.beginPath();if(type==='open'){ctx.ellipse(24,33,3,4,0,0,TAU);ctx.stroke()}
-    else if(type==='sad'){ctx.moveTo(19,34);ctx.quadraticCurveTo(24,29,29,34);ctx.stroke()}
-    else if(type==='flat'){slash(20,33,28,33)}
-    else{ctx.moveTo(19,31);ctx.quadraticCurveTo(24,36,29,31);ctx.stroke()}};
- if(p.dead){
-   // Defeated expression: only two tiny X's and a short straight mouth.
-   for(const a of [17,31]){slash(a-2,20,a+2,24);slash(a+2,20,a-2,24)}mouth('flat');
- }else if(p.faceHit>0){
-   // Changed immediately by a bullet hit, remains visible for about half a second.
-   slash(13,20,19,24);slash(19,20,13,24);
-   slash(29,20,35,24);slash(35,20,29,24);mouth('open');
- }else if(p.shieldTime>0){
-   slash(13,22,19,22);slash(29,22,35,22);mouth('flat');
- }else if(p.hp<p.stats.maxHp*.33){
-   dot(16,22);dot(32,22);mouth('sad');
- }else if(p.faceShoot>0){
-   dot(16,22);dot(32,22);mouth('open');
- }else if(p.id===0){
-   // Neutral two-dot face without a wink; hurt / shoot / shield expressions still animate.
-   dot(16,22);dot(32,22);mouth('smile');
- }else{
-   // Blue rival has an equally simple, non-expressive default face.
-   dot(16,22);dot(32,22);mouth('flat');
- }
- if(p.hitflash>0){ctx.strokeStyle='#fff7';ctx.lineWidth=2.4;roundRect(4,3,w-8,43,8);ctx.stroke()}
+ const mouth=(type)=>{ctx.beginPath();if(type==='open'){ctx.ellipse(24,32,3,4,0,0,TAU);ctx.stroke()}
+    else if(type==='sad'){ctx.moveTo(19,33);ctx.quadraticCurveTo(24,28,29,33);ctx.stroke()}
+    else if(type==='flat'){slash(20,32,28,32)}
+    else{ctx.moveTo(19,30);ctx.quadraticCurveTo(24,35,29,30);ctx.stroke()}};
+ if(p.dead){for(const a of [17,31]){slash(a-2,20,a+2,24);slash(a+2,20,a-2,24)}mouth('flat');}
+ else if(p.faceHit>0){slash(13,20,19,24);slash(19,20,13,24);slash(29,20,35,24);slash(35,20,29,24);mouth('open');}
+ else if(p.shieldTime>0){slash(13,22,19,22);slash(29,22,35,22);mouth('flat');}
+ else if(p.hp<p.stats.maxHp*.33){dot(16,22);dot(32,22);mouth('sad');}
+ else if(p.faceShoot>0){dot(16,22);dot(32,22);mouth('open');}
+ else if(p.id===0){dot(16,22);dot(32,22);mouth('smile');}
+ else{dot(16,22);dot(32,22);mouth('flat');}
+ if(p.hitflash>0){ctx.strokeStyle='#ffffff88';ctx.lineWidth=1.8;roundRect(5,4,w-10,41,8);ctx.stroke()}
  ctx.restore();
- // The compact green health bar floats directly above this fighter (no numbers).
+ // Health bar above the player.
  if(!p.dead){
    const barW=60,barH=8,hpFrac=cap(p.hp/p.stats.maxHp,0,1),bx=x+w/2-barW/2,by=y-26;
    ctx.fillStyle='#051624d9';roundRect(bx-3,by-3,barW+6,barH+6,4);ctx.fill();
@@ -848,41 +847,35 @@ function drawPlayer(p){
    if(hpFrac>0){ctx.fillStyle=hpFrac>.35?'#58ed79':'#afe55a';roundRect(bx,by,Math.max(2,barW*hpFrac),barH,2);ctx.fill();}
    ctx.fillStyle='#d9ffe462';ctx.fillRect(bx+2,by+1,Math.max(0,barW*hpFrac-4),1.5);
  }
- // Off-hand shield charge. It glows gold only when fully charged.
+ // Tiny black ROUNDS-style blaster near the firing hand.
  if(!p.dead){
-   const ready=p.shieldCD<=0;
-   const handX=x+w/2-facing*25,handY=y+h*.46+7;
-   const full=cap(1-p.shieldCD/p.stats.shield,0,1);
-   ctx.save();ctx.translate(handX,handY);
-   if(ready){ctx.shadowColor='#ffe64b';ctx.shadowBlur=18+5*Math.sin(t*8);}
-   ctx.fillStyle=ready?'#ffdc4b':'#192b3b';ctx.strokeStyle=ready?'#fff2a5':'#527182';
-   ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,8,0,TAU);ctx.fill();ctx.stroke();
-   ctx.shadowBlur=0;ctx.lineWidth=3;ctx.strokeStyle=ready?'#ffdc4b':'#81aeca';
-   ctx.beginPath();ctx.arc(0,0,11,-Math.PI/2,-Math.PI/2+TAU*full);ctx.stroke();
-   ctx.restore();
+  const gunX=x+w/2+Math.cos(p.aim)*18, gunY=y+h*.46+Math.sin(p.aim)*18;
+  ctx.save();ctx.translate(gunX,gunY);ctx.rotate(p.aim);
+  ctx.fillStyle='#0b1018';
+  roundRect(0,-2.6,9,5.2,2);ctx.fill(); // main body
+  ctx.fillRect(7,-5.4,4.2,3.4); // little top barrel bend
+  ctx.fillRect(2.5,2,2.8,4.5); // small grip
+  ctx.fillStyle='#18202b';ctx.fillRect(.8,-1.5,6.8,1.1); // subtle highlight
+  ctx.restore();
+  // Yellow ammo pips grouped in intervals of 3.
+  const count=p.stats.ammo,cols=3,shown=Math.min(count,18),rows=Math.ceil(shown/cols);
+  const pipR=2.35,pipGapX=7.0,pipGapY=7.4;
+  ctx.save();
+  for(let i=0;i<shown;i++){
+   const row=Math.floor(i/cols),col=i%cols;
+   const nCols=Math.min(cols,shown-row*cols);
+   const px=gunX+(col-(nCols-1)/2)*pipGapX;
+   const py=gunY-11-(rows-1-row)*pipGapY;
+   ctx.beginPath();ctx.arc(px,py,pipR,0,TAU);
+   ctx.fillStyle=i<p.ammo?'#ffdc4b':'#263c4d';ctx.fill();
+   ctx.strokeStyle=i<p.ammo?'#fff0a5':'#8295a1';ctx.lineWidth=.7;ctx.stroke();
+  }
+  if(p.reload>0){ctx.fillStyle='#ffe168';ctx.fillRect(gunX-10,gunY-18-rows*pipGapY,20*cap(1-p.reload/p.stats.reload,0,1),2)}
+  ctx.restore();
  }
- // Updated gun with yellow ammo pips directly above it.
- if(!p.dead){ctx.save();ctx.translate(x+w/2,y+h*.46);ctx.rotate(p.aim);
- // Compact blaster with dark receiver, grip, barrel and colored muzzle.
- ctx.fillStyle='#162739';ctx.strokeStyle='#071421';ctx.lineWidth=2.2;
- roundRect(10,-7,34,13,3);ctx.fill();ctx.stroke();
- ctx.fillStyle='#627a92';ctx.fillRect(15,-7,14,3);
- ctx.fillStyle='#0c1b2a';ctx.beginPath();ctx.moveTo(19,5);ctx.lineTo(28,5);ctx.lineTo(24,18);ctx.lineTo(16,17);ctx.closePath();ctx.fill();ctx.stroke();
- ctx.fillStyle=p.color;ctx.fillRect(38,-4,9,7);ctx.fillStyle='#e2edfa';ctx.fillRect(43,-2,8,3);
- // Yellow rounds: bright = loaded; dim = spent.
- const total=p.stats.ammo,visible=Math.min(14,total),gap=Math.min(6.2,39/Math.max(1,visible-1)),startX=12;
- for(let i=0;i<visible;i++){
-   ctx.beginPath();ctx.arc(startX+i*gap,-15,2.5,0,TAU);
-   ctx.fillStyle=i<p.ammo?'#ffdc4b':'#3d4c5e';
-   ctx.fill();
-   ctx.strokeStyle=i<p.ammo?'#fff1a6':'#748293';ctx.lineWidth=.7;ctx.stroke();
- }
- if(p.reload>0){ctx.fillStyle='#ffce4699';ctx.fillRect(13,-23,36*cap(1-p.reload/p.stats.reload,0,1),2)}
- ctx.restore()}
  if(p.shieldTime>0){ctx.strokeStyle=p.color;ctx.lineWidth=5;ctx.globalAlpha=.55+.25*Math.sin(t*22);ctx.beginPath();ctx.arc(x+w/2,y+h/2,49,0,TAU);ctx.stroke();ctx.lineWidth=2;ctx.globalAlpha=.9;ctx.beginPath();ctx.arc(x+w/2,y+h/2,56,0,TAU);ctx.stroke()}
  ctx.globalAlpha=1;
-ctx.restore();
- 
+ ctx.restore();
 }
 function drawBullets(){ctx.lineCap='round';for(const b of bullets){ctx.strokeStyle=b.col;ctx.globalAlpha=.3;ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(b.x-b.vx*.025,b.y-b.vy*.025);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(b.x-b.vx*.018,b.y-b.vy*.018);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill()}}
 function drawParticles(){for(const p of particles){ctx.globalAlpha=cap(p.life/.5,0,1);ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.r*cap(p.life/.5,.1,1),0,TAU);ctx.fill()}ctx.globalAlpha=1;for(const t of texts){ctx.globalAlpha=cap(t.life,0,1);ctx.font='900 19px Impact, Arial Black, sans-serif';ctx.textAlign='center';ctx.strokeStyle='#111a2d';ctx.lineWidth=5;ctx.strokeText(t.msg,t.x,t.y);ctx.fillStyle=t.col;ctx.fillText(t.msg,t.x,t.y)}ctx.globalAlpha=1}
