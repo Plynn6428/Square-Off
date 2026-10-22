@@ -1,0 +1,10 @@
+{
+  "name": "square-off-room-server",
+  "version": "4.0.0",
+  "private": true,
+  "description": "Two-player private room code relay for Square Off",
+  "main": "server.js",
+  "scripts": {"start": "node server.js"},
+  "engines": {"node": ">=20"},
+  "dependencies": {"ws": "^8.18.3"}
+}
