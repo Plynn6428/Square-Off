@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 4.3</title>
+<title>SQUARE OFF | PC 4.4</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -534,7 +534,7 @@ body{padding:0 !important;display:block;background:#071223}
 .net-actions button:disabled{opacity:.4;cursor:not-allowed}
 .net-feedback{min-height:1.5em;font-size:13px!important;color:#baf8e7!important}
 
-/* SQUARE OFF 4.3 — main menu / DevSquare edition */
+/* SQUARE OFF 4.4 — main menu / DevSquare edition */
 .splash{background:radial-gradient(ellipse 51% 78% at 80% 42%,#1e48637c,transparent 78%),radial-gradient(ellipse 45% 90% at 0% 100%,#153d51,transparent 76%),linear-gradient(135deg,#071323 5%,#0c2034 57%,#061421 100%)}
 .splash-main{grid-template-columns:minmax(0,52%) minmax(0,48%);padding-bottom:83px}
 .splash-top{border-bottom:1px solid #7c9eb044;padding-bottom:15px}
@@ -597,7 +597,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 4.3</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 4.4</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1127,7 +1127,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 4.2</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 4.4</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1163,9 +1163,52 @@ const ONLINE_SERVER_CONFIG='square-off-online-server';
 const defaultOnlineServer=location.hostname==='localhost'||location.hostname==='127.0.0.1'?`ws://${location.hostname}:3001`:' ';
 let netSocket=null,netRole='',netCode='',netConnected=false,netGuestReady=false,netLastSnapshot=-1,remoteKeys={},netDraftIds=[];
 let guestSmooth=null,netLastReceived=0;
+// 4.4: Explicit per-round handshake. Never simulate combat until BOTH clients have
+// prepared the exact same round. Epoch IDs reject queued/out-of-order old packets.
+let netRoundEpoch=0,netPreparedEpoch=0,netGuestRoundEpoch=0,netCountdownEnd=0;
+let netWaitResend=0;
+const NET_COUNTDOWN_MS=3000;
+function netWaitScreen(title,detail){showOverlay(`<div class="net-card"><h2>${title}</h2><p>${detail}</p></div>`)}
+function onlineRoundPrepare(){
+ if(netRole!=='host'||!netConnected)return;
+ netRoundEpoch++;netPreparedEpoch=0;netWaitResend=0;netCountdownEnd=0;
+ state='online_sync_wait';remoteKeys={};mouse.down=false;keys.clear();
+ netWaitScreen('WAITING FOR PLAYER 2','Synchronizing both players before the round starts…');
+ sendRoundPrepare();
+}
+function sendRoundPrepare(){
+ if(netRole==='host'&&state==='online_sync_wait')sendNet({type:'round_prepare',epoch:netRoundEpoch,payload:{...makeNetSnapshot(),state:'playing'}});
+}
+function guestPrepareRound(m){
+ if(!Number.isInteger(m.epoch)||m.epoch<netGuestRoundEpoch||!m.payload)return;
+ if(m.epoch===netGuestRoundEpoch&&['online_countdown','playing','roundover'].includes(state))return;
+ if(m.epoch>netGuestRoundEpoch){
+  netGuestRoundEpoch=m.epoch;
+  updateGuestSnapshot(m.payload);
+  guestSmooth=null;remoteKeys={};mouse.down=false;keys.clear();
+ }
+ state='online_guest_ready';
+ netWaitScreen('ROUND READY','Connected! Waiting for the host to start the countdown…');
+ sendNet({type:'round_ready',epoch:netGuestRoundEpoch});
+}
+function beginOnlineCountdown(epoch){
+ if(netRole!=='host'||state!=='online_sync_wait'||epoch!==netRoundEpoch)return;
+ netPreparedEpoch=epoch;netCountdownEnd=performance.now()+NET_COUNTDOWN_MS;
+ state='online_countdown';
+ sendNet({type:'round_go',epoch,duration:NET_COUNTDOWN_MS});
+ netWaitScreen('GET READY','Both players connected. Round begins in 3…');
+}
+function updateOnlineCountdown(now){
+ if(state!=='online_countdown')return;
+ const remaining=Math.max(0,netCountdownEnd-now);
+ const line=panel.querySelector('.net-card p');
+ if(line)line.textContent=remaining>0?'Both players ready — starting in '+Math.ceil(remaining/1000)+'…':'GO!';
+ if(remaining<=0){state='playing';hideOverlay();netLastSnapshot=-1;}
+}
+
 let onlineServerUrl='';try{onlineServerUrl=localStorage.getItem(ONLINE_SERVER_CONFIG)||defaultOnlineServer}catch(e){onlineServerUrl=defaultOnlineServer}
 function sendNet(m){if(netSocket?.readyState===WebSocket.OPEN){try{netSocket.send(JSON.stringify(m))}catch(e){}}}
-function disconnectOnline(){guestSmooth=null;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
+function disconnectOnline(){netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;guestSmooth=null;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
 function onlineMessage(text,isError=false){const el=$('netMessage');if(el){el.textContent=text;el.style.color=isError?'#ff8996':'#baf8e7';}}
 function onlineMenu(){state='online_menu';setMusicTheme('menu');hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / ONLINE</div><h2 class="page-title">ONLINE <span>1V1.</span></h2><p>Private room, one host and one guest. First to five rounds.</p><label class="net-label">MULTIPLAYER SERVER</label><input class="net-input" id="netServer" spellcheck="false" placeholder="wss://your-server.onrender.com" value="${String(onlineServerUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"><p class="net-small">GitHub Pages hosts the game; a separate WebSocket server handles room codes. Set its public wss:// URL here, or run the included server locally.</p><div class="net-actions"><button class="btn" id="hostOnline">CREATE ROOM</button><button class="btn secondary" id="joinOnline">JOIN ROOM</button></div><input class="net-input net-room-input" id="joinCode" maxlength="6" placeholder="ENTER 6-LETTER ROOM CODE" autocapitalize="characters"><p id="netMessage" class="net-feedback"></p><button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('hostOnline').onclick=()=>connectOnline('host');$('joinOnline').onclick=()=>connectOnline('guest');$('backBtn').onclick=menu}
 function connectOnline(role){
@@ -1183,7 +1226,7 @@ function connectOnline(role){
  sock.onclose=()=>{if(sock!==netSocket)return;netSocket=null;netConnected=false;remoteKeys={};if(['online_menu','online_lobby'].includes(state)){onlineMessage('Disconnected from server. Check the address and try again.',true)}else if(netRole){state='online_disconnected';showOverlay('<div class="net-card"><h2>CONNECTION LOST</h2><p>The multiplayer connection closed.</p><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}};
 }
 function onlineLobby(){state='online_lobby';hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / PRIVATE MATCH</div><h2 class="page-title">YOUR <span>ROOM.</span></h2><p>${netRole==='host'?'Share this code with your friend.':'Waiting for the host to start the match.'}</p><div class="net-code">${netCode}</div><div class="net-actions"><button class="btn secondary" id="copyInvite">COPY INVITE LINK</button>${netRole==='host'?'<button class="btn" id="beginOnline" '+(!netGuestReady?'disabled':'')+'>START MATCH</button>':''}</div><p id="netMessage" class="net-feedback">${netGuestReady?'Both players connected!':'Waiting for second player…'}</p><button class="page-back" id="backBtn">← LEAVE ROOM</button></div></section>`);$('copyInvite').onclick=()=>{const u=new URL(location.href);u.searchParams.set('room',netCode);navigator.clipboard?.writeText(u.href).then(()=>onlineMessage('Invite link copied!')).catch(()=>onlineMessage('Room code: '+netCode))};$('backBtn').onclick=menu;if(netRole==='host')$('beginOnline').onclick=()=>{if(netGuestReady){sendNet({type:'start'});startOnlineMatch()}};}
-function startOnlineMatch(){if(netRole!=='host')return;practiceMode=false;colaSelectionPending=false;mouse.down=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);netConnected=true;netLastSnapshot=-1;guestSmooth=null;remoteKeys={};startRound(true);}
+function startOnlineMatch(){if(netRole!=='host')return;practiceMode=false;colaSelectionPending=false;mouse.down=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);netConnected=true;netRoundEpoch=0;netPreparedEpoch=0;netLastSnapshot=-1;guestSmooth=null;remoteKeys={};startRound(true);}
 function makeNetSnapshot(){
  // Cosmetics (especially particles and floating text) are local-only: they ballooned
  // each message, causing packet queues and visibly delayed guest input.
@@ -1205,8 +1248,27 @@ function handleOnlineMessage(m){
  if(m.type==='created'||m.type==='joined'){netCode=m.code;netConnected=true;netGuestReady=m.type==='joined';onlineLobby();return}
  if(m.type==='player_joined'&&netRole==='host'){netGuestReady=true;onlineLobby();return}
  if(m.type==='player_left'){remoteKeys={};netGuestReady=false;if(netRole==='host'){state='online_lobby';onlineLobby();onlineMessage('Friend disconnected. Waiting for another player.',true)}else{state='online_disconnected';showOverlay('<div class="net-card"><h2>HOST LEFT</h2><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}return}
+ if(m.type==='round_ready'&&netRole==='host'){
+  if(m.epoch===netRoundEpoch){
+   if(state==='online_sync_wait')beginOnlineCountdown(m.epoch);
+   else if(state==='online_countdown')sendNet({type:'round_go',epoch:netRoundEpoch,duration:Math.max(0,netCountdownEnd-performance.now())});
+  }
+  return;
+ }
+ if(m.type==='round_prepare'&&netRole==='guest'){guestPrepareRound(m);return}
+ if(m.type==='round_go'&&netRole==='guest'){
+  if(m.epoch!==netGuestRoundEpoch)return;
+  netCountdownEnd=performance.now()+Math.max(0,Math.min(NET_COUNTDOWN_MS,Number(m.duration)||0));
+  state='online_countdown';setMusicTheme('battle');
+  netWaitScreen('GET READY','Both players connected. Round begins in 3…');
+  return;
+ }
  if(m.type==='input'&&netRole==='host'){remoteKeys=m.input||{};return}
- if(m.type==='snapshot'&&netRole==='guest'&&['playing','roundover','online_guest_wait','online_lobby'].includes(state)){updateGuestSnapshot(m.payload);return}
+ if(m.type==='snapshot'&&netRole==='guest'){
+  // Never let stale gameplay snapshots erase a draft, preparation, or countdown.
+  if(m.epoch!==netGuestRoundEpoch||!['playing','roundover'].includes(state))return;
+  updateGuestSnapshot(m.payload);return;
+ }
  if(m.type==='start'&&netRole==='guest'){state='online_guest_wait';setMusicTheme('battle');return}
  if(m.type==='draft'&&netRole==='guest'){onlineGuestDraft(m.options||[]);return}
  if(m.type==='host_draft'&&netRole==='guest'){state='online_guest_wait';showOverlay('<div class="net-card"><h2>HOST IS PICKING A SODA</h2><p>Next round begins after your friend selects an upgrade.</p></div>');return}
@@ -1274,12 +1336,8 @@ function startPractice(){
 function resetPracticeBuild(){if(!practiceMode)return;const previous=p1; p1=makePlayer(0);p1.x=previous.x;p1.y=previous.y;p1.vx=p1.vy=0;p1.invuln=.4;bullets=[];refreshPracticePanel();toast('BUILD RESET');}
 function startMatch(){if(netRole)disconnectOnline();practiceMode=false;$('practicePanel')?.classList.add('hidden');colaSelectionPending=false;mouse.down=false;mouse.used=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);startRound(true)}
 function startRound(first=false){mouse.down=false;arena=practiceMode?practiceArena:maps[arenaIndex];updateArenaCamera();moveableBlocks=practiceMode?[]:makeCrateStacks(arena);const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.crouched=false;p.h=60*(p.w/48);p.visualCrouch=0;p.jumpPose=0;p.landPose=0;p.roofSquash=0;p.visualFacing=i===0?1:-1;arenaSpawn(p);p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.healthTrail=p.hp;p.healthTrailHold=0;p.healTrailFrom=p.hp;p.healTrailHold=0;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.jumpRiseActive=false;p.wallJumpCD=0;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;p.hiddenBody=false;p.burstLeft=0;p.burstTimer=0;p.autoBlocks=[];p.poison=[];p.slowUntil=0;p.coldHits=0;p.coldUntil=0;p.pulls=[];p.dashCD=0;p.dashTime=0;p.secondWindReady=p.stats.secondwind>0;p.lastHurt=0;p.chainHits=0;p.timeWarpUntil=0;p.lastHurt=clock;p.burnUntil=0;p.burnDps=0;});bullets=[];fireBombs=[];effectWaves=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;netLastSnapshot=-1;aiThink=0;aiPlan={move:0,jump:false,block:false};botStyle='rusher';botStyleTime=9999;botStrategyAge=0;botJumpGoal=null;botRoamTimer=0;botStuckTime=0;botLastX=p2.x;state='playing';$('game').classList.toggle('practice-active',practiceMode);setMusicTheme('battle');hideOverlay();hud.classList.add('show');hint.classList.remove('show');hint.textContent='';$('name1').textContent='RED • PLAYER 1';$('name2').textContent=netRole?'BLUE • GUEST':'BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS • LOSE A ROUND TO PICK A COLA');else toast(`ROUND ${round} • ${arena.name}`);
- // Multiplayer: immediately notify the guest of the new round and clear their draft overlay.
- // The game clock resets above, so the snapshot cadence must reset as well.
- if(netRole==='host'&&netConnected){
-  sendNet({type:'snapshot',payload:makeNetSnapshot()});
-  netLastSnapshot=clock;
- }
+ // 4.4: The host may NOT fight until the guest confirms it loaded this round.
+ if(netRole==='host'&&netConnected)onlineRoundPrepare();
  const coarse=window.matchMedia('(pointer:coarse)').matches;touchEl.style.display='none';updateHUD();}
 
 let perkTrackerSignature="";
@@ -1438,7 +1496,7 @@ function cardOptions(){
  if(old.length){const stack=old[Math.floor(Math.random()*old.length)];arr=arr.filter(c=>c.id!==stack.id).slice(0,4);arr.splice(Math.floor(Math.random()*5),0,stack);return arr;}
  return arr.slice(0,5);
 }
-function finishRound(win){if(state!=='playing')return;winner=win;loser=1-win;scores[win]++;shake=14;const victim=win===0?p2:p1;deathBurst(victim.x+victim.w/2,victim.y+victim.h*.47,victim.color);victim.hiddenBody=true;sound(250,.32,'sawtooth',.1,.25);state='roundover';roundEndTime=.95;updateHUD();if(netRole==='host')sendNet({type:'snapshot',payload:makeNetSnapshot()});}
+function finishRound(win){if(state!=='playing')return;winner=win;loser=1-win;scores[win]++;shake=14;const victim=win===0?p2:p1;deathBurst(victim.x+victim.w/2,victim.y+victim.h*.47,victim.color);victim.hiddenBody=true;sound(250,.32,'sawtooth',.1,.25);state='roundover';roundEndTime=.95;updateHUD();if(netRole==='host')sendNet({type:'snapshot',epoch:netRoundEpoch,payload:makeNetSnapshot()});}
 function postRound(){const champ=scores[0]>=5||scores[1]>=5;
  if(champ){if(netRole==='host')sendNet({type:'match_end',winner,scores});state='gameover';setMusicTheme('menu');const name=winner===0?'RED':(netRole?'BLUE':'BLUE BOT');showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> FINAL WHISTLE / MATCH COMPLETE</div><div class="result-kicker">FIRST TO FIVE</div><h2 class="roundheading ${winner===0?'cyan':'coral'}">${name} <span>TAKES IT.</span></h2><div class="result-score"><span>${scores[0]}</span><em>—</em><span>${scores[1]}</span></div><p class="subtitle">PLAYER 1: ${p1.upgrades.length} COLAS <span class="sep">//</span> BOT: ${p2.upgrades.length} COLAS</p><div class="buttonrow"><button class="btn" id="rematch">RUN IT BACK</button><button class="btn secondary" id="toMenu">MAIN MENU</button></div></div>`);$('rematch').onclick=startMatch;$('toMenu').onclick=menu;return}
  const opts=cardOptions();const lose=loser===0?'RED':'BLUE BOT';
@@ -2431,7 +2489,7 @@ function tick(dt){if(netRole==='guest')return;clock+=dt;
   if(!inPlay())break;
  }
  updateHUD();
- if(netRole==='host'&&netConnected&&clock-netLastSnapshot>.067){netLastSnapshot=clock;sendNet({type:'snapshot',payload:makeNetSnapshot()})}
+ if(netRole==='host'&&netConnected&&clock-netLastSnapshot>.085){netLastSnapshot=clock;sendNet({type:'snapshot',epoch:netRoundEpoch,payload:makeNetSnapshot()})}
 }
 function roundRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
 function drawBackground(){
@@ -2838,7 +2896,14 @@ function render(){
  if(state==='roundover'&&winner!==null){ctx.fillStyle='#07101abb';ctx.fillRect(0,190,W,142);ctx.font='900 65px Impact, Arial Black, sans-serif';ctx.fillStyle=winner===0?'#ff595b':'#4594ff';ctx.textAlign='center';ctx.fillText((winner===0?'RED':(netRole?'BLUE':'BLUE BOT'))+' WINS ROUND!',W/2,275);ctx.fillStyle='#d1def0';ctx.font='800 17px monospace';ctx.fillText('UPGRADE DRAFT INCOMING',W/2,306)}
 }
 $('practiceToggle').onclick=()=>openPracticePanel(!practicePanelOpen);$('practiceReset').onclick=resetPracticeBuild;$('practiceRespawnBtn').onclick=respawnDummy;$('practiceFrostTest').onclick=()=>{if(!practiceMode)return;if(p2.dead||p2.hiddenBody)respawnDummy();applyFrostbite(p2,1);openPracticePanel(false);toast('FROST TEST — ICE VISIBLE FOR 2 SECONDS');};$('practiceExit').onclick=menu;
-function frame(now){let dt=cap((now-last)/1000,0,.032);last=now;tick(dt);render();requestAnimationFrame(frame)}
+function frame(now){
+ let dt=cap((now-last)/1000,0,.032);last=now;
+ if(netRole==='host'&&state==='online_sync_wait'&&now-netWaitResend>1400){
+  netWaitResend=now;sendRoundPrepare(); // Retry until guest confirms, no host head start.
+ }
+ updateOnlineCountdown(now);
+ tick(dt);render();requestAnimationFrame(frame);
+}
 function canvasMouse(e){let r=canvas.getBoundingClientRect();const pt=worldPoint((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height);mouse.x=pt.x;mouse.y=pt.y;mouse.used=true}
 canvas.addEventListener('mousemove',canvasMouse);canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'){canvasMouse(e);if(e.button===0)mouse.down=true;else if(e.button===2&&inPlay())block(p1)}else if(inPlay()){canvasMouse(e);mouse.down=true}});window.addEventListener('pointerup',()=>mouse.down=false);canvas.addEventListener('contextmenu',e=>e.preventDefault());
 window.addEventListener('keydown',e=>{if(['Space','KeyW','KeyA','KeyS','KeyD','KeyE','KeyF','ShiftLeft','ShiftRight','Digit1','Digit2','Digit3','Digit4','Digit5'].includes(e.code))e.preventDefault();keys.add(e.code);if(state==='draft'&&['Digit1','Digit2','Digit3','Digit4','Digit5'].includes(e.code)){pickCard(window.currentOptions,Number(e.code.slice(-1))-1)}if(e.code==='Escape'){e.preventDefault();if(state==='playing'&&netRole!=='guest')pause();else if(state==='paused')resume();else if(state==='settings'||state==='help'||state==='gameover')menu()}});
