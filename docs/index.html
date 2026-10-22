@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 4.6</title>
+<title>SQUARE OFF | PC 4.7</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -601,7 +601,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 4.6</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 4.7</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1171,7 +1171,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 4.6</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 4.7</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1207,6 +1207,26 @@ const ONLINE_SERVER_CONFIG='square-off-online-server';
 const defaultOnlineServer=location.hostname==='localhost'||location.hostname==='127.0.0.1'?`ws://${location.hostname}:3001`:' ';
 let netSocket=null,netRole='',netCode='',netConnected=false,netGuestReady=false,netLastSnapshot=-1,remoteKeys={},netDraftIds=[];
 let guestSmooth=null,netLastReceived=0;
+let netPingMs=null,netPingSent=0,netPingSeq=0;
+// A discrete network status display; does not affect gameplay.
+const netPingLabel=document.createElement('div');
+netPingLabel.id='netPingLabel';
+netPingLabel.setAttribute('aria-label','Multiplayer connection latency');
+netPingLabel.style.cssText='position:absolute;right:13px;bottom:13px;z-index:9;padding:5px 9px;border:1px solid #5cebdc77;border-radius:7px;background:#071523d9;color:#a9f5e9;font:700 11px system-ui,sans-serif;pointer-events:none;display:none';
+$('game').append(netPingLabel);
+function updatePingLabel(){
+ netPingLabel.style.display=netRole&&netConnected?'block':'none';
+ if(netRole&&netConnected){
+  netPingLabel.textContent=netPingMs==null?'PING …':('PING '+Math.round(netPingMs)+' ms');
+  netPingLabel.style.color=netPingMs!=null&&netPingMs>180?'#ffd37e':'#a9f5e9';
+ }
+}
+function sendLatencyProbe(){
+ if(!netRole||!netConnected||netSocket?.readyState!==WebSocket.OPEN)return;
+ netPingSent=performance.now();
+ sendNet({type:'latency_probe',seq:++netPingSeq});
+}
+setInterval(sendLatencyProbe,2500);
 // 4.4: Explicit per-round handshake. Never simulate combat until BOTH clients have
 // prepared the exact same round. Epoch IDs reject queued/out-of-order old packets.
 let netRoundEpoch=0,netPreparedEpoch=0,netGuestRoundEpoch=0,netCountdownEnd=0;
@@ -1258,7 +1278,7 @@ function sendNet(m){
  if(m.type==='input'&&netSocket.bufferedAmount>8000)return;
  try{netSocket.send(JSON.stringify(m))}catch(e){}
 }
-function disconnectOnline(){netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;guestSmooth=null;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
+function disconnectOnline(){netPingMs=null;updatePingLabel();netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;guestSmooth=null;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
 function onlineMessage(text,isError=false){const el=$('netMessage');if(el){el.textContent=text;el.style.color=isError?'#ff8996':'#baf8e7';}}
 function onlineMenu(){state='online_menu';setMusicTheme('menu');hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / ONLINE</div><h2 class="page-title">ONLINE <span>1V1.</span></h2><p>Private room, one host and one guest. First to five rounds.</p><label class="net-label">MULTIPLAYER SERVER</label><input class="net-input" id="netServer" spellcheck="false" placeholder="wss://your-server.onrender.com" value="${String(onlineServerUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"><p class="net-small">GitHub Pages hosts the game; a separate WebSocket server handles room codes. Set its public wss:// URL here, or run the included server locally.</p><div class="net-actions"><button class="btn" id="hostOnline">CREATE ROOM</button><button class="btn secondary" id="joinOnline">JOIN ROOM</button></div><input class="net-input net-room-input" id="joinCode" maxlength="6" placeholder="ENTER 6-LETTER ROOM CODE" autocapitalize="characters"><p id="netMessage" class="net-feedback"></p><button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('hostOnline').onclick=()=>connectOnline('host');$('joinOnline').onclick=()=>connectOnline('guest');$('backBtn').onclick=menu}
 function connectOnline(role){
@@ -1276,7 +1296,7 @@ function connectOnline(role){
  sock.onclose=()=>{if(sock!==netSocket)return;netSocket=null;netConnected=false;remoteKeys={};if(['online_menu','online_lobby'].includes(state)){onlineMessage('Disconnected from server. Check the address and try again.',true)}else if(netRole){state='online_disconnected';showOverlay('<div class="net-card"><h2>CONNECTION LOST</h2><p>The multiplayer connection closed.</p><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}};
 }
 function onlineLobby(){state='online_lobby';hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / PRIVATE MATCH</div><h2 class="page-title">YOUR <span>ROOM.</span></h2><p>${netRole==='host'?'Share this code with your friend.':'Waiting for the host to start the match.'}</p><div class="net-code">${netCode}</div><div class="net-actions"><button class="btn secondary" id="copyInvite">COPY INVITE LINK</button>${netRole==='host'?'<button class="btn" id="beginOnline" '+(!netGuestReady?'disabled':'')+'>START MATCH</button>':''}</div><p id="netMessage" class="net-feedback">${netGuestReady?'Both players connected!':'Waiting for second player…'}</p><button class="page-back" id="backBtn">← LEAVE ROOM</button></div></section>`);$('copyInvite').onclick=()=>{const u=new URL(location.href);u.searchParams.set('room',netCode);navigator.clipboard?.writeText(u.href).then(()=>onlineMessage('Invite link copied!')).catch(()=>onlineMessage('Room code: '+netCode))};$('backBtn').onclick=menu;if(netRole==='host')$('beginOnline').onclick=()=>{if(netGuestReady){sendNet({type:'start'});startOnlineMatch()}};}
-function startOnlineMatch(){if(netRole!=='host')return;practiceMode=false;colaSelectionPending=false;mouse.down=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);netConnected=true;netRoundEpoch=0;netPreparedEpoch=0;netLastSnapshot=-1;guestSmooth=null;remoteKeys={};startRound(true);}
+function startOnlineMatch(){if(netRole!=='host')return;practiceMode=false;colaSelectionPending=false;mouse.down=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);netConnected=true;updatePingLabel();netRoundEpoch=0;netPreparedEpoch=0;netLastSnapshot=-1;guestSmooth=null;remoteKeys={};startRound(true);}
 function makeNetSnapshot(){
  // Cosmetics (especially particles and floating text) are local-only: they ballooned
  // each message, causing packet queues and visibly delayed guest input.
@@ -1294,8 +1314,16 @@ function updateGuestSnapshot(q){if(!q||!Array.isArray(q.scores)||!q.p1||!q.p2)re
  hud.classList.add('show');hideOverlay();$('name2').textContent='BLUE • YOU';$('roundNo').textContent='ROUND '+round;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;updateHUD();}
 function onlineGuestDraft(ids){netDraftIds=ids.filter(id=>ITEMS.some(c=>c.id===id));state='online_guest_draft';const choices=netDraftIds.map(id=>ITEMS.find(c=>c.id===id));overlay.classList.add('vend-screen');showOverlay(vendingMarkup(choices,false));panel.querySelectorAll('.vend-slot').forEach(b=>{b.onclick=()=>{const idx=Number(b.dataset.i);sendNet({type:'choose',card:netDraftIds[idx]});state='online_guest_wait';showOverlay('<div class="net-card"><h2>SODA SELECTED!</h2><p>Waiting for the next round…</p></div>')}});setMusicTheme('cola');}
 function handleOnlineMessage(m){
+ if(m.type==='latency_reply'){
+  if(m.seq===netPingSeq){
+   const sample=performance.now()-netPingSent;
+   netPingMs=netPingMs==null?sample:(netPingMs*.7+sample*.3);
+   updatePingLabel();
+  }
+  return;
+ }
  if(m.type==='error'){onlineMessage(m.message||'Room error.',true);return}
- if(m.type==='created'||m.type==='joined'){netCode=m.code;netConnected=true;netGuestReady=m.type==='joined';onlineLobby();return}
+ if(m.type==='created'||m.type==='joined'){netCode=m.code;netConnected=true;netGuestReady=m.type==='joined';updatePingLabel();onlineLobby();return}
  if(m.type==='player_joined'&&netRole==='host'){netGuestReady=true;onlineLobby();return}
  if(m.type==='player_left'){remoteKeys={};netGuestReady=false;if(netRole==='host'){state='online_lobby';onlineLobby();onlineMessage('Friend disconnected. Waiting for another player.',true)}else{state='online_disconnected';showOverlay('<div class="net-card"><h2>HOST LEFT</h2><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}return}
  if(m.type==='round_ready'&&netRole==='host'){
@@ -2950,7 +2978,18 @@ function render(){
    const dy=Math.max(-16,Math.min(16,(Number(p.vy)||0)*age));
    return [p.x+dx,p.y+dy];
   };
-  const [x1,y1]=target(p1),[x2,y2]=target(p2);
+  const [x1,y1]=target(p1);
+  let [x2,y2]=target(p2);
+  // Guest-only visual input prediction. Combat remains server-authoritative.
+  // The bounded offset makes walking respond before a network round trip.
+  const axis=(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0);
+  if(axis&&p2.grounded&&!p2.dead&&!p2.dashTime){
+   const lead=Math.min(.12,Math.max(.035,(netPingMs==null?110:netPingMs)/2000+.02));
+   const desiredV=axis*Math.min(500,p2.stats.speed||250);
+   const leadX=Math.max(-32,Math.min(32,desiredV*lead));
+   // Avoid displaying the predicted fighter outside the arena bounds.
+   x2=Math.max(arena.bounds.left,Math.min(arena.bounds.right-p2.w,x2+leadX));
+  }
   if(Math.hypot(x1-guestSmooth.x1,y1-guestSmooth.y1)>110){guestSmooth.x1=x1;guestSmooth.y1=y1}
   else{guestSmooth.x1+=(x1-guestSmooth.x1)*amt;guestSmooth.y1+=(y1-guestSmooth.y1)*amt}
   if(Math.hypot(x2-guestSmooth.x2,y2-guestSmooth.y2)>110){guestSmooth.x2=x2;guestSmooth.y2=y2}
