@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<!-- Encourage browsers to revalidate the game document between sessions. Hosting/CDN cache policy is controlled separately by GitHub Pages. -->
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <title>SQUARE OFF | PC 4.5</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
@@ -621,6 +625,46 @@ body{padding:0 !important;display:block;background:#071223}
   </div>
   <div class="foot"><span><b>SO / PC 3.36</b> BUILT FOR THE COMEBACK <i>//</i> FIRST TO FIVE</span><span class="footeractions"><button id="soundBtn" class="pill">SOUND: ON</button><button id="menuBtn" class="pill">MENU / PAUSE</button></span></div>
 </div>
+<script>
+/* Square Off update guard: prompts for a fresh copy without interrupting an active match.
+   GitHub Pages controls CDN caching headers; a unique query parameter bypasses stale URL cache entries. */
+(()=>{'use strict';
+ const installedVersion=(document.title.match(/PC\s+([\d.]+)/)||[])[1]||'';
+ let checking=false,lastCheck=0;
+ function freshUrl(v){
+  const url=new URL(location.href);
+  url.searchParams.set('so_build',String(v||Date.now()));
+  return url.href;
+ }
+ const css=document.createElement('style');
+ css.textContent='#so-update-notice{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:99999;background:#15233b;border:1px solid #5cebdc;border-radius:12px;padding:11px 14px;box-shadow:0 12px 36px #000b;color:#fff;font:700 13px system-ui,sans-serif;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px)}#so-update-notice button{border:0;background:#5cebdc;color:#111c2d;padding:9px 12px;border-radius:8px;font:800 12px system-ui;cursor:pointer}';
+ document.head.append(css);
+ async function checkForUpdate(){
+  if(checking||Date.now()-lastCheck<70000)return;
+  checking=true;lastCheck=Date.now();
+  try{
+   const url=new URL(location.href);
+   url.searchParams.set('_so_check',Date.now().toString());
+   const response=await fetch(url.href,{cache:'no-store'});
+   if(!response.ok)return;
+   const html=await response.text();
+   const next=(html.match(/<title>\s*SQUARE OFF\s*\|\s*PC\s*([\d.]+)\s*<\/title>/i)||[])[1];
+   if(next&&installedVersion&&next!==installedVersion&&!document.getElementById('so-update-notice')){
+    const bar=document.createElement('div');bar.id='so-update-notice';
+    const label=document.createElement('span');label.textContent='Square Off '+next+' is available!';
+    const button=document.createElement('button');button.type='button';button.textContent='REFRESH GAME';
+    button.onclick=()=>location.assign(freshUrl(next));
+    bar.append(label,button);document.body.append(bar);
+   }
+  }catch(e){/* Offline or sleeping laptop: just check again later. */}
+  finally{checking=false}
+ }
+ window.addEventListener('focus',checkForUpdate);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkForUpdate()});
+ setTimeout(checkForUpdate,3000);
+ setInterval(checkForUpdate,120000);
+})();
+</script>
 <script>
 (()=>{
 'use strict';
