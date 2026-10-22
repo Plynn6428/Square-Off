@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.1</title>
+<title>SQUARE OFF | PC 5.2</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -601,7 +601,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.1</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.2</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1171,7 +1171,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.1</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.2</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1206,32 +1206,7 @@ function menu(){
 const ONLINE_SERVER_CONFIG='square-off-online-server';
 const defaultOnlineServer=location.hostname==='localhost'||location.hostname==='127.0.0.1'?`ws://${location.hostname}:3001`:' ';
 let netSocket=null,netRole='',netCode='',netConnected=false,netGuestReady=false,netLastSnapshot=-1,remoteKeys={},netDraftIds=[];
-let guestSmooth=null,netLastReceived=0;
-// Recent authoritative positions buffered for steady 60 FPS visual interpolation.
-let guestPositionHistory=[];
-// Guest-only projectile render history, keyed by stable host-generated shot IDs.
-let guestBulletHistory=new Map(),bulletSequence=0;
-let guestPacketGap=85,guestPacketJitter=0;
-let netPingMs=null,netPingSent=0,netPingSeq=0;
-// A discrete network status display; does not affect gameplay.
-const netPingLabel=document.createElement('div');
-netPingLabel.id='netPingLabel';
-netPingLabel.setAttribute('aria-label','Multiplayer connection latency');
-netPingLabel.style.cssText='position:absolute;right:13px;bottom:13px;z-index:9;padding:5px 9px;border:1px solid #5cebdc77;border-radius:7px;background:#071523d9;color:#a9f5e9;font:700 11px system-ui,sans-serif;pointer-events:none;display:none';
-$('game').append(netPingLabel);
-function updatePingLabel(){
- netPingLabel.style.display=netRole&&netConnected?'block':'none';
- if(netRole&&netConnected){
-  netPingLabel.textContent=netPingMs==null?'PING …':('PING '+Math.round(netPingMs)+' ms');
-  netPingLabel.style.color=netPingMs!=null&&netPingMs>180?'#ffd37e':'#a9f5e9';
- }
-}
-function sendLatencyProbe(){
- if(!netRole||!netConnected||netSocket?.readyState!==WebSocket.OPEN)return;
- netPingSent=performance.now();
- sendNet({type:'latency_probe',seq:++netPingSeq});
-}
-setInterval(sendLatencyProbe,2500);
+// Basic online rendering: received snapshots are displayed immediately.
 // 4.4: Explicit per-round handshake. Never simulate combat until BOTH clients have
 // prepared the exact same round. Epoch IDs reject queued/out-of-order old packets.
 let netRoundEpoch=0,netPreparedEpoch=0,netGuestRoundEpoch=0,netCountdownEnd=0;
@@ -1254,7 +1229,7 @@ function guestPrepareRound(m){
  if(m.epoch>netGuestRoundEpoch){
   netGuestRoundEpoch=m.epoch;
   updateGuestSnapshot(m.payload);
-  guestSmooth=null;guestPositionHistory=[];guestBulletHistory.clear();remoteKeys={};mouse.down=false;keys.clear();
+  remoteKeys={};mouse.down=false;keys.clear();
  }
  state='online_guest_ready';
  netWaitScreen('ROUND READY','Connected! Waiting for the host to start the countdown…');
@@ -1283,7 +1258,7 @@ function sendNet(m){
  if(m.type==='input'&&netSocket.bufferedAmount>8000)return;
  try{netSocket.send(JSON.stringify(m))}catch(e){}
 }
-function disconnectOnline(){netPingMs=null;updatePingLabel();netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;guestSmooth=null;guestPositionHistory=[];guestBulletHistory.clear();guestPacketGap=85;guestPacketJitter=0;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
+function disconnectOnline(){netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
 function onlineMessage(text,isError=false){const el=$('netMessage');if(el){el.textContent=text;el.style.color=isError?'#ff8996':'#baf8e7';}}
 function onlineMenu(){state='online_menu';setMusicTheme('menu');hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / ONLINE</div><h2 class="page-title">ONLINE <span>1V1.</span></h2><p>Private room, one host and one guest. First to five rounds.</p><label class="net-label">MULTIPLAYER SERVER</label><input class="net-input" id="netServer" spellcheck="false" placeholder="wss://your-server.onrender.com" value="${String(onlineServerUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"><p class="net-small">GitHub Pages hosts the game; a separate WebSocket server handles room codes. Set its public wss:// URL here, or run the included server locally.</p><div class="net-actions"><button class="btn" id="hostOnline">CREATE ROOM</button><button class="btn secondary" id="joinOnline">JOIN ROOM</button></div><input class="net-input net-room-input" id="joinCode" maxlength="6" placeholder="ENTER 6-LETTER ROOM CODE" autocapitalize="characters"><p id="netMessage" class="net-feedback"></p><button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('hostOnline').onclick=()=>connectOnline('host');$('joinOnline').onclick=()=>connectOnline('guest');$('backBtn').onclick=menu}
 function connectOnline(role){
@@ -1301,65 +1276,32 @@ function connectOnline(role){
  sock.onclose=()=>{if(sock!==netSocket)return;netSocket=null;netConnected=false;remoteKeys={};if(['online_menu','online_lobby'].includes(state)){onlineMessage('Disconnected from server. Check the address and try again.',true)}else if(netRole){state='online_disconnected';showOverlay('<div class="net-card"><h2>CONNECTION LOST</h2><p>The multiplayer connection closed.</p><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}};
 }
 function onlineLobby(){state='online_lobby';hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / PRIVATE MATCH</div><h2 class="page-title">YOUR <span>ROOM.</span></h2><p>${netRole==='host'?'Share this code with your friend.':'Waiting for the host to start the match.'}</p><div class="net-code">${netCode}</div><div class="net-actions"><button class="btn secondary" id="copyInvite">COPY INVITE LINK</button>${netRole==='host'?'<button class="btn" id="beginOnline" '+(!netGuestReady?'disabled':'')+'>START MATCH</button>':''}</div><p id="netMessage" class="net-feedback">${netGuestReady?'Both players connected!':'Waiting for second player…'}</p><button class="page-back" id="backBtn">← LEAVE ROOM</button></div></section>`);$('copyInvite').onclick=()=>{const u=new URL(location.href);u.searchParams.set('room',netCode);navigator.clipboard?.writeText(u.href).then(()=>onlineMessage('Invite link copied!')).catch(()=>onlineMessage('Room code: '+netCode))};$('backBtn').onclick=menu;if(netRole==='host')$('beginOnline').onclick=()=>{if(netGuestReady){sendNet({type:'start'});startOnlineMatch()}};}
-function startOnlineMatch(){if(netRole!=='host')return;practiceMode=false;colaSelectionPending=false;mouse.down=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);netConnected=true;updatePingLabel();netRoundEpoch=0;netPreparedEpoch=0;netLastSnapshot=-1;guestSmooth=null;remoteKeys={};startRound(true);}
+function startOnlineMatch(){if(netRole!=='host')return;practiceMode=false;colaSelectionPending=false;mouse.down=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);netConnected=true;netRoundEpoch=0;netPreparedEpoch=0;netLastSnapshot=-1;remoteKeys={};startRound(true);}
 function makeNetSnapshot(){
  // Cosmetics (especially particles and floating text) are local-only: they ballooned
  // each message, causing packet queues and visibly delayed guest input.
  return {state,clock,round,arenaIndex,scores,p1,p2,bullets,moveableBlocks,fireBombs,effectWaves,winner,loser,roundEndTime};
 }
-function updateGuestSnapshot(q){if(!q||!Array.isArray(q.scores)||!q.p1||!q.p2)return;
- // Guest display-only. The host alone resolves physics/hit detection.
- const prevP1=p1,prevP2=p2,prevArena=arenaIndex,prevRound=round;
- state=q.state==='roundover'?'roundover':'playing';clock=q.clock||0;round=q.round||1;arenaIndex=q.arenaIndex|0;arena=maps[arenaIndex]||maps[0];updateArenaCamera();scores=q.scores;p1=q.p1;p2=q.p2;bullets=q.bullets||[];moveableBlocks=q.moveableBlocks||[];fireBombs=q.fireBombs||[];effectWaves=q.effectWaves||[];particles=[];texts=[];winner=q.winner;loser=q.loser;roundEndTime=q.roundEndTime||0;
- // Smooth only the drawn positions; simulation and hits remain host authoritative.
- // Reset at each round so teleporting to the next spawn is immediate.
- const reset=!guestSmooth||prevRound!==round||prevArena!==arenaIndex;
- if(reset){guestSmooth={x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y};guestPositionHistory=[];guestBulletHistory.clear();guestPacketGap=85;guestPacketJitter=0;}
- const receivedAt=performance.now();
- if(guestPositionHistory.length){
-  const gap=receivedAt-guestPositionHistory[guestPositionHistory.length-1].t;
-  if(gap>10&&gap<500){
-   const prevGap=guestPacketGap;
-   guestPacketGap=prevGap*.9+gap*.1;
-   guestPacketJitter=guestPacketJitter*.85+Math.abs(gap-prevGap)*.15;
-  }
- }
- netLastReceived=receivedAt;
- // Retain the last few authoritative positions per bullet across snapshots.
- // Missing bullets disappear immediately: no visual ghost after a hit.
- const seen=new Set();
- for(let i=0;i<bullets.length;i++){
-  const b=bullets[i];
-  if(!Number.isInteger(b.id))continue; // Defensive compatibility with older clients.
-  seen.add(b.id);
-  let history=guestBulletHistory.get(b.id);
-  if(!history){history=[];guestBulletHistory.set(b.id,history);}
-  history.push({t:receivedAt,x:b.x,y:b.y,vx:b.vx,vy:b.vy,bullet:b});
-  history.removedAt=null;
-  if(history.length>5)history.shift();
- }
- // A removed bullet must remain drawable until the guest's delayed visual
- // timeline reaches the packet in which it disappeared. Otherwise it blinks
- // out mid-flight even though the display is still ~100–185ms behind.
- for(const [id,history] of guestBulletHistory){
-  if(!seen.has(id)&&history.removedAt==null)history.removedAt=receivedAt;
-  if(history.removedAt!=null&&receivedAt-history.removedAt>500)guestBulletHistory.delete(id);
- }
- guestPositionHistory.push({t:receivedAt,x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y});
- if(guestPositionHistory.length>10)guestPositionHistory.shift();
- hud.classList.add('show');hideOverlay();$('name2').textContent='BLUE • YOU';$('roundNo').textContent='ROUND '+round;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;updateHUD();}
+function updateGuestSnapshot(q){
+ if(!q||!Array.isArray(q.scores)||!q.p1||!q.p2)return;
+ // Guest displays the latest authoritative state directly: no interpolation,
+ // prediction, buffering or cosmetic position corrections.
+ state=q.state==='roundover'?'roundover':'playing';
+ clock=q.clock||0;round=q.round||1;arenaIndex=q.arenaIndex|0;
+ arena=maps[arenaIndex]||maps[0];updateArenaCamera();
+ scores=q.scores;p1=q.p1;p2=q.p2;bullets=q.bullets||[];
+ moveableBlocks=q.moveableBlocks||[];fireBombs=q.fireBombs||[];
+ effectWaves=q.effectWaves||[];particles=[];texts=[];
+ winner=q.winner;loser=q.loser;roundEndTime=q.roundEndTime||0;
+ hud.classList.add('show');hideOverlay();
+ $('name2').textContent='BLUE • YOU';$('roundNo').textContent='ROUND '+round;
+ $('score1').textContent=scores[0];$('score2').textContent=scores[1];
+ $('mapName').textContent=arena.name;updateHUD();
+}
 function onlineGuestDraft(ids){netDraftIds=ids.filter(id=>ITEMS.some(c=>c.id===id));state='online_guest_draft';const choices=netDraftIds.map(id=>ITEMS.find(c=>c.id===id));overlay.classList.add('vend-screen');showOverlay(vendingMarkup(choices,false));panel.querySelectorAll('.vend-slot').forEach(b=>{b.onclick=()=>{const idx=Number(b.dataset.i);sendNet({type:'choose',card:netDraftIds[idx]});state='online_guest_wait';showOverlay('<div class="net-card"><h2>SODA SELECTED!</h2><p>Waiting for the next round…</p></div>')}});setMusicTheme('cola');}
 function handleOnlineMessage(m){
- if(m.type==='latency_reply'){
-  if(m.seq===netPingSeq){
-   const sample=performance.now()-netPingSent;
-   netPingMs=netPingMs==null?sample:(netPingMs*.7+sample*.3);
-   updatePingLabel();
-  }
-  return;
- }
  if(m.type==='error'){onlineMessage(m.message||'Room error.',true);return}
- if(m.type==='created'||m.type==='joined'){netCode=m.code;netConnected=true;netGuestReady=m.type==='joined';updatePingLabel();onlineLobby();return}
+ if(m.type==='created'||m.type==='joined'){netCode=m.code;netConnected=true;netGuestReady=m.type==='joined';onlineLobby();return}
  if(m.type==='player_joined'&&netRole==='host'){netGuestReady=true;onlineLobby();return}
  if(m.type==='player_left'){remoteKeys={};netGuestReady=false;if(netRole==='host'){state='online_lobby';onlineLobby();onlineMessage('Friend disconnected. Waiting for another player.',true)}else{state='online_disconnected';showOverlay('<div class="net-card"><h2>HOST LEFT</h2><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}return}
  if(m.type==='round_ready'&&netRole==='host'){
@@ -1957,7 +1899,7 @@ function fireSingle(p,angleOffset=0,damageMultiplier=1){
  if(p.dead||p.ammo<=0||p.shieldTime>0)return false;
  p.ammo--;if(p.ammo<=0)p.reload=p.stats.reload;
  const angle=p.aim+angleOffset+rand(-.016,.016),dx=Math.cos(angle),dy=Math.sin(angle),cx=p.x+p.w/2,cy=p.y+p.h*.47;
- const offset=35;bullets.push({id:++bulletSequence,x:cx+dx*offset,y:cy+dy*offset,px:cx,py:cy,vx:dx*p.stats.bullet,vy:dy*p.stats.bullet,owner:p.id,damage:p.stats.damage*damageMultiplier*(1+p.stats.revenge*.4*cap((1-p.hp/p.stats.maxHp)/.75,0,1)),split:p.stats.split,splitTime:.4,boomberry:p.stats.boomberry,hotshot:p.stats.hotshot,skyhook:p.stats.skyhook,wreck:p.stats.wreck,gravity:p.stats.gravity,chain:p.stats.chain,acid:p.stats.acid,coldshot:p.stats.coldshot,locklime:p.stats.locklime||0,laserLocked:false,laserPoint:null,life:(p.stats.locklime?3.65:1.85)*p.stats.bulletLife,bounceBoost:p.stats.ricochetBoost||0,initialSpeed:p.stats.bullet,bounces:p.stats.bounce,r:5.5*p.stats.bulletSize,col:p.stats.coldshot?'#9aefff':'#ffdc4b',selfArmed:false});
+ const offset=35;bullets.push({x:cx+dx*offset,y:cy+dy*offset,px:cx,py:cy,vx:dx*p.stats.bullet,vy:dy*p.stats.bullet,owner:p.id,damage:p.stats.damage*damageMultiplier*(1+p.stats.revenge*.4*cap((1-p.hp/p.stats.maxHp)/.75,0,1)),split:p.stats.split,splitTime:.4,boomberry:p.stats.boomberry,hotshot:p.stats.hotshot,skyhook:p.stats.skyhook,wreck:p.stats.wreck,gravity:p.stats.gravity,chain:p.stats.chain,acid:p.stats.acid,coldshot:p.stats.coldshot,locklime:p.stats.locklime||0,laserLocked:false,laserPoint:null,life:(p.stats.locklime?3.65:1.85)*p.stats.bulletLife,bounceBoost:p.stats.ricochetBoost||0,initialSpeed:p.stats.bullet,bounces:p.stats.bounce,r:5.5*p.stats.bulletSize,col:p.stats.coldshot?'#9aefff':'#ffdc4b',selfArmed:false});
  p.faceShoot=.16;p.vx-=dx*37;p.vy-=dy*19;burst(cx+dx*31,cy+dy*31,p.color,5,120);sound(p.id===0?300:260,.08,'square',.028,.52);
  return true;
 }
@@ -2464,7 +2406,7 @@ function bulletPhysics(dt){
   b.x+=b.vx*travelDt;b.y+=b.vy*travelDt;if(!b.locklime||!b.laserLocked)b.vy+=BULLET_GRAVITY*travelDt;b.life-=dt;
   if(b.split>0&&!b.mini){b.splitTime-=dt;if(b.splitTime<=0){
    const v=Math.hypot(b.vx,b.vy),a=Math.atan2(b.vy,b.vx);
-   for(const offset of [-.20,.20])bullets.push({...b,id:++bulletSequence,vx:Math.cos(a+offset)*v,vy:Math.sin(a+offset)*v,damage:b.damage*.40,r:b.r*.7,split:0,mini:true,life:Math.min(1.2,b.life),selfArmed:true});
+   for(const offset of [-.20,.20])bullets.push({...b,vx:Math.cos(a+offset)*v,vy:Math.sin(a+offset)*v,damage:b.damage*.40,r:b.r*.7,split:0,mini:true,life:Math.min(1.2,b.life),selfArmed:true});
    b.split=0;
   }}
   let gone=b.life<=0,deathBurstDone=false;
@@ -2977,41 +2919,7 @@ function drawBlockEffects(){
   ctx.restore();
  }
 }
-function drawBullets(){
- ctx.lineCap='round';
- const guestVisual=netRole==='guest'&&state==='playing';
- const delay=Math.max(105,Math.min(185,guestPacketGap+guestPacketJitter*1.5+22));
- const displayTime=performance.now()-delay;
- const visibleBullets=guestVisual
-  ? Array.from(guestBulletHistory.values()).filter(hist=>hist.length&&hist[0].t<=displayTime&&(hist.removedAt==null||displayTime<hist.removedAt)).map(hist=>hist[hist.length-1].bullet)
-  : bullets;
- for(const b of visibleBullets){
-  // Draw a copy so weapon visuals/laser lines use the smoothed location without
-  // mutating the authoritative snapshot or affecting game mechanics.
-  const hist=guestVisual&&Number.isInteger(b.id)?guestBulletHistory.get(b.id):null;
-  let origX,origY;
-  if(hist&&hist.length){
-   origX=b.x;origY=b.y;
-   let older=hist[0],newer=hist[hist.length-1];
-   if(displayTime<=older.t)newer=older;
-   else if(displayTime>=newer.t)older=hist.length>1?hist[hist.length-2]:newer;
-   else for(let j=1;j<hist.length;j++)if(hist[j].t>=displayTime){older=hist[j-1];newer=hist[j];break}
-   const span=newer.t-older.t;
-   const t=span>1?Math.max(0,Math.min(1,(displayTime-older.t)/span)):0;
-   let x=older.x+(newer.x-older.x)*t,y=older.y+(newer.y-older.y)*t;
-   // A small, bounded continuation avoids a frozen bullet during late packets.
-   const extra=displayTime>newer.t?Math.min(55,displayTime-newer.t):0;
-   if(extra>0){
-    if(span>=15&&span<260){
-     x+=Math.max(-2400,Math.min(2400,(newer.x-older.x)*1000/span))*extra/1000;
-     y+=Math.max(-2400,Math.min(2400,(newer.y-older.y)*1000/span))*extra/1000;
-    }else{
-     x+=(Number(newer.vx)||0)*Math.min(35,extra)/1000;
-     y+=(Number(newer.vy)||0)*Math.min(35,extra)/1000;
-    }
-   }
-   b.x=x;b.y=y;
-  }
+function drawBullets(){ctx.lineCap='round';for(const b of bullets){
  if(b.locklime&&b.laserPoint){
   ctx.save();ctx.globalAlpha=b.laserLocked?.9:.36;
   ctx.strokeStyle=b.laserLocked?'#ff3b50':'#ff6674';
@@ -3033,43 +2941,10 @@ if(b.locklime){
   ctx.lineTo(b.x-ux*(b.r+13+4*Math.sin(clock*64+b.y)),b.y-uy*(b.r+13+4*Math.sin(clock*64+b.y)));
   ctx.stroke();ctx.restore();
  }
-ctx.strokeStyle=b.col;ctx.globalAlpha=.3;ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(b.x-b.vx*.025,b.y-b.vy*.025);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(b.x-b.vx*.018,b.y-b.vy*.018);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill();if(origX!==undefined){b.x=origX;b.y=origY;}}}
+ctx.strokeStyle=b.col;ctx.globalAlpha=.3;ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(b.x-b.vx*.025,b.y-b.vy*.025);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(b.x-b.vx*.018,b.y-b.vy*.018);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill()}}
 function drawParticles(){for(const p of particles){const a=cap(p.life/(p.max||.5),0,1);ctx.globalAlpha=a;ctx.fillStyle=p.col;if(p.shape==='square'){const size=p.r*Math.max(.35,a);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot||0);ctx.fillRect(-size/2,-size/2,size,size);ctx.restore();}else{ctx.beginPath();ctx.arc(p.x,p.y,p.r*Math.max(.1,a),0,TAU);ctx.fill()}}ctx.globalAlpha=1;for(const t of texts){ctx.globalAlpha=cap(t.life,0,1);ctx.font='900 19px Impact, Arial Black, sans-serif';ctx.textAlign='center';ctx.strokeStyle='#111a2d';ctx.lineWidth=5;ctx.strokeText(t.msg,t.x,t.y);ctx.fillStyle=t.col;ctx.fillText(t.msg,t.x,t.y)}ctx.globalAlpha=1}
 function render(){
- let orig1=null,orig2=null;
- if(netRole==='guest'&&p1&&p2&&state==='playing'&&guestPositionHistory.length){
-  orig1=[p1.x,p1.y];orig2=[p2.x,p2.y];
-  // Adaptive jitter buffer preserves smooth motion across uneven arrivals.
-  // If a packet is briefly late, extrapolate from confirmed recent movement
-  // for up to 65ms rather than freezing the players on their last position.
-  const delay=Math.max(105,Math.min(185,guestPacketGap+guestPacketJitter*1.5+22));
-  const targetTime=performance.now()-delay;
-  const samples=guestPositionHistory;
-  let before=samples[0],after=samples[samples.length-1];
-  if(targetTime<=samples[0].t){before=after=samples[0]}
-  else if(targetTime>=after.t){
-   before=samples.length>1?samples[samples.length-2]:after;
-  }else{
-   for(let n=1;n<samples.length;n++){
-    if(samples[n].t>=targetTime){before=samples[n-1];after=samples[n];break}
-   }
-  }
-  const span=after.t-before.t;
-  // Small, tightly bounded extrapolation uses ONLY received positions;
-  // never advances collisions, shots or the authoritative game state.
-  const extra=targetTime>after.t?Math.min(65,targetTime-after.t):0;
-  const frac=span>1?Math.max(0,Math.min(1,(targetTime-before.t)/span)):0;
-  const sample=(key)=>{
-   const base=before[key]+(after[key]-before[key])*frac;
-   if(extra<=0||span<20||span>260)return base;
-   const velocity=Math.max(-650,Math.min(650,(after[key]-before[key])*1000/span));
-   return base+velocity*extra/1000;
-  };
-  p1.x=sample('x1');p1.y=sample('y1');
-  p2.x=sample('x2');p2.y=sample('y2');
- }
  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(renderScaleX,0,0,renderScaleY,0,0);ctx.save();ctx.translate(cameraX,cameraY);ctx.scale(cameraScale,cameraScale);if(shakeEnabled&&shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();drawBullets();drawEffectWaves();drawBlockEffects();drawPlayer(p1);drawPlayer(p2);drawFrostbiteArmor(p1);drawFrostbiteArmor(p2);drawParticles();ctx.restore();
- if(orig1){p1.x=orig1[0];p1.y=orig1[1];p2.x=orig2[0];p2.y=orig2[1];}
  if(state==='playing'&&mouse.used&&p1){ctx.save();ctx.translate(cameraX,cameraY);ctx.scale(cameraScale,cameraScale);ctx.strokeStyle='#ffd44aaa';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(mouse.x,mouse.y,9,0,TAU);ctx.moveTo(mouse.x-15,mouse.y);ctx.lineTo(mouse.x-5,mouse.y);ctx.moveTo(mouse.x+5,mouse.y);ctx.lineTo(mouse.x+15,mouse.y);ctx.moveTo(mouse.x,mouse.y-15);ctx.lineTo(mouse.x,mouse.y-5);ctx.moveTo(mouse.x,mouse.y+5);ctx.lineTo(mouse.x,mouse.y+15);ctx.stroke();ctx.restore()}
  if(state==='roundover'&&winner!==null){ctx.fillStyle='#07101abb';ctx.fillRect(0,190,W,142);ctx.font='900 65px Impact, Arial Black, sans-serif';ctx.fillStyle=winner===0?'#ff595b':'#4594ff';ctx.textAlign='center';ctx.fillText((winner===0?'RED':(netRole?'BLUE':'BLUE BOT'))+' WINS ROUND!',W/2,275);ctx.fillStyle='#d1def0';ctx.font='800 17px monospace';ctx.fillText('UPGRADE DRAFT INCOMING',W/2,306)}
 }
