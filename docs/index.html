@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.0</title>
+<title>SQUARE OFF | PC 5.1</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -601,7 +601,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.0</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.1</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1171,7 +1171,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.0</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.1</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1334,10 +1334,17 @@ function updateGuestSnapshot(q){if(!q||!Array.isArray(q.scores)||!q.p1||!q.p2)re
   seen.add(b.id);
   let history=guestBulletHistory.get(b.id);
   if(!history){history=[];guestBulletHistory.set(b.id,history);}
-  history.push({t:receivedAt,x:b.x,y:b.y,vx:b.vx,vy:b.vy});
+  history.push({t:receivedAt,x:b.x,y:b.y,vx:b.vx,vy:b.vy,bullet:b});
+  history.removedAt=null;
   if(history.length>5)history.shift();
  }
- for(const id of guestBulletHistory.keys())if(!seen.has(id))guestBulletHistory.delete(id);
+ // A removed bullet must remain drawable until the guest's delayed visual
+ // timeline reaches the packet in which it disappeared. Otherwise it blinks
+ // out mid-flight even though the display is still ~100–185ms behind.
+ for(const [id,history] of guestBulletHistory){
+  if(!seen.has(id)&&history.removedAt==null)history.removedAt=receivedAt;
+  if(history.removedAt!=null&&receivedAt-history.removedAt>500)guestBulletHistory.delete(id);
+ }
  guestPositionHistory.push({t:receivedAt,x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y});
  if(guestPositionHistory.length>10)guestPositionHistory.shift();
  hud.classList.add('show');hideOverlay();$('name2').textContent='BLUE • YOU';$('roundNo').textContent='ROUND '+round;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;updateHUD();}
@@ -2975,7 +2982,10 @@ function drawBullets(){
  const guestVisual=netRole==='guest'&&state==='playing';
  const delay=Math.max(105,Math.min(185,guestPacketGap+guestPacketJitter*1.5+22));
  const displayTime=performance.now()-delay;
- for(const b of bullets){
+ const visibleBullets=guestVisual
+  ? Array.from(guestBulletHistory.values()).filter(hist=>hist.length&&hist[0].t<=displayTime&&(hist.removedAt==null||displayTime<hist.removedAt)).map(hist=>hist[hist.length-1].bullet)
+  : bullets;
+ for(const b of visibleBullets){
   // Draw a copy so weapon visuals/laser lines use the smoothed location without
   // mutating the authoritative snapshot or affecting game mechanics.
   const hist=guestVisual&&Number.isInteger(b.id)?guestBulletHistory.get(b.id):null;
