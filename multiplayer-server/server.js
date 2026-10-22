@@ -7,7 +7,7 @@ const rooms = new Map();
 const clients = new WeakMap();
 const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function code(){let c;do{c=Array.from(crypto.randomBytes(6),v=>alphabet[v%alphabet.length]).join('')}while(rooms.has(c));return c;}
-function send(ws,obj){if(ws?.readyState===WebSocket.OPEN){if(obj.type==='snapshot'&&ws.bufferedAmount>90000)return;ws.send(JSON.stringify(obj));}}
+function send(ws,obj){if(ws?.readyState===WebSocket.OPEN){if(obj.type==='snapshot'&&ws.bufferedAmount>48000)return;if(obj.type==='input'&&ws.bufferedAmount>16000)return;ws.send(JSON.stringify(obj));}}
 function cleanup(ws){const info=clients.get(ws);if(!info)return;clients.delete(ws);const room=rooms.get(info.code);if(!room)return;
  if(info.role==='host'){send(room.guest,{type:'player_left'});if(room.guest)clients.delete(room.guest);rooms.delete(info.code)}
  else if(room.guest===ws){room.guest=null;room.started=false;send(room.host,{type:'player_left'});}
