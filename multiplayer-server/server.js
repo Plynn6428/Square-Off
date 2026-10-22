@@ -20,6 +20,10 @@ wss.on('connection',ws=>{
   if(data.length>800000)return;
   let m;try{m=JSON.parse(data.toString())}catch{return}
   if(!m||typeof m.type!=='string')return;
+  // Server-side echo measures the actual browser-to-relay round trip.
+  if(m.type==='latency_probe'&&Number.isInteger(m.seq)){
+   send(ws,{type:'latency_reply',seq:m.seq});return;
+  }
   const user=clients.get(ws);
   if(!user){
    if(m.type==='create'){
