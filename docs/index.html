@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.3</title>
+<title>SQUARE OFF | PC 5.4</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -601,7 +601,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.3</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1171,7 +1171,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.3</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1209,6 +1209,24 @@ let netSocket=null,netRole='',netCode='',netConnected=false,netGuestReady=false,
 // Simple 60ms visual blend between confirmed player positions only.
 // No prediction, buffering, bullet changes or effect on collision physics.
 const ONLINE_PLAYER_BLEND_MS=60;
+// PC 5.4 diagnostic: count actual guest renders and accepted gameplay packets.
+const netPerfLabel=document.createElement('div');
+netPerfLabel.id='netPerfLabel';
+netPerfLabel.style.cssText='position:absolute;right:12px;bottom:12px;z-index:8;padding:6px 10px;border:1px solid #5cebdc88;border-radius:6px;background:#071523df;color:#baf8e7;font:700 12px ui-monospace,monospace;pointer-events:none;display:none;white-space:pre';
+$('game').append(netPerfLabel);
+let netPerfFrames=0,netPerfPackets=0,netPerfTime=performance.now();
+function updateNetPerf(now){
+ if(netRole!=='guest'||!netConnected||state!=='playing'){
+  netPerfLabel.style.display='none';netPerfFrames=0;netPerfPackets=0;netPerfTime=now;return;
+ }
+ netPerfLabel.style.display='block';
+ netPerfFrames++;
+ const elapsed=now-netPerfTime;
+ if(elapsed>=1000){
+  netPerfLabel.textContent='FPS '+Math.round(netPerfFrames*1000/elapsed)+'  |  SNAP '+Math.round(netPerfPackets*1000/elapsed)+'/s';
+  netPerfFrames=0;netPerfPackets=0;netPerfTime=now;
+ }else if(!netPerfLabel.textContent)netPerfLabel.textContent='FPS …  |  SNAP …';
+}
 let guestPlayerVisual=null;
 function blendedGuestPlayers(now){
  if(!guestPlayerVisual)return null;
@@ -1268,7 +1286,7 @@ function sendNet(m){
  if(m.type==='input'&&netSocket.bufferedAmount>8000)return;
  try{netSocket.send(JSON.stringify(m))}catch(e){}
 }
-function disconnectOnline(){guestPlayerVisual=null;netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
+function disconnectOnline(){netPerfLabel.style.display='none';netPerfLabel.textContent='';netPerfFrames=0;netPerfPackets=0;guestPlayerVisual=null;netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
 function onlineMessage(text,isError=false){const el=$('netMessage');if(el){el.textContent=text;el.style.color=isError?'#ff8996':'#baf8e7';}}
 function onlineMenu(){state='online_menu';setMusicTheme('menu');hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / ONLINE</div><h2 class="page-title">ONLINE <span>1V1.</span></h2><p>Private room, one host and one guest. First to five rounds.</p><label class="net-label">MULTIPLAYER SERVER</label><input class="net-input" id="netServer" spellcheck="false" placeholder="wss://your-server.onrender.com" value="${String(onlineServerUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"><p class="net-small">GitHub Pages hosts the game; a separate WebSocket server handles room codes. Set its public wss:// URL here, or run the included server locally.</p><div class="net-actions"><button class="btn" id="hostOnline">CREATE ROOM</button><button class="btn secondary" id="joinOnline">JOIN ROOM</button></div><input class="net-input net-room-input" id="joinCode" maxlength="6" placeholder="ENTER 6-LETTER ROOM CODE" autocapitalize="characters"><p id="netMessage" class="net-feedback"></p><button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('hostOnline').onclick=()=>connectOnline('host');$('joinOnline').onclick=()=>connectOnline('guest');$('backBtn').onclick=menu}
 function connectOnline(role){
@@ -1341,6 +1359,7 @@ function handleOnlineMessage(m){
  if(m.type==='snapshot'&&netRole==='guest'){
   // Never let stale gameplay snapshots erase a draft, preparation, or countdown.
   if(m.epoch!==netGuestRoundEpoch||!['playing','roundover'].includes(state))return;
+  netPerfPackets++;
   updateGuestSnapshot(m.payload);return;
  }
  if(m.type==='start'&&netRole==='guest'){state='online_guest_wait';setMusicTheme('battle');return}
@@ -2564,8 +2583,9 @@ function tick(dt){if(netRole==='guest')return;clock+=dt;
   if(!inPlay())break;
  }
  updateHUD();
- if(netRole==='host'&&netConnected&&clock-netLastSnapshot>.075){
+ if(netRole==='host'&&netConnected&&clock-netLastSnapshot>=.049){
   netLastSnapshot=clock;
+  // Approximately 20 snapshots/sec on a 60 FPS host; throttle if frames are slow.
   // Skip generating large snapshots while the outbound socket is backed up.
   if(netSocket?.readyState===WebSocket.OPEN&&netSocket.bufferedAmount<48000)
    sendNet({type:'snapshot',epoch:netRoundEpoch,payload:makeNetSnapshot()});
@@ -2976,7 +2996,7 @@ function frame(now){
   netWaitResend=now;sendRoundPrepare(); // Retry until guest confirms, no host head start.
  }
  updateOnlineCountdown(now);
- tick(dt);render();requestAnimationFrame(frame);
+ tick(dt);render();updateNetPerf(now);requestAnimationFrame(frame);
 }
 function canvasMouse(e){let r=canvas.getBoundingClientRect();const pt=worldPoint((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height);mouse.x=pt.x;mouse.y=pt.y;mouse.used=true}
 canvas.addEventListener('mousemove',canvasMouse);canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'){canvasMouse(e);if(e.button===0)mouse.down=true;else if(e.button===2&&inPlay())block(p1)}else if(inPlay()){canvasMouse(e);mouse.down=true}});window.addEventListener('pointerup',()=>mouse.down=false);canvas.addEventListener('contextmenu',e=>e.preventDefault());
