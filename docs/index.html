@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.2</title>
+<title>SQUARE OFF | PC 5.3</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -601,7 +601,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.2</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.3</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1171,7 +1171,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.2</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.3</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1206,7 +1206,16 @@ function menu(){
 const ONLINE_SERVER_CONFIG='square-off-online-server';
 const defaultOnlineServer=location.hostname==='localhost'||location.hostname==='127.0.0.1'?`ws://${location.hostname}:3001`:' ';
 let netSocket=null,netRole='',netCode='',netConnected=false,netGuestReady=false,netLastSnapshot=-1,remoteKeys={},netDraftIds=[];
-// Basic online rendering: received snapshots are displayed immediately.
+// Simple 60ms visual blend between confirmed player positions only.
+// No prediction, buffering, bullet changes or effect on collision physics.
+const ONLINE_PLAYER_BLEND_MS=60;
+let guestPlayerVisual=null;
+function blendedGuestPlayers(now){
+ if(!guestPlayerVisual)return null;
+ const v=guestPlayerVisual,t=Math.max(0,Math.min(1,(now-v.at)/ONLINE_PLAYER_BLEND_MS));
+ return [{x:v.from1.x+(v.to1.x-v.from1.x)*t,y:v.from1.y+(v.to1.y-v.from1.y)*t},
+         {x:v.from2.x+(v.to2.x-v.from2.x)*t,y:v.from2.y+(v.to2.y-v.from2.y)*t}];
+}
 // 4.4: Explicit per-round handshake. Never simulate combat until BOTH clients have
 // prepared the exact same round. Epoch IDs reject queued/out-of-order old packets.
 let netRoundEpoch=0,netPreparedEpoch=0,netGuestRoundEpoch=0,netCountdownEnd=0;
@@ -1228,6 +1237,7 @@ function guestPrepareRound(m){
  if(m.epoch===netGuestRoundEpoch&&['online_countdown','playing','roundover'].includes(state))return;
  if(m.epoch>netGuestRoundEpoch){
   netGuestRoundEpoch=m.epoch;
+  guestPlayerVisual=null;
   updateGuestSnapshot(m.payload);
   remoteKeys={};mouse.down=false;keys.clear();
  }
@@ -1258,7 +1268,7 @@ function sendNet(m){
  if(m.type==='input'&&netSocket.bufferedAmount>8000)return;
  try{netSocket.send(JSON.stringify(m))}catch(e){}
 }
-function disconnectOnline(){netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
+function disconnectOnline(){guestPlayerVisual=null;netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
 function onlineMessage(text,isError=false){const el=$('netMessage');if(el){el.textContent=text;el.style.color=isError?'#ff8996':'#baf8e7';}}
 function onlineMenu(){state='online_menu';setMusicTheme('menu');hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / ONLINE</div><h2 class="page-title">ONLINE <span>1V1.</span></h2><p>Private room, one host and one guest. First to five rounds.</p><label class="net-label">MULTIPLAYER SERVER</label><input class="net-input" id="netServer" spellcheck="false" placeholder="wss://your-server.onrender.com" value="${String(onlineServerUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"><p class="net-small">GitHub Pages hosts the game; a separate WebSocket server handles room codes. Set its public wss:// URL here, or run the included server locally.</p><div class="net-actions"><button class="btn" id="hostOnline">CREATE ROOM</button><button class="btn secondary" id="joinOnline">JOIN ROOM</button></div><input class="net-input net-room-input" id="joinCode" maxlength="6" placeholder="ENTER 6-LETTER ROOM CODE" autocapitalize="characters"><p id="netMessage" class="net-feedback"></p><button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('hostOnline').onclick=()=>connectOnline('host');$('joinOnline').onclick=()=>connectOnline('guest');$('backBtn').onclick=menu}
 function connectOnline(role){
@@ -1284,8 +1294,16 @@ function makeNetSnapshot(){
 }
 function updateGuestSnapshot(q){
  if(!q||!Array.isArray(q.scores)||!q.p1||!q.p2)return;
- // Guest displays the latest authoritative state directly: no interpolation,
- // prediction, buffering or cosmetic position corrections.
+ // Host snapshot remains authoritative; only the drawn fighters blend.
+ const now=performance.now(),oldRound=round,oldArena=arenaIndex;
+ const visible=blendedGuestPlayers(now);
+ const sameRound=guestPlayerVisual&&oldRound===(q.round||1)&&oldArena===(q.arenaIndex|0);
+ const begin1=sameRound&&visible?visible[0]:{x:q.p1.x,y:q.p1.y};
+ const begin2=sameRound&&visible?visible[1]:{x:q.p2.x,y:q.p2.y};
+ const end1={x:q.p1.x,y:q.p1.y},end2={x:q.p2.x,y:q.p2.y};
+ const snap1=Math.hypot(begin1.x-end1.x,begin1.y-end1.y)>135;
+ const snap2=Math.hypot(begin2.x-end2.x,begin2.y-end2.y)>135;
+ guestPlayerVisual={at:now,from1:snap1?end1:begin1,from2:snap2?end2:begin2,to1:end1,to2:end2};
  state=q.state==='roundover'?'roundover':'playing';
  clock=q.clock||0;round=q.round||1;arenaIndex=q.arenaIndex|0;
  arena=maps[arenaIndex]||maps[0];updateArenaCamera();
@@ -2944,7 +2962,10 @@ if(b.locklime){
 ctx.strokeStyle=b.col;ctx.globalAlpha=.3;ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(b.x-b.vx*.025,b.y-b.vy*.025);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(b.x-b.vx*.018,b.y-b.vy*.018);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill()}}
 function drawParticles(){for(const p of particles){const a=cap(p.life/(p.max||.5),0,1);ctx.globalAlpha=a;ctx.fillStyle=p.col;if(p.shape==='square'){const size=p.r*Math.max(.35,a);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot||0);ctx.fillRect(-size/2,-size/2,size,size);ctx.restore();}else{ctx.beginPath();ctx.arc(p.x,p.y,p.r*Math.max(.1,a),0,TAU);ctx.fill()}}ctx.globalAlpha=1;for(const t of texts){ctx.globalAlpha=cap(t.life,0,1);ctx.font='900 19px Impact, Arial Black, sans-serif';ctx.textAlign='center';ctx.strokeStyle='#111a2d';ctx.lineWidth=5;ctx.strokeText(t.msg,t.x,t.y);ctx.fillStyle=t.col;ctx.fillText(t.msg,t.x,t.y)}ctx.globalAlpha=1}
 function render(){
- ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(renderScaleX,0,0,renderScaleY,0,0);ctx.save();ctx.translate(cameraX,cameraY);ctx.scale(cameraScale,cameraScale);if(shakeEnabled&&shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();drawBullets();drawEffectWaves();drawBlockEffects();drawPlayer(p1);drawPlayer(p2);drawFrostbiteArmor(p1);drawFrostbiteArmor(p2);drawParticles();ctx.restore();
+ const guestDraw=netRole==='guest'&&state==='playing'&&p1&&p2?blendedGuestPlayers(performance.now()):null;
+ const renderP1=guestDraw?{...p1,x:guestDraw[0].x,y:guestDraw[0].y}:p1;
+ const renderP2=guestDraw?{...p2,x:guestDraw[1].x,y:guestDraw[1].y}:p2;
+ ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(renderScaleX,0,0,renderScaleY,0,0);ctx.save();ctx.translate(cameraX,cameraY);ctx.scale(cameraScale,cameraScale);if(shakeEnabled&&shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();drawBullets();drawEffectWaves();drawBlockEffects();drawPlayer(renderP1);drawPlayer(renderP2);drawFrostbiteArmor(renderP1);drawFrostbiteArmor(renderP2);drawParticles();ctx.restore();
  if(state==='playing'&&mouse.used&&p1){ctx.save();ctx.translate(cameraX,cameraY);ctx.scale(cameraScale,cameraScale);ctx.strokeStyle='#ffd44aaa';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(mouse.x,mouse.y,9,0,TAU);ctx.moveTo(mouse.x-15,mouse.y);ctx.lineTo(mouse.x-5,mouse.y);ctx.moveTo(mouse.x+5,mouse.y);ctx.lineTo(mouse.x+15,mouse.y);ctx.moveTo(mouse.x,mouse.y-15);ctx.lineTo(mouse.x,mouse.y-5);ctx.moveTo(mouse.x,mouse.y+5);ctx.lineTo(mouse.x,mouse.y+15);ctx.stroke();ctx.restore()}
  if(state==='roundover'&&winner!==null){ctx.fillStyle='#07101abb';ctx.fillRect(0,190,W,142);ctx.font='900 65px Impact, Arial Black, sans-serif';ctx.fillStyle=winner===0?'#ff595b':'#4594ff';ctx.textAlign='center';ctx.fillText((winner===0?'RED':(netRole?'BLUE':'BLUE BOT'))+' WINS ROUND!',W/2,275);ctx.fillStyle='#d1def0';ctx.font='800 17px monospace';ctx.fillText('UPGRADE DRAFT INCOMING',W/2,306)}
 }
