@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SQUARE OFF | PC 4.4</title>
+<title>SQUARE OFF | PC 4.5</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -597,7 +597,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 4.4</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 4.5</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -2906,7 +2906,19 @@ function frame(now){
 }
 function canvasMouse(e){let r=canvas.getBoundingClientRect();const pt=worldPoint((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height);mouse.x=pt.x;mouse.y=pt.y;mouse.used=true}
 canvas.addEventListener('mousemove',canvasMouse);canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'){canvasMouse(e);if(e.button===0)mouse.down=true;else if(e.button===2&&inPlay())block(p1)}else if(inPlay()){canvasMouse(e);mouse.down=true}});window.addEventListener('pointerup',()=>mouse.down=false);canvas.addEventListener('contextmenu',e=>e.preventDefault());
-window.addEventListener('keydown',e=>{if(['Space','KeyW','KeyA','KeyS','KeyD','KeyE','KeyF','ShiftLeft','ShiftRight','Digit1','Digit2','Digit3','Digit4','Digit5'].includes(e.code))e.preventDefault();keys.add(e.code);if(state==='draft'&&['Digit1','Digit2','Digit3','Digit4','Digit5'].includes(e.code)){pickCard(window.currentOptions,Number(e.code.slice(-1))-1)}if(e.code==='Escape'){e.preventDefault();if(state==='playing'&&netRole!=='guest')pause();else if(state==='paused')resume();else if(state==='settings'||state==='help'||state==='gameover')menu()}});
+// Text fields take priority over game controls, including room code and server URL.
+function typingInField(target){
+ const el=target instanceof Element?target:null;
+ return !!(el&&(el.closest('input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="textbox"]')||el.isContentEditable));
+}
+document.addEventListener('focusin',e=>{if(typingInField(e.target))keys.clear()});
+window.addEventListener('keydown',e=>{
+ if(typingInField(e.target)||typingInField(document.activeElement))return;
+ if(['Space','KeyW','KeyA','KeyS','KeyD','KeyE','KeyF','ShiftLeft','ShiftRight','Digit1','Digit2','Digit3','Digit4','Digit5'].includes(e.code))e.preventDefault();
+ keys.add(e.code);
+ if(state==='draft'&&['Digit1','Digit2','Digit3','Digit4','Digit5'].includes(e.code)){pickCard(window.currentOptions,Number(e.code.slice(-1))-1)}
+ if(e.code==='Escape'){e.preventDefault();if(state==='playing'&&netRole!=='guest')pause();else if(state==='paused')resume();else if(state==='settings'||state==='help'||state==='gameover')menu()}
+});
 window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>{keys.clear();mouse.down=false;Object.keys(touch).forEach(k=>touch[k]=false);if(state==='playing'&&netRole!=='guest')pause()});
 function pause(){if(netRole)return;state='paused';setMusicTheme('menu');showOverlay(`<div class="result-panel"><div class="eyebrow"><span class="nib"></span> TIMEOUT / GAME PAUSED</div><div class="result-kicker">TAKE FIVE.</div><h2 class="roundheading">BACK <span>AT IT?</span></h2><p class="subtitle">Your fight is right where you left it. Press Escape to resume.</p><div class="buttonrow"><button class="btn" id="resumeBtn">RESUME FIGHT</button><button class="btn secondary" id="exitBtn">MAIN MENU</button></div></div>`);$('resumeBtn').onclick=resume;$('exitBtn').onclick=menu}
 function resume(){state='playing';setMusicTheme('battle');hideOverlay()}
