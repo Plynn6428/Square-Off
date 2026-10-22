@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 4.5</title>
+<title>SQUARE OFF | PC 4.6</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -601,7 +601,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 4.5</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 4.6</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1171,7 +1171,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 4.5</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 4.6</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1251,7 +1251,13 @@ function updateOnlineCountdown(now){
 }
 
 let onlineServerUrl='';try{onlineServerUrl=localStorage.getItem(ONLINE_SERVER_CONFIG)||defaultOnlineServer}catch(e){onlineServerUrl=defaultOnlineServer}
-function sendNet(m){if(netSocket?.readyState===WebSocket.OPEN){try{netSocket.send(JSON.stringify(m))}catch(e){}}}
+// Never queue outdated movement snapshots: old positions create visible delay.
+function sendNet(m){
+ if(netSocket?.readyState!==WebSocket.OPEN)return;
+ if(m.type==='snapshot'&&netSocket.bufferedAmount>48000)return;
+ if(m.type==='input'&&netSocket.bufferedAmount>8000)return;
+ try{netSocket.send(JSON.stringify(m))}catch(e){}
+}
 function disconnectOnline(){netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;guestSmooth=null;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
 function onlineMessage(text,isError=false){const el=$('netMessage');if(el){el.textContent=text;el.style.color=isError?'#ff8996':'#baf8e7';}}
 function onlineMenu(){state='online_menu';setMusicTheme('menu');hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / ONLINE</div><h2 class="page-title">ONLINE <span>1V1.</span></h2><p>Private room, one host and one guest. First to five rounds.</p><label class="net-label">MULTIPLAYER SERVER</label><input class="net-input" id="netServer" spellcheck="false" placeholder="wss://your-server.onrender.com" value="${String(onlineServerUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"><p class="net-small">GitHub Pages hosts the game; a separate WebSocket server handles room codes. Set its public wss:// URL here, or run the included server locally.</p><div class="net-actions"><button class="btn" id="hostOnline">CREATE ROOM</button><button class="btn secondary" id="joinOnline">JOIN ROOM</button></div><input class="net-input net-room-input" id="joinCode" maxlength="6" placeholder="ENTER 6-LETTER ROOM CODE" autocapitalize="characters"><p id="netMessage" class="net-feedback"></p><button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('hostOnline').onclick=()=>connectOnline('host');$('joinOnline').onclick=()=>connectOnline('guest');$('backBtn').onclick=menu}
@@ -1320,7 +1326,8 @@ function handleOnlineMessage(m){
  if(m.type==='match_end'&&netRole==='guest'){state='gameover';setMusicTheme('menu');showOverlay(`<div class="result-panel"><h2 class="roundheading">${m.winner===1?'YOU WIN!':'RED WINS!'}</h2><p>FINAL SCORE ${m.scores[0]} — ${m.scores[1]}</p><button class="btn" id="netBack">BACK TO MENU</button></div>`);$('netBack').onclick=menu;return}
 }
 function sendGuestInput(){if(netRole!=='guest'||!netConnected||state!=='playing')return;const fighter=p2;const a=mouse.used?Math.atan2(mouse.y-(fighter.y+fighter.h*.47),mouse.x-(fighter.x+fighter.w/2)):fighter.aim;sendNet({type:'input',input:{left:keys.has('KeyA'),right:keys.has('KeyD'),jump:keys.has('KeyW'),down:keys.has('KeyS'),fire:keys.has('Space')||mouse.down,shield:keys.has('KeyE')||keys.has('KeyF'),dash:keys.has('ShiftLeft')||keys.has('ShiftRight'),aim:a}})}
-setInterval(sendGuestInput,33);
+// 20 inputs/sec is ample for a browser relay and keeps the queue smaller.
+setInterval(sendGuestInput,50);
 
 function savePrefs(){try{localStorage.setItem('square-off-pc-settings',JSON.stringify({difficulty,muted,shakeEnabled,musicEnabled}))}catch(e){}}
 function syncSound(){const b=$('soundBtn');if(b)b.textContent=muted?'SOUND: OFF':'SOUND: ON'}
@@ -2533,7 +2540,12 @@ function tick(dt){if(netRole==='guest')return;clock+=dt;
   if(!inPlay())break;
  }
  updateHUD();
- if(netRole==='host'&&netConnected&&clock-netLastSnapshot>.085){netLastSnapshot=clock;sendNet({type:'snapshot',epoch:netRoundEpoch,payload:makeNetSnapshot()})}
+ if(netRole==='host'&&netConnected&&clock-netLastSnapshot>.075){
+  netLastSnapshot=clock;
+  // Skip generating large snapshots while the outbound socket is backed up.
+  if(netSocket?.readyState===WebSocket.OPEN&&netSocket.bufferedAmount<48000)
+   sendNet({type:'snapshot',epoch:netRoundEpoch,payload:makeNetSnapshot()});
+ }
 }
 function roundRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
 function drawBackground(){
@@ -2929,9 +2941,20 @@ function render(){
  let orig1=null,orig2=null;
  if(netRole==='guest'&&guestSmooth&&p1&&p2&&state==='playing'){
   orig1=[p1.x,p1.y];orig2=[p2.x,p2.y];
-  const amt=.27;
-  guestSmooth.x1+=(p1.x-guestSmooth.x1)*amt;guestSmooth.y1+=(p1.y-guestSmooth.y1)*amt;
-  guestSmooth.x2+=(p2.x-guestSmooth.x2)*amt;guestSmooth.y2+=(p2.y-guestSmooth.y2)*amt;
+  // Render toward a very short velocity projection, rather than continually
+  // drawing the positions as they were one full network trip ago.
+  const age=Math.min(.055,Math.max(0,(performance.now()-netLastReceived)/1000));
+  const amt=.42;
+  const target=(p)=>{
+   const dx=Math.max(-16,Math.min(16,(Number(p.vx)||0)*age));
+   const dy=Math.max(-16,Math.min(16,(Number(p.vy)||0)*age));
+   return [p.x+dx,p.y+dy];
+  };
+  const [x1,y1]=target(p1),[x2,y2]=target(p2);
+  if(Math.hypot(x1-guestSmooth.x1,y1-guestSmooth.y1)>110){guestSmooth.x1=x1;guestSmooth.y1=y1}
+  else{guestSmooth.x1+=(x1-guestSmooth.x1)*amt;guestSmooth.y1+=(y1-guestSmooth.y1)*amt}
+  if(Math.hypot(x2-guestSmooth.x2,y2-guestSmooth.y2)>110){guestSmooth.x2=x2;guestSmooth.y2=y2}
+  else{guestSmooth.x2+=(x2-guestSmooth.x2)*amt;guestSmooth.y2+=(y2-guestSmooth.y2)*amt}
   p1.x=guestSmooth.x1;p1.y=guestSmooth.y1;p2.x=guestSmooth.x2;p2.y=guestSmooth.y2;
  }
  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(renderScaleX,0,0,renderScaleY,0,0);ctx.save();ctx.translate(cameraX,cameraY);ctx.scale(cameraScale,cameraScale);if(shakeEnabled&&shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();drawBullets();drawEffectWaves();drawBlockEffects();drawPlayer(p1);drawPlayer(p2);drawFrostbiteArmor(p1);drawFrostbiteArmor(p2);drawParticles();ctx.restore();
