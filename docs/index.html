@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.4</title>
+<title>SQUARE OFF | PC 5.4.1</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -601,7 +601,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.1</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1171,7 +1171,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.1</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1204,7 +1204,7 @@ function menu(){
 // Multiplayer 4.0: small WebSocket relay and host-authoritative simulation.
 // Hosting the static HTML alone is not sufficient: deploy server.js separately.
 const ONLINE_SERVER_CONFIG='square-off-online-server';
-const defaultOnlineServer=location.hostname==='localhost'||location.hostname==='127.0.0.1'?`ws://${location.hostname}:3001`:' ';
+const defaultOnlineServer=location.hostname==='localhost'||location.hostname==='127.0.0.1'?`ws://${location.hostname}:3001`:'wss://square-off-wxlz.onrender.com';
 let netSocket=null,netRole='',netCode='',netConnected=false,netGuestReady=false,netLastSnapshot=-1,remoteKeys={},netDraftIds=[];
 // Simple 60ms visual blend between confirmed player positions only.
 // No prediction, buffering, bullet changes or effect on collision physics.
@@ -1278,7 +1278,7 @@ function updateOnlineCountdown(now){
  if(remaining<=0){state='playing';hideOverlay();netLastSnapshot=-1;}
 }
 
-let onlineServerUrl='';try{onlineServerUrl=localStorage.getItem(ONLINE_SERVER_CONFIG)||defaultOnlineServer}catch(e){onlineServerUrl=defaultOnlineServer}
+let onlineServerUrl=defaultOnlineServer;try{const savedServer=(localStorage.getItem(ONLINE_SERVER_CONFIG)||'').trim();if(/^wss?:\/\//i.test(savedServer))onlineServerUrl=savedServer}catch(e){}
 // Never queue outdated movement snapshots: old positions create visible delay.
 function sendNet(m){
  if(netSocket?.readyState!==WebSocket.OPEN)return;
@@ -1288,7 +1288,7 @@ function sendNet(m){
 }
 function disconnectOnline(){netPerfLabel.style.display='none';netPerfLabel.textContent='';netPerfFrames=0;netPerfPackets=0;guestPlayerVisual=null;netRoundEpoch=0;netGuestRoundEpoch=0;netPreparedEpoch=0;netCountdownEnd=0;const sock=netSocket;netSocket=null;netRole='';netCode='';netConnected=false;netGuestReady=false;remoteKeys={};if(sock){try{sock.close()}catch(e){}}}
 function onlineMessage(text,isError=false){const el=$('netMessage');if(el){el.textContent=text;el.style.color=isError?'#ff8996':'#baf8e7';}}
-function onlineMenu(){state='online_menu';setMusicTheme('menu');hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / ONLINE</div><h2 class="page-title">ONLINE <span>1V1.</span></h2><p>Private room, one host and one guest. First to five rounds.</p><label class="net-label">MULTIPLAYER SERVER</label><input class="net-input" id="netServer" spellcheck="false" placeholder="wss://your-server.onrender.com" value="${String(onlineServerUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"><p class="net-small">GitHub Pages hosts the game; a separate WebSocket server handles room codes. Set its public wss:// URL here, or run the included server locally.</p><div class="net-actions"><button class="btn" id="hostOnline">CREATE ROOM</button><button class="btn secondary" id="joinOnline">JOIN ROOM</button></div><input class="net-input net-room-input" id="joinCode" maxlength="6" placeholder="ENTER 6-LETTER ROOM CODE" autocapitalize="characters"><p id="netMessage" class="net-feedback"></p><button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('hostOnline').onclick=()=>connectOnline('host');$('joinOnline').onclick=()=>connectOnline('guest');$('backBtn').onclick=menu}
+function onlineMenu(){state='online_menu';setMusicTheme('menu');hud.classList.remove('show');fullMenu(`<section class="splash-page"><div class="page-card net-card"><div class="page-marker">SQUARE OFF / ONLINE</div><h2 class="page-title">ONLINE <span>1V1.</span></h2><p>Private room, one host and one guest. First to five rounds.</p><label class="net-label">MULTIPLAYER SERVER</label><input class="net-input" id="netServer" spellcheck="false" placeholder="wss://your-server.onrender.com" value="${String(onlineServerUrl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"><p class="net-small">GitHub Pages hosts the game; a separate WebSocket server handles room codes. The multiplayer server is filled in automatically. Just create a room or enter your friend's code.</p><div class="net-actions"><button class="btn" id="hostOnline">CREATE ROOM</button><button class="btn secondary" id="joinOnline">JOIN ROOM</button></div><input class="net-input net-room-input" id="joinCode" maxlength="6" placeholder="ENTER 6-LETTER ROOM CODE" autocapitalize="characters"><p id="netMessage" class="net-feedback"></p><button class="page-back" id="backBtn">← BACK TO MENU</button></div></section>`);$('hostOnline').onclick=()=>connectOnline('host');$('joinOnline').onclick=()=>connectOnline('guest');$('backBtn').onclick=menu}
 function connectOnline(role){
  const address=$('netServer').value.trim(),code=$('joinCode').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
  if(!/^wss?:\/\//i.test(address)){onlineMessage('Enter a WebSocket URL starting with wss:// (or ws:// on localhost).',true);return}
