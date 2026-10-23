@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.4.3</title>
+<title>SQUARE OFF | PC 5.4.4</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -641,11 +641,77 @@ body{padding:0 !important;display:block;background:#071223}
  .splash-scene{height:55dvh}
 }
 
+
+/* 5.4.4 — SQUARE OFF / THE SHOWDOWN: redesigned main-menu only.
+   Two CURRENT square fighters, long arms, no feet, pistol and block orb. */
+.showdown-scene{
+ position:relative;transform:none!important;isolation:isolate;
+ height:min(59dvh,560px);max-height:67dvh;width:100%;
+ background:linear-gradient(130deg,#13203911,#07142412);
+ border:1px solid #48607766;clip-path:polygon(3% 0,100% 0,100% 95%,97% 100%,0 100%,0 5%);
+ box-shadow:inset 0 0 80px #02081765;
+}
+.showdown-grid{position:absolute;inset:0;opacity:.45;background-image:linear-gradient(#6d8db112 1px,transparent 1px),linear-gradient(90deg,#6d8db112 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,transparent 0,#000 25%,#000 80%,transparent 100%)}
+.showdown-red-glow,.showdown-blue-glow{position:absolute;top:12%;bottom:12%;width:55%;filter:blur(14px);opacity:.8}
+.showdown-red-glow{left:-5%;background:radial-gradient(ellipse at 50% 55%,#fb435a55,transparent 64%)}
+.showdown-blue-glow{right:-5%;background:radial-gradient(ellipse at 50% 55%,#3388ff55,transparent 64%)}
+.showdown-heading{position:absolute;top:5%;left:0;right:0;text-align:center;z-index:7;font:900 clamp(9px,1vw,13px) Consolas,monospace;letter-spacing:clamp(1px,.3vw,4px);color:#d7e5f8}
+.showdown-heading span,.showdown-footer span{color:#ffd34f}
+.showdown-streak{position:absolute;top:22%;height:3px;width:38%;z-index:1;opacity:.5;background:linear-gradient(90deg,transparent,#ff627a);transform:rotate(-25deg)}
+.streak-one{left:-2%}.streak-two{right:-2%;transform:rotate(25deg);background:linear-gradient(90deg,#68bdff,transparent)}
+.showdown-fighter{--fight:#ff5965;position:absolute;top:21%;left:6%;height:59%;width:32%;max-width:210px;z-index:4;filter:drop-shadow(11px 18px 0 #02091695);animation:showdown-hover 3s ease-in-out infinite}
+.showdown-fighter.fighter-blue{--fight:#5fa7ff;left:auto;right:6%;animation-delay:-1.5s}
+.showdown-body{position:absolute;top:5%;left:10%;width:80%;aspect-ratio:1;max-height:75%;background:linear-gradient(135deg,color-mix(in srgb,var(--fight) 87%,white),var(--fight) 43%,color-mix(in srgb,var(--fight) 74%,black));border:clamp(4px,.65vw,8px) solid #0e1829;border-radius:14%;box-shadow:inset 7px 9px 0 #ffffff29,inset -10px -8px 0 #00000026;z-index:3}
+.showdown-eyes{position:absolute;left:25%;right:25%;top:34%;display:flex;justify-content:space-between}
+.showdown-eyes i{display:block;width:clamp(6px,1.2vw,13px);height:clamp(9px,1.8vw,19px);border-radius:40%;background:#101827}
+.showdown-mouth{position:absolute;left:42%;bottom:24%;height:5%;width:20%;background:#0e1728;border-radius:6px}
+.showdown-legs{position:absolute;top:59%;left:28%;right:28%;height:33%;display:flex;justify-content:space-between;z-index:1}
+.showdown-legs i{width:34%;height:100%;background:var(--fight);border:clamp(3px,.4vw,5px) solid #0e1829;border-radius:7px;transform:rotate(5deg)}
+.showdown-legs i+ i{transform:rotate(-5deg)}
+.showdown-arm{position:absolute;width:51%;height:11%;min-height:14px;top:38%;background:var(--fight);border:clamp(3px,.42vw,5px) solid #0e1829;border-radius:14px;z-index:2}
+.showdown-arm.arm-back{left:-23%;transform:rotate(32deg)}
+.showdown-arm.arm-front{right:-31%;transform:rotate(-26deg);z-index:5}
+.showdown-pistol{position:absolute;right:-18%;top:-95%;width:38%;height:95%;border:clamp(3px,.4vw,5px) solid #060d19;background:#212735;border-radius:3px;transform:rotate(20deg)}
+.showdown-pistol:after{content:'';position:absolute;left:70%;top:-34%;height:36%;width:50%;background:#0b101b;border-radius:1px}
+.showdown-orb{position:absolute;left:-21%;top:-52%;width:clamp(16px,3vw,31px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d3e8ff,#72b2ff 40%,#264bbb 73%,#101a37);box-shadow:0 0 15px #8cb8ff8c;border:2px solid #b2d0ff}
+.fighter-blue .arm-front{right:auto;left:-31%;transform:rotate(26deg)}
+.fighter-blue .arm-back{left:auto;right:-23%;transform:rotate(-32deg)}
+.fighter-blue .showdown-pistol{right:auto;left:-18%;transform:rotate(-20deg)}
+.fighter-blue .showdown-pistol:after{left:auto;right:70%}
+.fighter-blue .showdown-orb{left:auto;right:-21%}
+.showdown-name{position:absolute;top:93%;left:0;right:0;white-space:nowrap;text-align:center;font:900 clamp(10px,1vw,15px) Consolas,monospace;letter-spacing:2px;color:#b7c7de}
+.showdown-name b{color:var(--fight);font-size:1.25em}
+.showdown-center{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);z-index:7;display:flex;flex-direction:column;align-items:center;justify-content:center;width:clamp(64px,15%,108px);aspect-ratio:1;pointer-events:none}
+.showdown-center:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#fff2a1,#ffcf41 65%,#e79229);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);filter:drop-shadow(0 10px 20px #000)}
+.showdown-center span{position:relative;z-index:2;font:italic 900 clamp(38px,5.2vw,68px)/1 Impact,'Arial Black',sans-serif;color:#0d1930;transform:rotate(-9deg);text-shadow:2px 2px 0 #ffffff60}
+.showdown-center small{position:absolute;top:102%;white-space:nowrap;color:#ffe386;font:900 clamp(8px,.85vw,11px) Consolas,monospace;letter-spacing:2px}
+.showdown-energy{position:absolute;inset:-25%;border:2px solid #ffd34f55;transform:rotate(45deg);animation:showdown-pulse 2.8s ease-in-out infinite}
+.showdown-floor{position:absolute;bottom:13%;left:5%;right:5%;height:5px;background:linear-gradient(90deg,#ff5965,#fcd65f 50%,#5fa7ff);box-shadow:0 9px 0 #0d2036,0 13px 25px #0009}
+.showdown-footer{position:absolute;bottom:5%;width:100%;text-align:center;font:900 clamp(9px,.9vw,12px) Consolas,monospace;letter-spacing:2px;color:#a3b6cc}
+@keyframes showdown-hover{0%,100%{translate:0 0}50%{translate:0 -9px}}
+@keyframes showdown-pulse{0%,100%{opacity:.35;scale:.95}50%{opacity:.9;scale:1.06}}
+@media(max-width:1100px){.showdown-fighter{left:3%;width:34%}.showdown-fighter.fighter-blue{right:3%}}
+@media(max-width:700px){
+ .showdown-scene{width:min(480px,100%);height:min(26dvh,195px);max-height:195px;margin:0 auto}
+ .showdown-fighter{top:20%;height:56%;width:24%;left:15%}
+ .showdown-fighter.fighter-blue{right:15%}
+ .showdown-body{border-width:3px}
+ .showdown-heading{top:3%;font-size:8px}
+ .showdown-footer{bottom:3%;font-size:8px}
+ .showdown-center{width:clamp(47px,12%,68px)}
+ .showdown-center span{font-size:36px}
+ .showdown-name{font-size:8px;letter-spacing:1px}
+ .showdown-floor{bottom:16%}
+}
+@media(max-width:700px) and (max-height:680px){.showdown-scene{display:none}}
+@media(min-width:701px) and (max-height:560px){.showdown-scene{height:57dvh}.showdown-fighter{top:19%;height:60%}}
+@media(prefers-reduced-motion:reduce){.showdown-fighter,.showdown-energy{animation:none}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.3</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.4</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1215,7 +1281,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.3</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.4</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1232,13 +1298,27 @@ function menu(){
     </nav>
     <div class="splash-credit">CREATED BY <strong>PRESTON, DEVSQUARE STUDIOS AND CHATGPT</strong></div>
    </section>
-   <div class="splash-scene" aria-hidden="true">
-    <div class="splash-aura"></div><div class="splash-ring"></div><div class="splash-bolt"></div>
-    <div class="splash-battle-tag">THE RIVALRY NEVER ENDS</div>
-    <div class="splash-mascot"><i class="arm"></i><i class="arm second"></i><i class="leg"></i><i class="leg second"></i><div class="body"><i class="brow"></i><i class="brow second"></i><i class="eye"></i><i class="eye second"></i><i class="mouth"></i><i class="cheek"></i></div></div>
-    <div class="splash-vs">VS</div>
-    <div class="splash-mascot blue"><i class="arm"></i><i class="arm second"></i><i class="leg"></i><i class="leg second"></i><div class="body"><i class="brow"></i><i class="brow second"></i><i class="eye"></i><i class="eye second"></i><i class="mouth"></i><i class="cheek"></i></div></div>
-    <div class="splash-floor"></div>
+   <div class="splash-scene showdown-scene" aria-hidden="true">
+    <div class="showdown-grid"></div><div class="showdown-red-glow"></div><div class="showdown-blue-glow"></div>
+    <div class="showdown-heading">TWO FIGHTERS <span>//</span> ONE CHAMPION</div>
+    <div class="showdown-streak streak-one"></div><div class="showdown-streak streak-two"></div>
+    <div class="showdown-fighter fighter-red">
+      <div class="showdown-legs"><i></i><i></i></div>
+      <div class="showdown-arm arm-back"><span class="showdown-orb"></span></div>
+      <div class="showdown-body"><div class="showdown-eyes"><i></i><i></i></div><div class="showdown-mouth"></div></div>
+      <div class="showdown-arm arm-front"><span class="showdown-pistol"></span></div>
+      <div class="showdown-name">01 <b>RED</b></div>
+    </div>
+    <div class="showdown-center"><div class="showdown-energy"></div><span>VS</span><small>NO MERCY</small></div>
+    <div class="showdown-fighter fighter-blue">
+      <div class="showdown-legs"><i></i><i></i></div>
+      <div class="showdown-arm arm-back"><span class="showdown-orb"></span></div>
+      <div class="showdown-body"><div class="showdown-eyes"><i></i><i></i></div><div class="showdown-mouth"></div></div>
+      <div class="showdown-arm arm-front"><span class="showdown-pistol"></span></div>
+      <div class="showdown-name">02 <b>BLUE</b></div>
+    </div>
+    <div class="showdown-floor"></div>
+    <div class="showdown-footer">LOCK IN <span>•</span> SQUARE UP <span>•</span> SETTLE IT</div>
    </div>
   </div>
  </main>`);
