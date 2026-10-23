@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.5.0</title>
+<title>SQUARE OFF | PC 5.5.1</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -775,7 +775,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.poster-button{transition:none}}
 
 
-/* PC 5.5.0 — polished cinematic menu controls. Artwork and game logic untouched. */
+/* PC 5.5.1 — polished cinematic menu controls. Artwork and game logic untouched. */
 .splash:has(.poster-menu) .poster-menu:after{height:43%;background:linear-gradient(180deg,transparent 0%,#03091b28 18%,#030917b8 68%,#020715eb 100%)}
 .splash:has(.poster-menu) .poster-ui{bottom:clamp(10px,2.5dvh,25px);gap:clamp(6px,1.1dvh,12px)}
 .splash:has(.poster-menu) .poster-controls{gap:clamp(8px,1.35dvh,13px);width:min(990px,100%)}
@@ -832,7 +832,7 @@ body{padding:0 !important;display:block;background:#071223}
 }
 
 
-/* PC 5.5.0: shared cinematic visual identity for Settings, Help and Online 1v1.
+/* PC 5.5.1: shared cinematic visual identity for Settings, Help and Online 1v1.
    Same button-free poster artwork, independent foreground HTML, zero gameplay changes. */
 .overlay.menu-screen:has(.splash-page){background:#040b19}
 .overlay.menu-screen .splash-page{position:relative;min-height:100dvh;height:auto;isolation:isolate;overflow-x:hidden;overflow-y:auto;padding:clamp(30px,6dvh,65px) clamp(16px,4vw,52px);background:#040b19;color:#f2f7ff}
@@ -870,11 +870,43 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-width:700px){.overlay.menu-screen .splash-page{padding:16px 9px}.overlay.menu-screen .splash-page .page-card{padding:21px 16px}.overlay.menu-screen .splash-page .setting-row{flex-direction:column;align-items:stretch;gap:10px}.overlay.menu-screen .splash-page .option-row{justify-content:flex-start}.overlay.menu-screen .splash-page .help-layout{grid-template-columns:1fr}.overlay.menu-screen .splash-page .page-title{font-size:43px}}
 @media(max-height:650px) and (min-width:701px){.overlay.menu-screen .splash-page{padding:14px 24px}.overlay.menu-screen .splash-page .page-card{padding:18px 27px}.overlay.menu-screen .splash-page .page-title{font-size:45px;margin:8px 0 12px}.overlay.menu-screen .splash-page .setting-row{min-height:0;padding:8px 15px;margin:6px 0}.overlay.menu-screen .splash-page .page-back{margin-top:10px}}
 
+
+/* PC 5.5.1 — soda draft shares Square Off's cinematic red/blue visual system */
+.overlay.vend-screen{background:#040b19;backdrop-filter:none;padding:0;overflow:hidden}
+.overlay.vend-screen::before{content:'';position:absolute;inset:0;opacity:1;pointer-events:none;background:linear-gradient(90deg,#050b1be8,#061026c9 48%,#050b1be8),linear-gradient(0deg,#020612e6,#060e1db3),url('assets/Neon%20Square-Off%20Arena.png') center 38%/cover no-repeat}
+.overlay.vend-screen::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 14% 55%,#ec32501a,transparent 45%),radial-gradient(ellipse at 86% 55%,#1379f923,transparent 45%),linear-gradient(180deg,#02071335,#0308177a)}
+.overlay.vend-screen .panel{position:relative;z-index:2}
+.overlay.vend-screen .rounds-draft{background:transparent}
+.overlay.vend-screen .rounds-draft::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,#050b1700 0%,#060e1e10 52%,#040b19ae 100%)}
+.overlay.vend-screen .rounds-rays{opacity:.22;background:repeating-linear-gradient(90deg,transparent 0 95px,#8aafdf0b 96px,transparent 98px)}
+.overlay.vend-screen .rounds-floor{background:linear-gradient(180deg,#1b2c44bf,#0c1526df 45%,#07101ce6);border-top:3px solid #476b92;box-shadow:0 -12px 40px #6b8a9b18}
+.overlay.vend-screen .rounds-head{color:#b6cce3;text-shadow:0 2px 9px #000;letter-spacing:1.8px}
+.overlay.vend-screen .rounds-id{color:#89caff}
+.overlay.vend-screen .vend-lamp{background:#89caff;box-shadow:0 0 12px #238aff}
+.overlay.vend-screen .rounds-title h2{color:#f2f8ff;text-shadow:0 4px 14px #000b,0 0 22px #5daaff55}
+.overlay.vend-screen .rounds-title h2::first-letter{color:#ff768b}
+.overlay.vend-screen .rounds-title p{color:#d3e1f2;text-shadow:0 2px 8px #000e}
+.overlay.vend-screen .rounds-hero-wrap{filter:drop-shadow(0 0 18px #0009)}
+.overlay.vend-screen .hero-aura{background:radial-gradient(ellipse at 50% 50%,#ffffff15,transparent 70%)}
+.overlay.vend-screen .rounds-product .vend-slot{filter:drop-shadow(0 11px 17px #000a);transition:transform .18s ease,filter .18s ease}
+.overlay.vend-screen .rounds-product .vend-details{border:1px solid #648aac;background:linear-gradient(140deg,#14253af0,#0d1a2fe9 60%,#152d48ef);border-radius:3px;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);box-shadow:0 9px 24px #0009,inset 0 1px #eaf5ff24}
+.overlay.vend-screen .rounds-product .vend-name{color:#f4f9ff;text-shadow:0 2px 8px #000c}
+.overlay.vend-screen .rounds-product .vend-desc{color:#93caff}
+.overlay.vend-screen .rounds-product .vend-number{color:#b5c8de}
+.overlay.vend-screen .rounds-product .vend-slot:hover,.overlay.vend-screen .rounds-product .vend-slot:focus-visible{filter:brightness(1.13) drop-shadow(0 0 15px #66b6ff75)}
+.overlay.vend-screen .rounds-product .vend-slot:hover .vend-details,.overlay.vend-screen .rounds-product .vend-slot:focus-visible .vend-details{border-color:#bbdeff;background:linear-gradient(140deg,#243751,#152c47 64%,#1d4164)}
+.overlay.vend-screen .rounds-product.chosen .vend-details{border-color:#dbecff!important}
+.overlay.vend-screen .rounds-controls{color:#c9d8e8}
+.overlay.vend-screen .rounds-controls strong{color:#9dd1ff}
+.overlay.vend-screen .rounds-next .btn{border:1px solid #7596b7;border-radius:3px;clip-path:polygon(11px 0,calc(100% - 11px) 0,100% 11px,100% calc(100% - 11px),calc(100% - 11px) 100%,11px 100%,0 calc(100% - 11px),0 11px);background:linear-gradient(110deg,#45243f,#152b47 43%,#1c5481);color:#f5faff;text-shadow:0 2px 7px #000a;box-shadow:0 7px 22px #0009}
+.overlay.vend-screen .rounds-next .btn:hover{background:linear-gradient(110deg,#642e4e,#254263 43%,#286ba5);filter:brightness(1.2)}
+@media(prefers-reduced-motion:reduce){.overlay.vend-screen .rounds-product .vend-slot{transition:none}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.5.0</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.5.1</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1348,7 +1380,7 @@ function vendingMarkup(opts,isBot=false,isGuest=false){
  const fig=`<div class="rounds-hero" style="--fighter-color:${color}" aria-hidden="true"><div class="hero-aura"></div><div class="hero-limb leg left"></div><div class="hero-limb leg right"></div><div class="hero-limb arm left"></div><div class="hero-limb arm right"></div><div class="hero-body"><div class="hero-eyes"><b></b><b></b></div><div class="hero-mouth"></div></div><div class="hero-shadow"></div></div>`;
  const slots=opts.map((c,i)=>`<div class="rounds-product rounds-pos-${isBot?1:i}">${renderColaCard(c,i)}</div>`).join('');
  return `<div class="rounds-draft ${isBot?'rounds-bot':'rounds-five'}">
-  <div class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF // PERK BREAK</div><div>ROUND ${round} / ${isBot?'BOT IS UPGRADING':'YOUR COMEBACK'}</div></div>
+  <div class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF // SODA DRAFT</div><div>ROUND ${round} / ${isBot?'BOT IS UPGRADING':'YOUR COMEBACK'}</div></div>
   <div class="rounds-title"><h2>${isBot?'RIVAL REFILL':'PICK YOUR POP'}</h2><p>${isBot?'The bot cracked open a new perk.':'Pick ONE of FIVE sodas to power up your fighter.'}</p></div>
   <div class="rounds-display"><div class="rounds-rays"></div><div class="rounds-hero-wrap">${fig}<div class="reach-arm" id="colaReachArm" aria-hidden="true"><div class="reach-hand"></div></div></div>${slots}
    <div class="rounds-floor"></div>
@@ -1457,11 +1489,11 @@ function menu(){
           <button type="button" class="poster-button" id="posterHelp"><span class="poster-button-icon">?</span><span>HELP</span></button>
         </div>
       </nav>
-      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.5.0</span></p>
+      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.5.1</span></p>
     </div>
   </section>
   <div class="poster-fallback">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.5.0</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.5.1</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
