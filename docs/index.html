@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.6.3</title>
+<title>SQUARE OFF | PC 5.6.4</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -775,64 +775,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.poster-button{transition:none}}
 
 
-/* PC 5.6.3 — polished cinematic menu controls. Artwork and game logic untouched. */
-.splash:has(.poster-menu) .poster-menu:after{height:43%;background:linear-gradient(180deg,transparent 0%,#03091b28 18%,#030917b8 68%,#020715eb 100%)}
-.splash:has(.poster-menu) .poster-ui{bottom:clamp(10px,2.5dvh,25px);gap:clamp(6px,1.1dvh,12px)}
-.splash:has(.poster-menu) .poster-controls{gap:clamp(8px,1.35dvh,13px);width:min(990px,100%)}
-.splash:has(.poster-menu) .poster-button{
- --rim:#568ebc;--glow:#309bff55;
- position:relative;isolation:isolate;overflow:hidden;
- border:1px solid var(--rim);border-radius:3px;
- clip-path:polygon(13px 0,calc(100% - 13px) 0,100% 13px,100% calc(100% - 13px),calc(100% - 13px) 100%,13px 100%,0 calc(100% - 13px),0 13px);
- background:linear-gradient(110deg,#273854ed 0%,#111d34f7 24%,#0d192de8 74%,#193859ed 100%);
- box-shadow:inset 0 1px 0 #e4f6ff3d,inset 0 -3px 0 #0008,0 8px 22px #0107147d;
- color:#edf6ff;text-shadow:0 2px 5px #000;
- font:900 clamp(14px,1.42vw,21px) Impact,'Arial Black',sans-serif;
- letter-spacing:1.7px;height:clamp(42px,6.7dvh,61px);
- transition:transform .16s ease,filter .16s ease,border-color .16s ease;
-}
-.splash:has(.poster-menu) .poster-button:before{content:'';position:absolute;inset:3px;z-index:-1;pointer-events:none;border-top:1px solid #d8f0ff19;border-bottom:1px solid #07101d88;clip-path:inherit}
-.splash:has(.poster-menu) .poster-button:after{content:'';position:absolute;left:-40%;top:0;height:100%;width:26%;pointer-events:none;transform:skewX(-25deg);background:linear-gradient(90deg,transparent,#d4efff15,transparent);transition:left .36s ease}
-.splash:has(.poster-menu) .poster-button:hover{transform:translateY(-3px);filter:brightness(1.3) drop-shadow(0 0 8px var(--glow));border-color:#a5d6ff}
-.splash:has(.poster-menu) .poster-button:hover:after{left:120%}
-.splash:has(.poster-menu) .poster-button:active{transform:translateY(1px);filter:brightness(1.08)}
-.splash:has(.poster-menu) .poster-button:focus-visible{outline:3px solid #fff;outline-offset:3px}
-.splash:has(.poster-menu) .poster-button-icon{font:900 clamp(15px,1.7vw,23px) Arial,sans-serif;color:#88c9ff;text-shadow:0 0 10px #2187ff70}
-.splash:has(.poster-menu) .poster-play-button{
- --rim:#db91b3;--glow:#e850a080;
- width:min(440px,80%);max-width:none;height:clamp(62px,9.2dvh,87px);
- background:linear-gradient(105deg,#4c1d35fa 0%,#161a31fc 24%,#0f1d37fa 73%,#173d69fa 100%);
- border:1px solid #ce86ae;color:#fff;font-size:clamp(29px,3vw,42px);
- text-shadow:0 2px 8px #000;gap:20px;
- box-shadow:inset 0 1px 0 #ffe0f366,inset 0 -4px 0 #050b18,0 12px 28px #000b,0 0 20px #ff5c8542;
-}
-.splash:has(.poster-menu) .poster-play-button:hover{background:linear-gradient(105deg,#672840,#22233c 30%,#1d3250 74%,#2465a4);border-color:#ffd0e0}
-.splash:has(.poster-menu) .poster-play-button .poster-button-icon{color:#ff7995;font-size:clamp(21px,2.25vw,32px);text-shadow:0 0 13px #ff577e}
-.splash:has(.poster-menu) .poster-play-button span+span{display:flex;flex-direction:column;gap:2px;align-items:center;line-height:1}
-.splash:has(.poster-menu) .poster-play-button small{font:800 clamp(8px,.77vw,11px) Consolas,monospace;letter-spacing:2px;color:#b9c9dd}
-.splash:has(.poster-menu) .poster-secondary{gap:clamp(7px,1.1vw,14px)}
-.splash:has(.poster-menu) .poster-secondary .poster-button:first-child{--rim:#a05d78;--glow:#ff4d6e55;background:linear-gradient(110deg,#311c33f5,#111a2df5)}
-.splash:has(.poster-menu) .poster-secondary .poster-button:nth-child(2){--rim:#677ea3;--glow:#64a6ff55}
-.splash:has(.poster-menu) .poster-studio{color:#9db2c9;font-size:clamp(8px,.8vw,11px);letter-spacing:.8px}
-.splash:has(.poster-menu) .poster-studio span{color:#80baff}
-@media(max-width:700px){
- .splash:has(.poster-menu) .poster-ui{bottom:8px;gap:7px;padding:0 12px}
- .splash:has(.poster-menu) .poster-controls{gap:8px}
- .splash:has(.poster-menu) .poster-play-button{width:min(360px,100%);height:clamp(52px,9dvh,70px);font-size:29px}
- .splash:has(.poster-menu) .poster-secondary{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
- .splash:has(.poster-menu) .poster-secondary .poster-button{height:clamp(37px,6dvh,49px);font-size:13px;letter-spacing:.8px}
- .splash:has(.poster-menu) .poster-studio{font-size:8px}
-}
-@media(max-height:590px) and (min-width:701px){
- .splash:has(.poster-menu) .poster-play-button{height:51px;font-size:29px}
- .splash:has(.poster-menu) .poster-secondary .poster-button{height:36px;font-size:14px}
-}
-@media(prefers-reduced-motion:reduce){
- .splash:has(.poster-menu) .poster-button,.splash:has(.poster-menu) .poster-button:after{transition:none}
-}
-
-
-/* PC 5.6.3: shared cinematic visual identity for Settings, Help and Online 1v1.
+/* PC 5.6.4: shared cinematic visual identity for Settings, Help and Online 1v1.
    Same button-free poster artwork, independent foreground HTML, zero gameplay changes. */
 .overlay.menu-screen:has(.splash-page){background:#040b19}
 .overlay.menu-screen .splash-page{position:relative;min-height:100dvh;height:auto;isolation:isolate;overflow-x:hidden;overflow-y:auto;padding:clamp(30px,6dvh,65px) clamp(16px,4vw,52px);background:#040b19;color:#f2f7ff}
@@ -871,7 +814,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:650px) and (min-width:701px){.overlay.menu-screen .splash-page{padding:14px 24px}.overlay.menu-screen .splash-page .page-card{padding:18px 27px}.overlay.menu-screen .splash-page .page-title{font-size:45px;margin:8px 0 12px}.overlay.menu-screen .splash-page .setting-row{min-height:0;padding:8px 15px;margin:6px 0}.overlay.menu-screen .splash-page .page-back{margin-top:10px}}
 
 
-/* PC 5.6.3 — soda draft shares Square Off's cinematic red/blue visual system */
+/* PC 5.6.4 — soda draft shares Square Off's cinematic red/blue visual system */
 .overlay.vend-screen{background:#040b19;backdrop-filter:none;padding:0;overflow:hidden}
 .overlay.vend-screen::before{content:'';position:absolute;inset:0;opacity:1;pointer-events:none;background:linear-gradient(90deg,#050b1be8,#061026c9 48%,#050b1be8),linear-gradient(0deg,#020612e6,#060e1db3),url('assets/Neon%20Square-Off%20Arena.png') center 38%/cover no-repeat}
 .overlay.vend-screen::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 14% 55%,#ec32501a,transparent 45%),radial-gradient(ellipse at 86% 55%,#1379f923,transparent 45%),linear-gradient(180deg,#02071335,#0308177a)}
@@ -903,7 +846,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.overlay.vend-screen .rounds-product .vend-slot{transition:none}}
 
 
-/* PC 5.6.3: larger soda cans, uncluttered can labels, readable card details */
+/* PC 5.6.4: larger soda cans, uncluttered can labels, readable card details */
 .overlay.vend-screen .rounds-five .rounds-product .cola-stage{height:clamp(150px,25vh,250px)!important}
 .overlay.vend-screen .rounds-five .rounds-pos-2 .cola-stage{height:clamp(135px,23vh,225px)!important}
 .overlay.vend-screen .rounds-five .soda-illustration{width:auto;max-width:100%;height:100%;transform:rotate(-3deg) scale(1.08);transform-origin:center center;filter:drop-shadow(8px 14px 10px #000b)}
@@ -920,7 +863,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:760px){.overlay.vend-screen .rounds-five .rounds-product .cola-stage{height:clamp(120px,22vh,185px)!important}.overlay.vend-screen .rounds-five .rounds-pos-2 .cola-stage{height:clamp(115px,20vh,170px)!important}.overlay.vend-screen .rounds-five .rounds-product .vend-details{min-height:76px;padding:7px 9px!important}}
 
 
-/* PC 5.6.3 — fully rebuilt soda draft with live character-stat hover comparison */
+/* PC 5.6.4 — fully rebuilt soda draft with live character-stat hover comparison */
 .overlay.vend-screen .so-draft-redesign{height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column;padding:0;background:linear-gradient(120deg,#071225eb,#0b1726e6)}
 .overlay.vend-screen .so-draft-redesign .rounds-head{position:relative;top:auto;left:auto;right:auto;flex:none;padding:17px 28px 0}
 .overlay.vend-screen .so-draft-redesign .rounds-title{position:relative;top:auto;flex:none;padding:4px 0 14px}
@@ -970,7 +913,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:660px) and (min-width:701px){.so-draft-redesign .rounds-title h2{font-size:38px}.so-draft-redesign .rounds-title{padding-bottom:6px}.so-stat-rows{gap:5px}.so-stat-title{padding:5px}.so-stat-preview{font-size:10px}.overlay.vend-screen .so-draft-redesign .rounds-product .vend-details{min-height:68px}}
 
 
-/* PC 5.6.3 — equal five-card draft tiles; no stat color legend */
+/* PC 5.6.4 — equal five-card draft tiles; no stat color legend */
 .so-draft-redesign .so-soda-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-flow:row;align-items:stretch}
 .so-draft-redesign .so-soda-grid>.rounds-product:nth-child(4){grid-column:1!important;grid-row:2}
 .so-draft-redesign .so-soda-grid>.rounds-product:nth-child(5){grid-column:2!important;grid-row:2}
@@ -982,14 +925,14 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-width:700px){.so-draft-redesign .so-soda-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,180px)}.so-draft-redesign .so-soda-grid>.rounds-product:nth-child(4),.so-draft-redesign .so-soda-grid>.rounds-product:nth-child(5){grid-column:auto!important;grid-row:auto}.so-draft-redesign .so-soda-grid>.rounds-product .vend-details{flex-basis:85px;min-height:85px!important;max-height:85px}}
 
 
-/* PC 5.6.3: draft fighter drawn to match the actual in-game sprite proportions */
+/* PC 5.6.4: draft fighter drawn to match the actual in-game sprite proportions */
 .so-draft-redesign .so-game-fighter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 15px 16px #0008);pointer-events:none}
 .so-draft-redesign .so-game-fighter-svg{height:min(94%,350px);max-width:110%;width:auto;overflow:visible;filter:drop-shadow(0 0 11px #ffffff12)}
 .so-draft-redesign .so-stat-rows{gap:clamp(5px,.78vh,10px)}
 @media(max-height:660px){.so-draft-redesign .so-stat-rows{gap:3px}.so-draft-redesign .so-stat-meta{margin-bottom:2px}}
 
 
-/* PC 5.6.3 — clean, centered unarmed fighter on the soda-selection screen */
+/* PC 5.6.4 — clean, centered unarmed fighter on the soda-selection screen */
 .so-draft-redesign .so-draft-fighter{overflow:hidden}
 .so-draft-redesign .so-game-fighter{position:absolute;inset:9% 7% 10%;display:flex;justify-content:center;align-items:center;filter:drop-shadow(0 11px 12px #0008)}
 .so-draft-redesign .so-game-fighter-svg{display:block;width:auto;height:min(77%,265px);max-width:90%;overflow:visible}
@@ -1000,7 +943,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.6.3</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.6.4</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1471,87 +1414,18 @@ function renderColaCan(c){
 function renderColaCard(c,i){return `<button class="vend-slot" data-i="${i}" aria-label="${c.name}. ${c.desc}"><div class="cola-stage">${renderColaCan(c)}</div><div class="vend-details"><span class="vend-number">0${i+1} // ${c.type}</span><strong class="vend-name">${c.name}</strong><span class="vend-desc">${c.desc}</span></div><div class="vend-rail"></div></button>`}
 function vendingMarkup(opts,isBot=false,isGuest=false){
  const color=(isBot||isGuest)?'#5fa7ff':'#ff5965';
- const fig=`<div class="so-game-fighter" style="--fighter-color:${color}" aria-hidden="true"><svg class="so-game-fighter-svg" viewBox="0 0 120 148" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="${color}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"><path d="M49 91 L43 116 L40 133"/><path d="M76 91 L82 117 L86 133"/><path d="M34 61 L12 73"/><path d="M87 60 L111 69"/></g><rect x="22" y="14" width="76" height="86" rx="12" fill="${color}" stroke="#181f30" stroke-opacity=".28" stroke-width="4"/><rect x="25" y="17" width="33" height="80" rx="8" fill="#ffffff" opacity=".12"/><rect x="66" y="18" width="28" height="78" rx="7" fill="#000000" opacity=".13"/><circle cx="47" cy="50" r="4.5" fill="#0f1727"/><circle cx="77" cy="50" r="4.5" fill="#0f1727"/>${isBot||isGuest?'<path d="M55 75 H69" stroke="#0f1727" stroke-width="4" stroke-linecap="round"/>':'<path d="M51 71 Q62 82 73 71" fill="none" stroke="#0f1727" stroke-width="4" stroke-linecap="round"/>'}</svg></div>`;
+ const fig=`<div class="rounds-hero" style="--fighter-color:${color}" aria-hidden="true"><div class="hero-aura"></div><div class="hero-limb leg left"></div><div class="hero-limb leg right"></div><div class="hero-limb arm left"></div><div class="hero-limb arm right"></div><div class="hero-body"><div class="hero-eyes"><b></b><b></b></div><div class="hero-mouth"></div></div><div class="hero-shadow"></div></div>`;
  const slots=opts.map((c,i)=>`<div class="rounds-product rounds-pos-${isBot?1:i}">${renderColaCard(c,i)}</div>`).join('');
- const user=(isBot||isGuest)?p2:p1,statSource=user?.stats||defaultStats();
- return `<div class="rounds-draft so-draft-redesign ${isBot?'rounds-bot':'rounds-five'}" data-stat-player="${(isBot||isGuest)?'blue':'red'}">
-  <header class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF / SODA LAB</div><div>ROUND ${round} // ${isBot?'RIVAL UPGRADING':'CHOOSE YOUR UPGRADE'}</div></header>
-  <div class="rounds-title"><h2>${isBot?'RIVAL REFILL':'PICK YOUR POP'}</h2><p>${isBot?'Your opponent is powering up.':'Hover over a soda to preview how it changes your fighter.'}</p></div>
-  <div class="so-draft-layout">
-   <section class="so-soda-choices" aria-label="Choose your soda"><div class="so-draft-section"><b>01</b> SODA SELECTION <span>${isBot?'RIVAL PICK':'SELECT ONE OF FIVE'}</span></div><div class="so-soda-grid">${slots}</div></section>
-   <section class="so-draft-fighter" aria-label="Your fighter"><div class="so-draft-section"><b>02</b> ${isBot?'RIVAL':'YOUR FIGHTER'}</div><div class="rounds-hero-wrap">${fig}</div><div class="so-fighter-label">${isBot||isGuest?'BLUE':'RED'} FIGHTER</div></section>
-   <aside class="so-stat-panel" id="soStats" aria-live="off"><div class="so-draft-section"><b>03</b> CHARACTER STATS</div><div class="so-stat-title">CURRENT BUILD</div><div class="so-stat-rows" id="soStatRows"></div><div class="so-stat-preview" id="soStatPreview">HOVER A SODA TO PREVIEW ITS EFFECTS</div></aside>
+ return `<div class="rounds-draft ${isBot?'rounds-bot':'rounds-five'}">
+  <div class="rounds-head"><div class="rounds-id"><span class="vend-lamp"></span>SQUARE OFF // SODA DRAFT</div><div>ROUND ${round} / ${isBot?'BOT IS UPGRADING':'YOUR COMEBACK'}</div></div>
+  <div class="rounds-title"><h2>${isBot?'RIVAL REFILL':'PICK YOUR POP'}</h2><p>${isBot?'The bot cracked open a new perk.':'Pick ONE of FIVE sodas to power up your fighter.'}</p></div>
+  <div class="rounds-display"><div class="rounds-rays"></div><div class="rounds-hero-wrap">${fig}<div class="reach-arm" id="colaReachArm" aria-hidden="true"><div class="reach-hand"></div></div></div>${slots}
+   <div class="rounds-floor"></div>
   </div>
-  <footer class="rounds-controls"><span>PERKS STACK FOR THE WHOLE MATCH</span><strong>${isBot?'NEXT ROUND TO CONTINUE':'CLICK A SODA OR PRESS 1 / 2 / 3 / 4 / 5'}</strong></footer>
+  <div class="rounds-controls"><span>PERKS STACK FOR THE WHOLE MATCH</span><strong>${isBot?'NEXT ROUND TO CONTINUE':'CLICK OR PRESS 1 / 2 / 3 / 4 / 5'}</strong></div>
   ${isBot?'<div class="buttonrow rounds-next"><button class="btn" id="continueBtn">NEXT ROUND / ENTER</button></div>':''}
  </div>`;
 }
-function soPreviewStats(base,card){
- const st={...base};
- if(!card)return st;
- switch(card.id){
- case 'damage':st.damage*=1.5;st.rate*=1.25;st.ammo=Math.min(st.ammo,2);break;
- case 'burst':st.reload*=1.25;break;
- case 'hp':st.maxHp+=50;st.speed*=.75;break;
- case 'speed':st.speed*=1.5;st.maxHp=Math.max(10,st.maxHp-10);break;
- case 'jump':st.jump*=1.5;break;
- case 'ammo':st.ammo+=3;break;
- case 'bounce':st.bounce+=2;break;
- case 'pinball':st.bounce+=3;break;
- case 'momentum':st.bounce+=2;break;
- case 'bullet':st.bullet*=.75;break;
- case 'reload':st.reload/=1.5;break;
- case 'shield':st.shield*=.5;st.speed*=.75;break;
- case 'acid':st.ammo=Math.max(1,st.ammo-1);break;
- case 'snapshield':st.shield/=1.5;break;
- case 'blackhole':case 'blood':case 'blast':case 'static':case 'fire':st.shield*=1.25;break;
- case 'ironhide':st.speed*=.9;break;
- case 'spraypray':st.ammo=Math.max(st.ammo,12);st.reload*=2.7;break;
- case 'drummag':st.ammo+=6;st.reload*=1.35;break;
- case 'twintap':st.reload*=1.2;break;
- case 'rail':st.bullet*=1.5;st.bulletLife*=1.35;st.rate*=1.15;break;
- case 'longshot':st.bullet*=1.2;st.bulletLife*=1.8;break;
- }
- return st;
-}
-const SO_STATS=[
- {label:'HEALTH',get:s=>s.maxHp,ref:200,format:v=>Math.round(v)+' HP'},
- {label:'DAMAGE',get:s=>s.damage,ref:90,format:v=>Math.round(v)+' DMG'},
- {label:'SHOT SPEED',get:s=>s.bullet,ref:1700,format:v=>Math.round(v)},
- {label:'MOVEMENT',get:s=>s.speed,ref:600,format:v=>Math.round(v)},
- {label:'RANGE',get:s=>s.bullet*s.bulletLife,ref:2600,format:v=>Math.round(v)},
- {label:'FIRE RATE',get:s=>1/s.rate,ref:8,format:v=>v.toFixed(1)+'/s'},
- {label:'AMMO',get:s=>s.ammo,ref:18,format:v=>Math.round(v)+' RDS'},
- {label:'BULLET BOUNCE',get:s=>s.bounce,ref:12,format:v=>Math.round(v)+' BOUNCES'},
- {label:'JUMP',get:s=>s.jump,ref:1800,format:v=>Math.round(v)},
- {label:'RELOAD',get:s=>1/s.reload,ref:2,format:v=>v.toFixed(2)+'/s'},
- {label:'SHIELD',get:s=>1/s.shield,ref:.7,format:v=>v.toFixed(2)+'/s'}
-];
-function soDrawStatBars(card=null){
- const root=panel.querySelector('.so-draft-redesign');if(!root)return;
- const who=root.dataset.statPlayer==='blue'?p2:p1,base=who?.stats||defaultStats(),next=soPreviewStats(base,card);
- const rows=root.querySelector('#soStatRows');if(!rows)return;
- rows.innerHTML=SO_STATS.map(d=>{
-  const from=d.get(base),to=d.get(next),lo=Math.min(from,to),hi=Math.max(from,to);
-  const b=Math.max(0,Math.min(100,from/d.ref*100)),t=Math.max(0,Math.min(100,to/d.ref*100));
-  const diff=to-from,kind=Math.abs(diff)<.0001?'neutral':diff>0?'plus':'minus';
-  const start=Math.min(b,t),extent=Math.abs(t-b);
-  return `<div class="so-stat-row"><div class="so-stat-meta"><span>${d.label}</span><b>${d.format(from)}${kind==='neutral'?'':` <em class="${kind}">→ ${d.format(to)}</em>`}</b></div><div class="so-stat-track"><div class="so-stat-base" style="width:${b}%"></div><div class="so-stat-change ${kind}" style="left:${start}%;width:${extent}%"></div><div class="so-stat-end" style="left:${t}%"></div></div></div>`;
- }).join('');
- const summary=root.querySelector('#soStatPreview');
- if(summary)summary.textContent=card?card.name.toUpperCase()+' — '+card.desc:'HOVER A SODA TO PREVIEW ITS EFFECTS';
-}
-function soBindStatPreview(opts){
- soDrawStatBars();
- panel.querySelectorAll('.so-draft-redesign .vend-slot').forEach(b=>{
-  const i=Number(b.dataset.i);
-  b.addEventListener('pointerenter',()=>soDrawStatBars(opts[i]));
-  b.addEventListener('focus',()=>soDrawStatBars(opts[i]));
-  b.addEventListener('pointerleave',()=>soDrawStatBars());
-  b.addEventListener('blur',()=>soDrawStatBars());
- });
-}
-
 function defaultStats(){return {damage:34,rate:.29,maxHp:100,speed:300,jump:920,ammo:3,bullet:850,bulletSize:1,reload:1.22,shield:4.2,blockDuration:.5,vamp:0,bounce:0,double:0,acid:0,burst:0,rebound:0,blackhole:0,blood:0,blast:0,static:0,fire:0,frost:0,coldshot:0,hotshot:0,split:0,boomberry:0,skyhook:0,dash:0,float:0,telepop:0,secondwind:0,regen:0,ironhide:0,revenge:0,wreck:0,gravity:0,chain:0,timewarp:0,spraypray:0,drummag:0,twintap:0,pinball:0,momentum:0,rail:0,longshot:0,tracer:0,bulletLife:1,ricochetBoost:0,locklime:0,boomerang:0};}
 function makePlayer(id){let x=id===0?140:946;return {id,x,y:GROUND-60,w:48,h:60,vx:0,vy:0,dir:id===0?1:-1,grounded:true,jumps:0,hp:100,ammo:3,reload:0,shootCD:0,shieldTime:0,shieldCD:0,hitflash:0,faceHit:0,faceShoot:0,invuln:0,aim:0,aimTilt:0,dead:false,stats:defaultStats(),upgrades:[],color:id===0?'#ff595b':'#4594ff',visualFacing:id===0?1:-1,visualCrouch:0,jumpPose:0,landPose:0,roofSquash:0,crouched:false,aiHop:0,dropTime:0,dropHeld:false,hiddenBody:false,healthTrail:100,healthTrailHold:0,healTrailFrom:100,healTrailHold:0,hazardCooldown:0,burstLeft:0,burstTimer:0,autoBlocks:[],poison:[],slowUntil:0,coldHits:0,coldUntil:0,pulls:[],dashCD:0,dashTime:0,secondWindReady:false,lastHurt:0,chainHits:0,timeWarpUntil:0};}
 function cap(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
@@ -1652,11 +1526,11 @@ function menu(){
           <button type="button" class="poster-button" id="posterHelp"><span class="poster-button-icon">?</span><span>HELP</span></button>
         </div>
       </nav>
-      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.6.3</span></p>
+      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.6.4</span></p>
     </div>
   </section>
   <div class="poster-fallback">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.6.3</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.6.4</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1840,7 +1714,7 @@ function onlineGuestDraft(ids){
  state='online_guest_draft';
  const choices=netDraftIds.map(id=>ITEMS.find(c=>c.id===id));
  overlay.classList.add('vend-screen');
- showOverlay(vendingMarkup(choices,false,true));soBindStatPreview(choices);
+ showOverlay(vendingMarkup(choices,false,true));
  panel.querySelectorAll('.vend-slot').forEach(b=>{
   const idx=Number(b.dataset.i);
   b.addEventListener('pointerenter',()=>reachForCola(idx));
@@ -2117,8 +1991,8 @@ function postRound(){const champ=scores[0]>=5||scores[1]>=5;
  const opts=cardOptions();const lose=loser===0?'RED':'BLUE BOT';
  if(loser===0&&netRole==='host')sendNet({type:'host_draft'});
  if(loser===1&&netRole==='host'){state='online_wait_draft';sendNet({type:'draft',options:opts.map(c=>c.id)});showOverlay(`<section class="net-card"><h2>BLUE PLAYER PICKS A SODA</h2><p>Waiting for your friend to choose from five sodas…</p><p class="net-code">${netCode}</p></section>`);return}
- if(loser===1){const choice=opts[Math.floor(Math.random()*opts.length)];applyCard(p2,choice);state='botdraft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup([choice],true));soDrawStatBars();$('continueBtn').onclick=nextRound;setMusicTheme('cola');requestAnimationFrame(()=>reachForCola(1,true));return}
- state='draft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup(opts,false));soBindStatPreview(opts);panel.querySelectorAll('.vend-slot').forEach(b=>{
+ if(loser===1){const choice=opts[Math.floor(Math.random()*opts.length)];applyCard(p2,choice);state='botdraft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup([choice],true));$('continueBtn').onclick=nextRound;setMusicTheme('cola');requestAnimationFrame(()=>reachForCola(1,true));return}
+ state='draft';overlay.classList.add('vend-screen');showOverlay(vendingMarkup(opts,false));panel.querySelectorAll('.vend-slot').forEach(b=>{
   const target=Number(b.dataset.i);
   b.addEventListener('pointerenter',()=>reachForCola(target));
   b.addEventListener('focus',()=>reachForCola(target));
