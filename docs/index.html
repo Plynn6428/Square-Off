@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.4.6</title>
+<title>SQUARE OFF | PC 5.4.7</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -728,18 +728,18 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-aspect-ratio:9/10){.poster-hit{border-radius:6px}}
 
 
-/* 5.4.6 — full-bleed cinematic artwork, independent interactive HTML menu. */
+/* 5.4.7 — full-bleed cinematic artwork, independent interactive HTML menu. */
 .splash:has(.poster-menu){position:relative;display:block;width:100vw;height:100vh;height:100dvh;overflow:hidden;background:#050b1c}
 .poster-menu{position:absolute;inset:0;z-index:20;display:block;overflow:hidden;background:radial-gradient(ellipse at 25% 62%,#45101f,#050c1e 65%,#061b39)}
 .poster-backdrop,.poster-clean-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;pointer-events:none;user-select:none}
 .poster-backdrop{
- background-image:linear-gradient(to bottom,transparent 0%,transparent 43%,#07132699 53%,#061023 64%,#061023 100%),url('assets/square-off-showdown-menu.png');
+ background-image:linear-gradient(to bottom,transparent 0%,transparent 51%,#07132635 65%,#06102365 100%),url('assets/square-off-showdown-menu.png');
  background-size:cover;background-position:center 38%;background-repeat:no-repeat;
 }
 .poster-clean-art{display:none}
 .poster-menu.clean-loaded .poster-clean-art{display:block}
 .poster-menu.clean-loaded .poster-backdrop{display:none}
-.poster-menu:after{content:'';position:absolute;inset:auto 0 0;height:42%;pointer-events:none;background:linear-gradient(180deg,transparent,#061124b8 38%,#020711e6 100%);z-index:1}
+.poster-menu:after{content:'';position:absolute;inset:auto 0 0;height:30%;pointer-events:none;background:linear-gradient(180deg,transparent,#06112440 50%,#02071177 100%);z-index:1}
 .poster-ui{position:absolute;z-index:3;left:0;right:0;bottom:clamp(8px,2.2dvh,24px);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6dvh,15px);padding:0 clamp(14px,3vw,45px)}
 .poster-controls{display:flex;flex-direction:column;align-items:center;gap:clamp(9px,1.8dvh,17px);width:min(1080px,100%)}
 .poster-button{cursor:pointer;border:2px solid #529ac7;border-radius:8px;min-width:0;width:100%;height:clamp(45px,8dvh,72px);display:flex;align-items:center;justify-content:center;gap:clamp(5px,1vw,14px);background:linear-gradient(180deg,#152941e8,#07172bea);box-shadow:0 5px 0 #030814,0 0 21px #1e91ef35,inset 0 0 0 1px #c8edff16;color:#f4f8ff;font:900 clamp(13px,1.55vw,24px) Impact,'Arial Black',sans-serif;letter-spacing:1.3px;text-shadow:0 2px 4px #0009;transition:transform .16s,border-color .16s,box-shadow .16s,background .16s}
@@ -763,7 +763,7 @@ body{padding:0 !important;display:block;background:#071223}
  .poster-button{height:clamp(40px,7.3dvh,58px);font-size:clamp(13px,3.4vw,19px)}
  .poster-play-button{height:clamp(52px,9dvh,74px);font-size:clamp(27px,7vw,38px)}
  .poster-studio{font-size:9px;line-height:1.4;max-width:320px}
- .poster-menu:after{height:62%}
+ .poster-menu:after{height:45%}
 }
 @media(max-height:590px) and (min-width:701px){
  .poster-ui{bottom:5px;gap:6px}
@@ -778,7 +778,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.6</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.7</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1361,11 +1361,11 @@ function menu(){
           <button type="button" class="poster-button" id="posterHelp"><span class="poster-button-icon">?</span><span>HELP</span></button>
         </div>
       </nav>
-      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.4.6</span></p>
+      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.4.7</span></p>
     </div>
   </section>
   <div class="poster-fallback">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.6</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.7</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
