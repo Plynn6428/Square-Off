@@ -392,6 +392,33 @@ body{padding:0 !important;display:block;background:#071223}
 .rounds-hero .hero-mouth{left:39%!important;bottom:18%!important;width:22%!important;height:10%!important;border:clamp(3px,.32vw,5px) solid #101728!important;border-top:0!important;background:transparent!important;border-radius:0 0 50% 50%!important;box-shadow:none!important;transform:none!important}
 .rounds-bot .rounds-hero .hero-mouth{width:18%!important;left:41%!important;bottom:22%!important;height:0!important;border:0!important;background:#101728!important;border-radius:3px!important}
 
+
+/* Square Off cinematic menu, composed with HTML/CSS—not image-baked controls */
+.splash.so-cinematic{display:block;position:relative;min-height:100dvh;text-align:center;overflow:hidden;background:radial-gradient(ellipse at 19% 52%,#a1183740,transparent 43%),radial-gradient(ellipse at 83% 52%,#127bee40,transparent 43%),linear-gradient(#020817,#07162a 75%,#040817);isolation:isolate}
+.splash.so-cinematic:before{content:'';position:absolute;inset:0;z-index:-1;background:repeating-linear-gradient(90deg,transparent 0 13%,#5e8ab013 13.5%,transparent 14% 26%);opacity:.13}
+.splash.so-cinematic:after{height:4px;background:linear-gradient(90deg,#ff435c,transparent,#148dff)}
+.so-title{position:absolute;top:4%;left:0;right:0;z-index:3;pointer-events:none}.so-title h1{font:italic 1000 clamp(58px,10vw,164px)/.78 Impact,'Arial Black',sans-serif;letter-spacing:-.045em;margin:0;text-shadow:0 8px 10px #030b20,0 0 30px #53a9ff5e;filter:drop-shadow(0 6px 0 #063875);color:#e4f7ff}.so-title h1 span{display:block;font-size:1.04em;background:linear-gradient(90deg,#ff3855 33%,#cf419d 52%,#098dff 67%);background-clip:text;color:transparent;filter:drop-shadow(0 5px 3px #041029)}
+.so-versus{position:absolute;top:26%;bottom:24%;left:0;right:0;pointer-events:none;background:linear-gradient(90deg,#ff29401c,transparent 45%,#148dff22);z-index:1}
+.so-fighter{--color:#fc3049;position:absolute;left:12%;top:18%;width:clamp(100px,17vw,270px);aspect-ratio:1;transform:rotate(-12deg);filter:drop-shadow(0 0 28px var(--color));animation:so-float 3s ease-in-out infinite}
+.so-fighter.so-blue{--color:#138bff;left:auto;right:12%;transform:rotate(12deg) scaleX(-1);animation-delay:-1.5s}
+.so-face{position:absolute;inset:0;background:linear-gradient(120deg,#ffffff50,transparent 32%),var(--color);border:4px solid #ffffff88;box-shadow:inset -26px -20px #04132b32;z-index:3;clip-path:polygon(0 0,94% 0,100% 100%,0 100%)}
+.so-face .eye{position:absolute;top:44%;width:7%;height:12%;border-radius:50%;background:#05091c}.so-face .eye.left{left:31%}.so-face .eye.right{right:24%}
+.so-face .brow{position:absolute;top:34%;height:5%;width:16%;background:#05091c}.so-face .brow.left{left:27%;transform:rotate(34deg)}.so-face .brow.right{right:20%;transform:rotate(-34deg)}
+.so-face .mouth{position:absolute;left:43%;top:72%;width:24%;height:13%;border-top:5px solid #05091c;border-radius:50%;transform:rotate(-10deg)}
+.so-leg,.so-arm{position:absolute;background:var(--color);border:3px solid #061029;border-radius:7px;z-index:1}.so-leg{height:85%;width:18%;top:76%;transform-origin:top}.so-leg.first{left:24%;transform:rotate(50deg)}.so-leg.second{right:23%;transform:rotate(-50deg)}
+.so-arm{height:17%;width:66%;top:35%}.so-arm.rear{left:-49%;transform:rotate(-17deg)}.so-arm.front{right:-54%;top:60%;transform:rotate(8deg);z-index:4}
+.so-gun{position:absolute;right:-35%;top:-38%;width:83%;height:70%;background:#050914;border:2px solid #d0ddee;border-radius:2px;box-shadow:inset 0 -5px #183552}.so-gun:after{content:'';position:absolute;left:25%;top:90%;height:140%;width:21%;background:#050914;transform:rotate(-20deg)}
+.so-energy{position:absolute;left:-80%;top:-10%;width:90%;aspect-ratio:1;border:7px solid #fffd;border-radius:50%;box-shadow:0 0 17px var(--color),0 0 50px var(--color),inset 0 0 40px var(--color);background:radial-gradient(circle,#ffffff88,transparent);animation:so-pulse 2.2s ease-in-out infinite}
+.so-controls{position:absolute;bottom:8%;width:min(610px,94%);left:50%;transform:translateX(-50%);z-index:8;display:flex;flex-direction:column;gap:15px;align-items:center}
+.so-btn{position:relative;appearance:none;border:2px solid #4387ba;cursor:pointer;color:#f3f9ff;font:900 clamp(18px,2.1vw,26px) Impact,'Arial Black',sans-serif;letter-spacing:1.4px;text-shadow:0 3px 8px #000;min-height:57px;width:100%;background:linear-gradient(115deg,#102d4a,#071126 46%,#172e51);clip-path:polygon(6% 0,94% 0,100% 50%,94% 100%,6% 100%,0 50%);box-shadow:inset 0 0 18px #397fcc54;transition:filter .18s,transform .18s}
+.so-btn:hover{filter:brightness(1.4) drop-shadow(0 0 14px #128dff);transform:translateY(-4px)}.so-btn:active{transform:scale(.98)}.so-btn:focus-visible{outline:3px solid #fff;outline-offset:5px}
+.so-btn.so-main{width:min(470px,95%);min-height:90px;font:italic 900 clamp(37px,4.5vw,60px) Impact,'Arial Black',sans-serif;letter-spacing:3px;border:3px solid #ec6b94;background:linear-gradient(110deg,#8e1838 0,#09142a 28%,#0a142b 70%,#116dce 100%)}.so-icon{font:normal 27px Arial;color:#ff5d76;margin-right:24px}
+.so-secondary{display:flex;width:100%;justify-content:center;gap:13px}.so-secondary .so-btn{flex:1;max-width:280px}
+.so-footer{position:absolute;bottom:2%;left:0;right:0;z-index:4;color:#9cb3ca;font:700 clamp(8px,.8vw,12px) Consolas,monospace;letter-spacing:1px;padding:0 10px}.so-footer span{color:#7cb9ff}
+@keyframes so-float{0%,100%{translate:0 0}50%{translate:0 -12px}}@keyframes so-pulse{0%,100%{opacity:.65;scale:.93}50%{opacity:1;scale:1.08}}
+@media(max-width:650px){.so-title{top:12%}.so-versus{top:37%;bottom:29%}.so-fighter{left:12%;width:26vw}.so-fighter.so-blue{right:12%}.so-controls{bottom:10%}.so-btn.so-main{min-height:72px}.so-footer{bottom:3%}}
+@media(prefers-reduced-motion:reduce){.so-fighter,.so-energy{animation:none}}
+
 </style>
 </head>
 <body>
@@ -619,29 +646,20 @@ window.addEventListener('pointerdown',beginMusic,{capture:true});window.addEvent
 function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classList.add('menu-screen');showOverlay(html)}
 function menu(){
  state='menu';setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
- fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 2.8</div></div>
-  <div class="splash-main">
-   <section class="splash-copy">
-    <div class="splash-kicker">SOLO ARENA FIGHTER</div>
-    <h1 class="splash-title"><span>SQUARE</span><span class="title-off">OFF<span class="title-dot">.</span></span></h1>
-    <nav class="splash-actions" aria-label="Main options">
-     <button type="button" class="splash-action primary" id="playBtn">PLAY <span>↗</span></button>
-     <div class="splash-subactions">
-      <button type="button" class="splash-action" id="settingsBtn">SETTINGS <span>+</span></button>
-      <button type="button" class="splash-action" id="helpBtn">HELP <span>?</span></button>
-     </div>
-    </nav>
-   </section>
-   <div class="splash-scene" aria-hidden="true">
-    <div class="splash-aura"></div><div class="splash-ring"></div><div class="splash-bolt"></div>
-    <div class="splash-mascot"><i class="arm"></i><i class="arm second"></i><i class="leg"></i><i class="leg second"></i><div class="body"><i class="eye"></i><i class="eye second"></i><i class="mouth"></i></div></div>
-    <div class="splash-vs">VS</div>
-    <div class="splash-mascot blue"><i class="arm"></i><i class="arm second"></i><i class="leg"></i><i class="leg second"></i><div class="body"><i class="eye"></i><i class="eye second"></i><i class="mouth"></i></div></div>
-    <div class="splash-floor"></div>
-   </div>
-  </div>
- </main>`);
+ fullMenu(`<main class="splash so-cinematic" aria-label="Square Off main menu">
+<header class="so-title"><h1>SQUARE <span>OFF</span></h1></header>
+<div class="so-versus" aria-hidden="true">
+<div class="so-fighter so-red"><div class="so-energy"></div><div class="so-leg first"></div><div class="so-leg second"></div><div class="so-arm rear"></div><div class="so-face"><i class="eye left"></i><i class="eye right"></i><i class="brow left"></i><i class="brow right"></i><i class="mouth"></i></div><div class="so-arm front"><i class="so-gun"></i></div></div>
+<div class="so-fighter so-blue"><div class="so-energy"></div><div class="so-leg first"></div><div class="so-leg second"></div><div class="so-arm rear"></div><div class="so-face"><i class="eye left"></i><i class="eye right"></i><i class="brow left"></i><i class="brow right"></i><i class="mouth"></i></div><div class="so-arm front"><i class="so-gun"></i></div></div>
+</div>
+<nav class="so-controls" aria-label="Main menu">
+<button type="button" class="so-btn so-main" id="playBtn"><span class="so-icon">▶</span>PLAY</button>
+<div class="so-secondary">
+<button type="button" class="so-btn" id="settingsBtn">⚙ &nbsp; SETTINGS</button>
+<button type="button" class="so-btn" id="helpBtn">? &nbsp; HELP</button>
+</div></nav>
+<footer class="so-footer">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span>// PC 5.4.8</span></footer>
+</main>`);
  $('playBtn').onclick=()=>startMatch();$('settingsBtn').onclick=settings;$('helpBtn').onclick=help;
 }
 function savePrefs(){try{localStorage.setItem('square-off-pc-settings',JSON.stringify({difficulty,muted,shakeEnabled,musicEnabled}))}catch(e){}}
