@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.4.2</title>
+<title>SQUARE OFF | PC 5.4.3</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -645,7 +645,7 @@ body{padding:0 !important;display:block;background:#071223}
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.2</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.3</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1114,8 +1114,8 @@ function renderColaCan(c){
 }
 
 function renderColaCard(c,i){return `<button class="vend-slot" data-i="${i}" aria-label="${c.name}. ${c.desc}"><div class="cola-stage">${renderColaCan(c)}</div><div class="vend-details"><span class="vend-number">0${i+1} // ${c.type}</span><strong class="vend-name">${c.name}</strong><span class="vend-desc">${c.desc}</span></div><div class="vend-rail"></div></button>`}
-function vendingMarkup(opts,isBot=false){
- const color=isBot?'#5fa7ff':'#ff5965',name=isBot?'BLUE BOT':'RED FIGHTER';
+function vendingMarkup(opts,isBot=false,isGuest=false){
+ const color=(isBot||isGuest)?'#5fa7ff':'#ff5965';
  const fig=`<div class="rounds-hero" style="--fighter-color:${color}" aria-hidden="true"><div class="hero-aura"></div><div class="hero-limb leg left"></div><div class="hero-limb leg right"></div><div class="hero-limb arm left"></div><div class="hero-limb arm right"></div><div class="hero-body"><div class="hero-eyes"><b></b><b></b></div><div class="hero-mouth"></div></div><div class="hero-shadow"></div></div>`;
  const slots=opts.map((c,i)=>`<div class="rounds-product rounds-pos-${isBot?1:i}">${renderColaCard(c,i)}</div>`).join('');
  return `<div class="rounds-draft ${isBot?'rounds-bot':'rounds-five'}">
@@ -1215,7 +1215,7 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.2</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.3</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1378,7 +1378,27 @@ function updateGuestSnapshot(q){
  $('score1').textContent=scores[0];$('score2').textContent=scores[1];
  $('mapName').textContent=arena.name;updateHUD();
 }
-function onlineGuestDraft(ids){netDraftIds=ids.filter(id=>ITEMS.some(c=>c.id===id));state='online_guest_draft';const choices=netDraftIds.map(id=>ITEMS.find(c=>c.id===id));overlay.classList.add('vend-screen');showOverlay(vendingMarkup(choices,false));panel.querySelectorAll('.vend-slot').forEach(b=>{b.onclick=()=>{const idx=Number(b.dataset.i);sendNet({type:'choose',card:netDraftIds[idx]});state='online_guest_wait';showOverlay('<div class="net-card"><h2>SODA SELECTED!</h2><p>Waiting for the next round…</p></div>')}});setMusicTheme('cola');}
+function onlineGuestDraft(ids){
+ netDraftIds=ids.filter(id=>ITEMS.some(c=>c.id===id));
+ state='online_guest_draft';
+ const choices=netDraftIds.map(id=>ITEMS.find(c=>c.id===id));
+ overlay.classList.add('vend-screen');
+ showOverlay(vendingMarkup(choices,false,true));
+ panel.querySelectorAll('.vend-slot').forEach(b=>{
+  const idx=Number(b.dataset.i);
+  b.addEventListener('pointerenter',()=>reachForCola(idx));
+  b.addEventListener('focus',()=>reachForCola(idx));
+  b.addEventListener('pointerleave',resetColaReach);
+  b.addEventListener('blur',resetColaReach);
+  b.onclick=()=>{
+   sendNet({type:'choose',card:netDraftIds[idx]});
+   state='online_guest_wait';
+   showOverlay('<div class="net-card"><h2>SODA SELECTED!</h2><p>Waiting for the next round…</p></div>');
+  };
+ });
+ setMusicTheme('cola');
+ requestAnimationFrame(resetColaReach);
+}
 function handleOnlineMessage(m){
  if(m.type==='error'){onlineMessage(m.message||'Room error.',true);return}
  if(m.type==='created'||m.type==='joined'){netCode=m.code;netConnected=true;netGuestReady=m.type==='joined';onlineLobby();return}
@@ -1652,7 +1672,7 @@ function postRound(){const champ=scores[0]>=5||scores[1]>=5;
 }
 let colaSelectionPending=false,colaReachTarget=null;
 function pointColaHand(clientX,clientY){
- if(!['draft','botdraft','drinking'].includes(state))return;
+ if(!['draft','botdraft','drinking','online_guest_draft'].includes(state))return;
  const hero=panel.querySelector('.rounds-hero-wrap'),arm=panel.querySelector('#colaReachArm');
  if(!hero||!arm)return;
  const hr=hero.getBoundingClientRect();
@@ -1661,7 +1681,7 @@ function pointColaHand(clientX,clientY){
  // Only its rotation changes; the hand moves on a short circular arc.
  const theta=Math.atan2(clientY-shoulderY,clientX-shoulderX);
  arm.style.transform=`translateY(-50%) rotate(${theta}rad)`;
- arm.style.setProperty('--reach-color',state==='botdraft'?'#5fa7ff':'#ff5965');
+ arm.style.setProperty('--reach-color',(state==='botdraft'||state==='online_guest_draft')?'#5fa7ff':'#ff5965');
  arm.classList.add('is-reaching');hero.classList.add('reaching');
 }
 function reachForCola(i,isBot=false){
@@ -1671,12 +1691,12 @@ function reachForCola(i,isBot=false){
  pointColaHand(rect.left+rect.width/2,rect.top+rect.height/2);
  colaReachTarget=i;
 }
-function resetColaReach(){colaReachTarget=null; const hero=panel?.querySelector('.rounds-hero-wrap'),arm=panel?.querySelector('#colaReachArm'); if(hero&&arm){arm.style.transform='translateY(-50%) rotate(-0.22rad)'; arm.style.setProperty('--reach-color',state==='botdraft'?'#5fa7ff':'#ff5965'); hero.classList.remove('left-reach');}}
+function resetColaReach(){colaReachTarget=null; const hero=panel?.querySelector('.rounds-hero-wrap'),arm=panel?.querySelector('#colaReachArm'); if(hero&&arm){arm.style.transform='translateY(-50%) rotate(-0.22rad)'; arm.style.setProperty('--reach-color',(state==='botdraft'||state==='online_guest_draft')?'#5fa7ff':'#ff5965'); hero.classList.remove('left-reach');}}
 document.addEventListener('pointermove',e=>{
- if(state==='draft'||state==='botdraft')pointColaHand(e.clientX,e.clientY);
+ if(state==='draft'||state==='botdraft'||state==='online_guest_draft')pointColaHand(e.clientX,e.clientY);
 });
 window.addEventListener('resize',()=>{
- if(colaReachTarget!==null&&(state==='draft'||state==='botdraft'))reachForCola(colaReachTarget,state==='botdraft');
+ if(colaReachTarget!==null&&(state==='draft'||state==='botdraft'||state==='online_guest_draft'))reachForCola(colaReachTarget,state==='botdraft');
 });
 function sodaDrinkSound(){
  if(muted)return;
