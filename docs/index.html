@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.4.9</title>
+<title>SQUARE OFF | PC 5.5.0</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -775,7 +775,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.poster-button{transition:none}}
 
 
-/* PC 5.4.9 — polished cinematic menu controls. Artwork and game logic untouched. */
+/* PC 5.5.0 — polished cinematic menu controls. Artwork and game logic untouched. */
 .splash:has(.poster-menu) .poster-menu:after{height:43%;background:linear-gradient(180deg,transparent 0%,#03091b28 18%,#030917b8 68%,#020715eb 100%)}
 .splash:has(.poster-menu) .poster-ui{bottom:clamp(10px,2.5dvh,25px);gap:clamp(6px,1.1dvh,12px)}
 .splash:has(.poster-menu) .poster-controls{gap:clamp(8px,1.35dvh,13px);width:min(990px,100%)}
@@ -831,11 +831,50 @@ body{padding:0 !important;display:block;background:#071223}
  .splash:has(.poster-menu) .poster-button,.splash:has(.poster-menu) .poster-button:after{transition:none}
 }
 
+
+/* PC 5.5.0: shared cinematic visual identity for Settings, Help and Online 1v1.
+   Same button-free poster artwork, independent foreground HTML, zero gameplay changes. */
+.overlay.menu-screen:has(.splash-page){background:#040b19}
+.overlay.menu-screen .splash-page{position:relative;min-height:100dvh;height:auto;isolation:isolate;overflow-x:hidden;overflow-y:auto;padding:clamp(30px,6dvh,65px) clamp(16px,4vw,52px);background:#040b19;color:#f2f7ff}
+.overlay.menu-screen .splash-page:before{position:fixed;inset:0;opacity:1;mask-image:none;z-index:-2;background:linear-gradient(90deg,#050b1be0,#061026ae 48%,#050b1be0),linear-gradient(0deg,#020612df,#060e1d70),url('assets/Neon%20Square-Off%20Arena.png') center 38% / cover no-repeat;pointer-events:none}
+.overlay.menu-screen .splash-page:after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 15% 56%,#f3373a16,transparent 44%),radial-gradient(ellipse at 84% 50%,#1379f91c,transparent 43%),linear-gradient(180deg,#02071355,#030817a6)}
+.overlay.menu-screen .splash-page .page-card{width:min(890px,100%);margin:auto;padding:clamp(20px,3vw,40px);background:linear-gradient(145deg,#0b1729f2,#0c1729e9 70%,#0b1b35ee);border:1px solid #55799d88;box-shadow:0 24px 70px #000d,inset 0 1px #d1e9ff25;clip-path:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px),0 14px)}
+.overlay.menu-screen .splash-page .page-marker{font:800 11px Consolas,monospace;letter-spacing:2.7px;color:#87c9ff}
+.overlay.menu-screen .splash-page .page-title{font:italic 900 clamp(42px,6vw,76px)/.95 Impact,'Arial Black',sans-serif;letter-spacing:.2px;margin:11px 0 22px;color:#f6faff;text-shadow:0 0 18px #62a9ff36}
+.overlay.menu-screen .splash-page .page-title span{color:#75baff;text-shadow:0 0 18px #168eff7b}
+.overlay.menu-screen .splash-page .setting-row{padding:clamp(11px,1.6vw,18px) clamp(13px,2vw,21px);margin:9px 0;gap:16px;background:linear-gradient(100deg,#1b263aeb,#0e1c32ea);border:1px solid #435c79;border-left:3px solid #a45778;min-height:70px}
+.overlay.menu-screen .splash-page .setting-row:nth-of-type(even){border-left-color:#438ee3}
+.overlay.menu-screen .splash-page .setting-row h3{font-size:clamp(16px,1.65vw,21px);letter-spacing:.6px}
+.overlay.menu-screen .splash-page .setting-row p{color:#aabed6;font-size:11px}
+.overlay.menu-screen .splash-page .option{background:#192d46;border:1px solid #57799b;color:#e7f1ff;border-radius:3px;min-width:67px;padding:10px 13px;cursor:pointer}
+.overlay.menu-screen .splash-page .option.active{background:linear-gradient(120deg,#63314a,#255386);border-color:#b6d9ff;color:#fff;box-shadow:0 0 16px #368ce23b}
+.overlay.menu-screen .splash-page .option:hover,.overlay.menu-screen .splash-page .option:focus-visible{border-color:#d7efff;filter:brightness(1.2)}
+.overlay.menu-screen .splash-page .page-back,.overlay.menu-screen .splash-page .net-actions .btn{border:1px solid #718eb1;border-radius:3px;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);background:linear-gradient(105deg,#3b243d,#142742 40%,#17416c);color:#f5faff;text-shadow:0 2px 7px #000a;box-shadow:inset 0 1px #d4eeff2c,0 7px 20px #0008;font:900 clamp(14px,1.5vw,18px) Impact,'Arial Black',sans-serif;letter-spacing:1.1px;padding:12px 22px;min-width:0;transition:filter .15s,transform .15s;cursor:pointer}
+.overlay.menu-screen .splash-page .page-back:hover,.overlay.menu-screen .splash-page .net-actions .btn:hover{background:linear-gradient(105deg,#592e4b,#213e5d 45%,#2665a2);filter:brightness(1.2);transform:translateY(-2px)}
+.overlay.menu-screen .splash-page .page-back:focus-visible,.overlay.menu-screen .splash-page .net-actions .btn:focus-visible{outline:3px solid white;outline-offset:3px}
+.overlay.menu-screen .splash-page .page-back{margin-top:17px}
+.overlay.menu-screen .splash-page .help-layout{gap:12px;grid-template-columns:1.25fr 1fr}
+.overlay.menu-screen .splash-page .help-tile{padding:clamp(13px,2vw,24px);background:#101d32df;border:1px solid #526f8b;border-top:3px solid #588fc6}
+.overlay.menu-screen .splash-page .help-tile h3{font-size:21px;margin-bottom:12px}
+.overlay.menu-screen .splash-page .help-tile p strong{color:#88c7ff}
+.overlay.menu-screen .splash-page .help-line{padding:8px 0;font-size:12px}
+.overlay.menu-screen .splash-page .help-tile p{font-size:13px;line-height:1.6}
+.overlay.menu-screen .splash-page .key{color:#c7e7ff}
+.overlay.menu-screen .splash-page .net-card{text-align:left;width:min(740px,100%);max-width:none}
+.overlay.menu-screen .splash-page .net-card>p{margin-left:0;max-width:none}
+.overlay.menu-screen .splash-page .net-label{color:#87c7ff}
+.overlay.menu-screen .splash-page .net-input{background:#0b182c;border:1px solid #577c9e;border-radius:3px}
+.overlay.menu-screen .splash-page .net-input:focus-visible{outline:2px solid #9cd8ff;outline-offset:2px}
+.overlay.menu-screen .splash-page .net-actions .btn.secondary{background:linear-gradient(105deg,#162e4c,#11213a)}
+.overlay.menu-screen .splash-page .net-card .net-code{color:#b9ddff;border-color:#6fa5da}
+@media(max-width:700px){.overlay.menu-screen .splash-page{padding:16px 9px}.overlay.menu-screen .splash-page .page-card{padding:21px 16px}.overlay.menu-screen .splash-page .setting-row{flex-direction:column;align-items:stretch;gap:10px}.overlay.menu-screen .splash-page .option-row{justify-content:flex-start}.overlay.menu-screen .splash-page .help-layout{grid-template-columns:1fr}.overlay.menu-screen .splash-page .page-title{font-size:43px}}
+@media(max-height:650px) and (min-width:701px){.overlay.menu-screen .splash-page{padding:14px 24px}.overlay.menu-screen .splash-page .page-card{padding:18px 27px}.overlay.menu-screen .splash-page .page-title{font-size:45px;margin:8px 0 12px}.overlay.menu-screen .splash-page .setting-row{min-height:0;padding:8px 15px;margin:6px 0}.overlay.menu-screen .splash-page .page-back{margin-top:10px}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.9</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.5.0</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1418,11 +1457,11 @@ function menu(){
           <button type="button" class="poster-button" id="posterHelp"><span class="poster-button-icon">?</span><span>HELP</span></button>
         </div>
       </nav>
-      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.4.9</span></p>
+      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.5.0</span></p>
     </div>
   </section>
   <div class="poster-fallback">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.9</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.5.0</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
