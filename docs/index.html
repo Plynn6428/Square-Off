@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.4.4</title>
+<title>SQUARE OFF | PC 5.4.5</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -707,11 +707,31 @@ body{padding:0 !important;display:block;background:#071223}
 @media(min-width:701px) and (max-height:560px){.showdown-scene{height:57dvh}.showdown-fighter{top:19%;height:60%}}
 @media(prefers-reduced-motion:reduce){.showdown-fighter,.showdown-energy{animation:none}}
 
+
+/* 5.4.5 — the approved cinematic menu art, with real interactive hit targets.
+   The prior menu stays hidden unless the poster asset cannot be loaded. */
+.splash:has(.poster-menu){display:block;background:#050d20;overflow:hidden}
+.poster-menu{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:#050d20}
+.poster-art{position:relative;width:min(100vw,177.68dvh);height:min(100dvh,56.28vw);aspect-ratio:1672/941;max-width:100%;max-height:100%;isolation:isolate}
+.poster-art>img{display:block;width:100%;height:100%;object-fit:fill;pointer-events:none;user-select:none}
+.poster-hit{position:absolute;z-index:2;border:0;cursor:pointer;background:transparent;border-radius:16px;color:transparent;padding:0;font-size:0;transition:box-shadow .16s,background .16s,transform .16s;touch-action:manipulation}
+.poster-hit span{display:block;width:100%;height:100%;opacity:0}
+.poster-hit:hover,.poster-hit:focus-visible{box-shadow:inset 0 0 0 3px #fff4a7,0 0 22px #ffdf6266;background:#ffffff0b;transform:translateY(-2px);outline:0}
+.poster-play{left:33.5%;top:54.5%;width:33%;height:18.5%}
+.poster-online{left:9.9%;top:74.5%;width:20.2%;height:13.5%}
+.poster-practice{left:31.6%;top:74.5%;width:17.4%;height:13.5%}
+.poster-settings{left:50.4%;top:74.5%;width:17.9%;height:13.5%}
+.poster-help{left:69.5%;top:74.5%;width:20.6%;height:13.5%}
+.poster-fallback{display:none}
+.poster-menu.poster-missing{display:none}
+.splash:has(.poster-menu.poster-missing) .poster-fallback{display:block}
+@media(max-aspect-ratio:9/10){.poster-hit{border-radius:6px}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.4</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.5</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1281,7 +1301,18 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.4</div></div>
+  <section class="poster-menu" aria-label="Square Off main menu artwork" id="posterMenu">
+   <div class="poster-art" role="group" aria-label="Red and blue fighters facing off under the Square Off logo">
+    <img src="assets/square-off-showdown-menu.png" alt="SQUARE OFF: furious red and blue square fighters charging each other" onerror="this.closest('.poster-menu').classList.add('poster-missing')">
+    <button type="button" class="poster-hit poster-play" id="posterPlay" aria-label="Single Player"><span>SINGLE PLAYER</span></button>
+    <button type="button" class="poster-hit poster-online" id="posterOnline" aria-label="Online 1v1"><span>ONLINE 1V1</span></button>
+    <button type="button" class="poster-hit poster-practice" id="posterPractice" aria-label="Practice"><span>PRACTICE</span></button>
+    <button type="button" class="poster-hit poster-settings" id="posterSettings" aria-label="Settings"><span>SETTINGS</span></button>
+    <button type="button" class="poster-hit poster-help" id="posterHelp" aria-label="How to Play"><span>HOW TO PLAY</span></button>
+   </div>
+  </section>
+  <div class="poster-fallback">
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.5</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
@@ -1321,8 +1352,10 @@ function menu(){
     <div class="showdown-footer">LOCK IN <span>•</span> SQUARE UP <span>•</span> SETTLE IT</div>
    </div>
   </div>
+  </div>
  </main>`);
  $('playBtn').onclick=()=>startMatch();$('onlineBtn').onclick=onlineMenu;$('practiceBtn').onclick=startPractice;$('settingsBtn').onclick=settings;$('helpBtn').onclick=help;
+ $('posterPlay').onclick=()=>startMatch();$('posterOnline').onclick=onlineMenu;$('posterPractice').onclick=startPractice;$('posterSettings').onclick=settings;$('posterHelp').onclick=help;
 }
 
 // Multiplayer 4.0: small WebSocket relay and host-authoritative simulation.
