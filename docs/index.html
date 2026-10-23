@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 5.4.5</title>
+<title>SQUARE OFF | PC 5.4.6</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -727,11 +727,58 @@ body{padding:0 !important;display:block;background:#071223}
 .splash:has(.poster-menu.poster-missing) .poster-fallback{display:block}
 @media(max-aspect-ratio:9/10){.poster-hit{border-radius:6px}}
 
+
+/* 5.4.6 — full-bleed cinematic artwork, independent interactive HTML menu. */
+.splash:has(.poster-menu){position:relative;display:block;width:100vw;height:100vh;height:100dvh;overflow:hidden;background:#050b1c}
+.poster-menu{position:absolute;inset:0;z-index:20;display:block;overflow:hidden;background:radial-gradient(ellipse at 25% 62%,#45101f,#050c1e 65%,#061b39)}
+.poster-backdrop,.poster-clean-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;pointer-events:none;user-select:none}
+.poster-backdrop{
+ background-image:linear-gradient(to bottom,transparent 0%,transparent 43%,#07132699 53%,#061023 64%,#061023 100%),url('assets/square-off-showdown-menu.png');
+ background-size:cover;background-position:center 38%;background-repeat:no-repeat;
+}
+.poster-clean-art{display:none}
+.poster-menu.clean-loaded .poster-clean-art{display:block}
+.poster-menu.clean-loaded .poster-backdrop{display:none}
+.poster-menu:after{content:'';position:absolute;inset:auto 0 0;height:42%;pointer-events:none;background:linear-gradient(180deg,transparent,#061124b8 38%,#020711e6 100%);z-index:1}
+.poster-ui{position:absolute;z-index:3;left:0;right:0;bottom:clamp(8px,2.2dvh,24px);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6dvh,15px);padding:0 clamp(14px,3vw,45px)}
+.poster-controls{display:flex;flex-direction:column;align-items:center;gap:clamp(9px,1.8dvh,17px);width:min(1080px,100%)}
+.poster-button{cursor:pointer;border:2px solid #529ac7;border-radius:8px;min-width:0;width:100%;height:clamp(45px,8dvh,72px);display:flex;align-items:center;justify-content:center;gap:clamp(5px,1vw,14px);background:linear-gradient(180deg,#152941e8,#07172bea);box-shadow:0 5px 0 #030814,0 0 21px #1e91ef35,inset 0 0 0 1px #c8edff16;color:#f4f8ff;font:900 clamp(13px,1.55vw,24px) Impact,'Arial Black',sans-serif;letter-spacing:1.3px;text-shadow:0 2px 4px #0009;transition:transform .16s,border-color .16s,box-shadow .16s,background .16s}
+.poster-button:hover{transform:translateY(-4px);border-color:#ffe08a;box-shadow:0 9px 0 #030814,0 0 28px #ffc84b77;background:linear-gradient(180deg,#24415c,#12263d)}
+.poster-button:active{transform:translateY(1px);box-shadow:0 2px 0 #030814}
+.poster-button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.poster-button-icon{font:900 clamp(17px,2.1vw,27px) Arial,sans-serif;color:#ffdc62}
+.poster-play-button{height:clamp(60px,11dvh,105px);max-width:clamp(280px,44vw,570px);background:linear-gradient(150deg,#ffed90,#ffbf2f 55%,#e98b13);border:3px solid #fff0ab;box-shadow:0 7px 0 #6c320a,0 0 30px #ffc03855;color:#101729;font-size:clamp(31px,4vw,55px);font-style:italic;text-shadow:0 2px 0 #ffffff66}
+.poster-play-button:hover{background:linear-gradient(160deg,#fff6bc,#ffd74a);box-shadow:0 10px 0 #6c320a,0 0 40px #ffcd58}
+.poster-play-button .poster-button-icon{color:#0c172b;font-size:clamp(24px,3vw,41px)}
+.poster-play-button span+span{display:flex;align-items:center;gap:14px}
+.poster-play-button small{display:block;font:900 clamp(9px,1.1vw,13px) Consolas,monospace;letter-spacing:1px;font-style:normal}
+.poster-secondary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1.5vw,18px);width:100%}
+.poster-studio{margin:0;text-align:center;color:#b8d9ff;text-shadow:0 2px 8px #000c;font:700 clamp(9px,1vw,12px) Consolas,monospace;letter-spacing:.7px}
+.poster-studio span{color:#ffd45d}
+@media(max-width:700px){
+ .poster-backdrop,.poster-clean-art{object-position:center 35%}
+ .poster-backdrop{background-position:center 35%}
+ .poster-ui{bottom:12px;gap:8px;padding:0 14px}
+ .poster-secondary{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .poster-button{height:clamp(40px,7.3dvh,58px);font-size:clamp(13px,3.4vw,19px)}
+ .poster-play-button{height:clamp(52px,9dvh,74px);font-size:clamp(27px,7vw,38px)}
+ .poster-studio{font-size:9px;line-height:1.4;max-width:320px}
+ .poster-menu:after{height:62%}
+}
+@media(max-height:590px) and (min-width:701px){
+ .poster-ui{bottom:5px;gap:6px}
+ .poster-controls{gap:7px}
+ .poster-play-button{height:50px;font-size:30px}
+ .poster-button{height:39px;font-size:15px}
+ .poster-studio{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.poster-button{transition:none}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.5</b></div></div>
+  <div class="topline"><div class="brand"><span class="brand-block">SO</span><span>SQUARE <strong>OFF</strong></span></div><div class="version"><span class="signal"></span> DESKTOP EDITION <b> / BUILD 5.4.6</b></div></div>
   <div class="game" id="game">
     <canvas id="canvas" width="1120" height="630" aria-label="Square Off: single-player arena fighting game"></canvas>
     <div id="hud">
@@ -1301,18 +1348,24 @@ function menu(){
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
-  <section class="poster-menu" aria-label="Square Off main menu artwork" id="posterMenu">
-   <div class="poster-art" role="group" aria-label="Red and blue fighters facing off under the Square Off logo">
-    <img src="assets/square-off-showdown-menu.png" alt="SQUARE OFF: furious red and blue square fighters charging each other" onerror="this.closest('.poster-menu').classList.add('poster-missing')">
-    <button type="button" class="poster-hit poster-play" id="posterPlay" aria-label="Single Player"><span>SINGLE PLAYER</span></button>
-    <button type="button" class="poster-hit poster-online" id="posterOnline" aria-label="Online 1v1"><span>ONLINE 1V1</span></button>
-    <button type="button" class="poster-hit poster-practice" id="posterPractice" aria-label="Practice"><span>PRACTICE</span></button>
-    <button type="button" class="poster-hit poster-settings" id="posterSettings" aria-label="Settings"><span>SETTINGS</span></button>
-    <button type="button" class="poster-hit poster-help" id="posterHelp" aria-label="How to Play"><span>HOW TO PLAY</span></button>
-   </div>
+  <section class="poster-menu" id="posterMenu" aria-label="Square Off main menu">
+    <div class="poster-backdrop" aria-hidden="true"></div>
+    <img class="poster-clean-art" src="assets/square-off-showdown-clean.png" alt="" aria-hidden="true" onload="this.closest('.poster-menu').classList.add('clean-loaded')" onerror="this.closest('.poster-menu').classList.add('clean-unavailable')">
+    <div class="poster-ui">
+      <nav class="poster-controls" aria-label="Main menu">
+        <button type="button" class="poster-button poster-play-button" id="posterPlay"><span class="poster-button-icon">▶</span><span>PLAY<small>SINGLE PLAYER</small></span></button>
+        <div class="poster-secondary">
+          <button type="button" class="poster-button" id="posterOnline"><span class="poster-button-icon">⚔</span><span>ONLINE 1V1</span></button>
+          <button type="button" class="poster-button" id="posterPractice"><span class="poster-button-icon">◎</span><span>PRACTICE</span></button>
+          <button type="button" class="poster-button" id="posterSettings"><span class="poster-button-icon">⚙</span><span>SETTINGS</span></button>
+          <button type="button" class="poster-button" id="posterHelp"><span class="poster-button-icon">?</span><span>HELP</span></button>
+        </div>
+      </nav>
+      <p class="poster-studio">CREATED BY PRESTON, DEVSQUARE STUDIOS AND CHATGPT <span> // PC 5.4.6</span></p>
+    </div>
   </section>
   <div class="poster-fallback">
-  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.5</div></div>
+  <div class="splash-top"><div class="splash-stamp"><b>SO</b> SQUARE OFF</div><div class="top-right">PC EDITION / 5.4.6</div></div>
   <div class="splash-main">
    <section class="splash-copy">
     <div class="splash-kicker">THE ULTIMATE 1V1 ARENA</div>
