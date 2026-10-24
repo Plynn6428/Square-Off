@@ -42,6 +42,9 @@ wss.on('connection',ws=>{
   const peer=user.role==='host'?room.guest:room.host;
   if(user.role==='host'&&m.type==='start'&&peer){room.started=true;send(peer,{type:'start'});return}
   if(!room.started||!peer)return;
+  // After a finished match, relay rematch votes both ways without closing the room.
+  if(m.type==='rematch_ready'){send(peer,{type:'rematch_ready'});return}
+  if(m.type==='rematch_start'&&user.role==='host'){send(peer,{type:'rematch_start'});return}
   if(user.role==='host'&&['snapshot','draft','host_draft','match_end','round_prepare','round_go'].includes(m.type)){
    // Relay only expected match fields, no arbitrary client commands.
    if(m.type==='snapshot'&&m.payload&&typeof m.payload==='object')send(peer,{type:'snapshot',epoch:m.epoch,payload:m.payload});
