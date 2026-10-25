@@ -1518,7 +1518,7 @@ const ITEMS=[
  {id:'timewarp',code:'TME',name:'Time Warp Tonic',desc:'+ Blocking slows nearby enemy bullets',type:'BLOCK EFFECT',can:'#6c94fa',deep:'#294786',accent:'#ddfaff',scene:'shield',layout:'topbadge',tag:'SLOW MOTION'},
  {id:'spraypray',code:'12X',name:'Spray N’ Pray',desc:'+ Automatic Fire  + 12 Bullets  - Damage  - Reload Speed',type:'FIREPOWER',can:'#f45c3d',deep:'#9a173a',accent:'#fff36c',scene:'rate',layout:'burst',tag:'EMPTY THE CLIP'},
  {id:'drummag',code:'DRM',name:'Drumroll Deluxe',desc:'+ 6 Bullets  - Reload Speed',type:'FIREPOWER',can:'#49d6f4',deep:'#226596',accent:'#ffe17a',scene:'ammo',layout:'ribbon',tag:'MORE AMMO'},
- {id:'twintap',code:'TWIN',name:'Twin Trigger Tonic',desc:'+ Fire two bullets at once  - Ammo  - Reload Speed',type:'FIREPOWER',can:'#b284ff',deep:'#5b3db1',accent:'#dcfbff',scene:'rate',layout:'split',tag:'DOUBLE TROUBLE'},
+ {id:'twintap',code:'TWIN',name:'Twin Trigger Tonic',desc:'+ Fire multiple bullets  + Magazine Size  - Reload Speed',type:'FIREPOWER',can:'#b284ff',deep:'#5b3db1',accent:'#dcfbff',scene:'rate',layout:'split',tag:'DOUBLE TROUBLE'},
  {id:'pinball',code:'PIN',name:'Pinball Punch',desc:'+ 3 Bullet Bounces',type:'BALLISTICS',can:'#f2cb3e',deep:'#a26419',accent:'#eaffff',scene:'bounce',layout:'burst',tag:'THREE MORE BANKS'},
  {id:'momentum',code:'RICO',name:'Ricochet Rocket',desc:'+ 5 Bullet Bounces  + Bounce Speed',type:'BALLISTICS',can:'#e06cfa',deep:'#722c9c',accent:'#ceffdb',scene:'bounce',layout:'diag',tag:'SPEED BANK'},
  {id:'rail',code:'RAIL',name:'Railgun Rush',desc:'+ Shot Speed  + Range',type:'BALLISTICS',can:'#50d4f8',deep:'#2056a7',accent:'#f9f0a3',scene:'bullet',layout:'side',tag:'HYPER VELOCITY'},
@@ -2160,7 +2160,7 @@ function resizeFighterForHealth(p){
 function applyCard(p,card){
  const st=p.stats, hpFraction=p.hp/Math.max(1,st.maxHp);
  switch(card.id){
- case'damage':st.damage=st.damage<100?Math.min(100,st.damage*1.5):st.damage*1.5;st.ammo=Math.max(1,st.ammo-1);break;
+ case'damage':st.damage=(p.upgrades.filter(n=>n==='Lead Storm Cola').length===1)?100:st.damage*1.5;st.ammo=Math.max(1,st.ammo-1);break;
  case'burst':st.burst+=1;st.reload*=1.25;break;
  case'hp':st.maxHp+=50;st.speed*=.75;break;
  case'speed':st.speed*=1.33;st.maxHp=Math.max(10,st.maxHp-10);break;
@@ -2460,7 +2460,7 @@ function vortexLineVisible(a,b){
 // Multipliers combine only while their respective timed effects remain active.
 function fighterSlowFactor(p){
  const frost=clock<p.slowUntil?.5:1;
- const cold=clock<(p.coldUntil||0)?Math.max(.2,1-.2*(p.coldHits||0)):1;
+ const cold=clock<(p.coldUntil||0)?Math.max(.1,1-(p.coldSlowPerHit||.2)*(p.coldHits||0)):1;
  return frost*cold;
 }
 function applyFrostbite(target,stacks=1){
@@ -3184,6 +3184,7 @@ function bulletPhysics(dt){
      if(b.coldshot>0&&target!==source&&target.hp>0){
       // Each actual bullet hit adds one 20% slow tier. Timer refreshes on impact.
       if(clock>=target.coldUntil)target.coldHits=0;
+      target.coldSlowPerHit=b.coldshot>=2?.35:.2;
       target.coldHits=Math.min(b.coldshot>=2?3:4,(target.coldHits||0)+1);
       target.coldUntil=clock+2.5;
       poptext(target.x+target.w/2,target.y-33,`CHILLED ${Math.min(90,target.coldHits*(b.coldshot>=2?35:20))}%`,'#a6efff');
