@@ -1623,8 +1623,9 @@ function sodaNextEffect(c,stacks){
  // Keep descriptions compact and truthful about effects that differ on second purchase.
  return SODA_NEXT_STACK[c.id]||c.desc;
 }
-function renderColaCard(c,i){
- const lines=c.desc.match(/[+-]\s*[^+-]+/g)||[c.desc];
+function renderColaCard(c,i,player){
+ const stacks=sodaOwnedStacks(c,player),description=sodaNextEffect(c,stacks);
+ const lines=description.match(/[+-]\s*[^+-]+/g)||[c.desc];
  const effects=lines.map(line=>{
   const clean=line.trim(),good=clean.startsWith('+');
   return `<span class="vend-effect ${good?'vend-positive':'vend-negative'}"><b>${good?'+':'−'}</b><span>${clean.replace(/^[+-]\s*/,'').trim()}</span></span>`;
