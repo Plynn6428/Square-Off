@@ -27,19 +27,30 @@ wss.on('connection',ws=>{
   const user=clients.get(ws);
   if(!user){
    if(m.type==='create'){
-    const c=code();rooms.set(c,{code:c,host:ws,guest:null,started:false,created:Date.now()});clients.set(ws,{code:c,role:'host'});send(ws,{type:'created',code:c});return;
+    const c=code();rooms.set(c,{code:c,host:ws,guest:null,started:false,colors:['red','blue'],created:Date.now()});clients.set(ws,{code:c,role:'host'});send(ws,{type:'created',code:c});return;
    }
    if(m.type==='join'){
     const c=String(m.code||'').trim().toUpperCase(),room=rooms.get(c);
     if(!room){send(ws,{type:'error',message:'Room not found. Check the code.'});return}
     if(room.guest){send(ws,{type:'error',message:'Room is full (2 players max).'});return}
     if(room.started){send(ws,{type:'error',message:'Match already started.'});return}
-    room.guest=ws;clients.set(ws,{code:c,role:'guest'});send(ws,{type:'joined',code:c});send(room.host,{type:'player_joined'});return;
+    room.guest=ws;clients.set(ws,{code:c,role:'guest'});send(ws,{type:'joined',code:c});send(ws,{type:'color_state',colors:room.colors});send(room.host,{type:'player_joined'});send(room.host,{type:'color_state',colors:room.colors});return;
    }
    send(ws,{type:'error',message:'Create or join a room first.'});return;
   }
   const room=rooms.get(user.code);if(!room)return;
   const peer=user.role==='host'?room.guest:room.host;
+  // Lobby colors are room-authoritative and unique across both players.
+  // Allow selection before the match starts, broadcast to both clients.
+  if(m.type==='color_select'&&!room.started){
+   const index=user.role==='host'?0:1;
+   const color=String(m.color||'').toLowerCase();
+   if(['red','blue','green','yellow'].includes(color)&&room.colors[1-index]!==color)room.colors[index]=color;
+   send(room.host,{type:'color_state',colors:room.colors});
+   send(room.guest,{type:'color_state',colors:room.colors});
+   return;
+  }
+
   if(user.role==='host'&&m.type==='start'&&peer){room.started=true;send(peer,{type:'start'});return}
   if(!room.started||!peer)return;
   // After a finished match, relay rematch votes both ways without closing the room.
