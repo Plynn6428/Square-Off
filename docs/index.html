@@ -4486,8 +4486,8 @@ function ffaCheck(){
 }
 function ffaDisconnect(id){
  if(id<0||id>3)return;ffaSeats[id]=false;ffaInputs[id]={};const p=ffaPlayers[id];
- if(p&&!p.dead)ffaEliminate(p);
- if(state==='ffa_draft')ffaAdvance();
+ if(netRole==='host'&&p&&!p.dead)ffaEliminate(p);
+ if(netRole==='host'&&state==='ffa_draft')ffaAdvance();
 }
 function ffaTick(dt){
  if(netRole!=='host')return;clock+=dt;
@@ -4513,9 +4513,10 @@ function ffaDraft(q){
  overlay.classList.add('vend-screen');showOverlay(vendingMarkup(opts,false,true));
  panel.querySelectorAll('.vend-slot').forEach(b=>{const i=Number(b.dataset.i);
  b.onpointerenter=()=>reachForCola(i);b.onpointerleave=resetColaReach;
- b.onclick=()=>{if(!opts[i])return;if(netRole==='host')ffaChoose(id,opts[i].id);
- else sendNet({type:'ffa_choose',card:opts[i].id});
- showOverlay('<div class="net-card"><h2>SODA SELECTED</h2><p>Waiting for everyone else…</p></div>')};
+ b.onclick=()=>{if(!opts[i])return;
+ showOverlay('<div class="net-card"><h2>SODA SELECTED</h2><p>Waiting for everyone else…</p></div>');
+ if(netRole==='host')ffaChoose(id,opts[i].id);
+ else sendNet({type:'ffa_choose',card:opts[i].id});};
  });requestAnimationFrame(resetColaReach);
 }
 function ffaChoose(id,cardId){
