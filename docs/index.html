@@ -2763,7 +2763,7 @@ function postRound(){const champ=scores[0]>=5||scores[1]>=5;
 }
 let colaSelectionPending=false,colaReachTarget=null;
 function pointColaHand(clientX,clientY){
- if(!['draft','botdraft','drinking','online_guest_draft'].includes(state))return;
+ if(!['draft','botdraft','drinking','online_guest_draft','ffa_draft'].includes(state))return;
  const hero=panel.querySelector('.rounds-hero-wrap'),svg=panel.querySelector('#colaReachArm');
  if(!hero||!svg)return;
  const hr=hero.getBoundingClientRect(),body=hero.querySelector('.hero-body');
@@ -2794,7 +2794,7 @@ function reachForCola(i,isBot=false){
 }
 function resetColaReach(){colaReachTarget=null; const hero=panel?.querySelector('.rounds-hero-wrap');if(hero){hero.classList.remove('left-reach');}}
 document.addEventListener('pointermove',e=>{
- if(state==='draft'||state==='botdraft'||state==='online_guest_draft'){
+ if(state==='draft'||state==='botdraft'||state==='online_guest_draft'||state==='ffa_draft'){
   pointColaHand(e.clientX,e.clientY);
   const face=panel?.querySelector('.rounds-hero .hero-eyes');
   const hero=panel?.querySelector('.rounds-hero .hero-body');
@@ -2809,7 +2809,7 @@ document.addEventListener('pointermove',e=>{
  }
 });
 window.addEventListener('resize',()=>{
- if(colaReachTarget!==null&&(state==='draft'||state==='botdraft'||state==='online_guest_draft'))reachForCola(colaReachTarget,state==='botdraft');
+ if(colaReachTarget!==null&&(state==='draft'||state==='botdraft'||state==='online_guest_draft'||state==='ffa_draft'))reachForCola(colaReachTarget,state==='botdraft');
 });
 function sodaDrinkSound(){
  if(muted)return;
@@ -4491,6 +4491,8 @@ function ffaDisconnect(id){
 }
 function ffaTick(dt){
  if(netRole!=='host')return;clock+=dt;
+ // Classic tick normally decays shake; FFA has its own tick loop.
+ shake=towards(shake,0,36*dt);
  if(state==='roundover'){ffaTimer-=dt;if(ffaTimer<=0)ffaAfter();return}
  if(state!=='playing')return;
  for(let step=0;step<2;step++){let sd=dt/2;
@@ -4511,6 +4513,8 @@ function ffaDraft(q){
  if(!ids.length){showOverlay('<div class="net-card"><h2>ROUND COMPLETE</h2><p>Waiting for soda selections…</p></div>');return}
  const opts=ids.map(i=>ITEMS.find(c=>c.id===i)).filter(Boolean);
  overlay.classList.add('vend-screen');showOverlay(vendingMarkup(opts,false,true));
+ // The shared vending scene defaults to BLUE for online guests; FFA uses each seat's true color.
+ const hero=panel.querySelector('.rounds-hero');if(hero)hero.style.setProperty('--fighter-color',['#ff595b','#4594ff','#53dc85','#ffd34c'][id]);
  panel.querySelectorAll('.vend-slot').forEach(b=>{const i=Number(b.dataset.i);
  b.onpointerenter=()=>reachForCola(i);b.onpointerleave=resetColaReach;
  b.onclick=()=>{if(!opts[i])return;
