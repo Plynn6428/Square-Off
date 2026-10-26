@@ -2060,7 +2060,6 @@ function handleOnlineMessage(m){
  }
  if(m.type==='created'||m.type==='joined'){netCode=m.code;netConnected=true;soOwnSlot=m.slot|| (netRole==='host'?1:2);if(soOwnSlot>2)netRole='spectator';netGuestReady=false;onlineLobby();return}
  if(m.type==='player_joined'&&netRole==='host'){if(m.slot===2)netGuestReady=true;onlineLobby();return}
- if(m.type==='player_left'&&netRole==='spectator')return;
  if(m.type==='player_left'){soResetRematch();remoteKeys={};netGuestReady=false;if(netRole==='host'){state='online_lobby';onlineLobby();onlineMessage('Friend disconnected. Waiting for another player.',true)}else{state='online_disconnected';showOverlay('<div class="net-card"><h2>HOST LEFT</h2><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}return}
  if(m.type==='rematch_ready'&&['gameover','online_rematch_wait'].includes(state)){
   soRematchPeerReady=true;soShowRematchStatus();soTryStartRematch();return;
