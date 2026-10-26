@@ -11,8 +11,8 @@ function send(ws,obj){if(ws?.readyState===WebSocket.OPEN){if(obj.type==='snapsho
 function lobbyState(room){const seats=[room.host,room.guest,...room.extra];for(const peer of seats)send(peer,{type:'lobby_state',slots:seats.map(Boolean),mode:room.mode||'classic'});}
 function cleanup(ws){const info=clients.get(ws);if(!info)return;clients.delete(ws);const room=rooms.get(info.code);if(!room)return;
  if(info.role==='host'){for(const other of [room.guest,...room.extra]){send(other,{type:'player_left'});if(other)clients.delete(other)}rooms.delete(info.code)}
- else if(room.guest===ws){room.guest=null;room.started=false;send(room.host,{type:'player_left'});lobbyState(room)}
- else {const slot=room.extra.indexOf(ws);if(slot>=0){room.extra[slot]=null;lobbyState(room)}}
+ else if(room.guest===ws){room.guest=null;if(room.mode==='ffa'&&room.started){for(const p of [room.host,...room.extra])send(p,{type:'ffa_left',slot:2});}else{room.started=false;send(room.host,{type:'player_left'});}lobbyState(room)}
+ else {const slot=room.extra.indexOf(ws);if(slot>=0){room.extra[slot]=null;if(room.mode==='ffa'&&room.started)for(const p of [room.host,room.guest,...room.extra])send(p,{type:'ffa_left',slot:slot+3});lobbyState(room)}}
 }
 const server=http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});res.end(JSON.stringify({name:'Square Off multiplayer relay',status:'ok',rooms:rooms.size,players:[...rooms.values()].reduce((n,r)=>n+1+(r.guest?1:0)+r.extra.filter(Boolean).length,0)}));});
 const wss=new WebSocketServer({server,maxPayload:1024*1024,perMessageDeflate:false});
@@ -29,7 +29,7 @@ wss.on('connection',ws=>{
   const user=clients.get(ws);
   if(!user){
    if(m.type==='create'){
-    const c=code();rooms.set(c,{code:c,host:ws,guest:null,extra:[null,null],mode:'classic',started:false,created:Date.now()});clients.set(ws,{code:c,role:'host'});send(ws,{type:'created',code:c,slot:1});lobbyState(rooms.get(c));return;
+    const c=code();rooms.set(c,{code:c,host:ws,guest:null,extra:[null,null],mode:'classic',started:false,created:Date.now()});clients.set(ws,{code:c,role:'host',slot:1});send(ws,{type:'created',code:c,slot:1});lobbyState(rooms.get(c));return;
    }
    if(m.type==='join'){
     const c=String(m.code||'').trim().toUpperCase(),room=rooms.get(c);
@@ -51,8 +51,16 @@ wss.on('connection',ws=>{
    if(m.mode==='classic'||m.mode==='ffa'){room.mode=m.mode;lobbyState(room)}
    return;
   }
-  if(user.role==='host'&&m.type==='start'&&peer){if(room.mode==='ffa')return;room.started=true;send(peer,{type:'start'});for(const spectator of room.extra)send(spectator,{type:'spectate_wait'});return}
-  if(!room.started||!peer)return;
+  if(user.role==='host'&&m.type==='start'&&peer){if(room.mode==='ffa'){const peers=[room.host,room.guest,...room.extra],count=peers.filter(Boolean).length;if(count<3)return;room.started=true;for(const p of peers)send(p,{type:'ffa_start',slots:peers.map(Boolean)});return;}room.started=true;send(peer,{type:'start'});for(const spectator of room.extra)send(spectator,{type:'spectate_wait'});return}
+  if(!room.started)return;
+  if(room.mode==='ffa'){
+   const peers=[room.host,room.guest,...room.extra];
+   if(user.role==='host'&&['ffa_snapshot','ffa_draft','ffa_round','ffa_end'].includes(m.type))for(const p of peers.slice(1))send(p,{type:m.type,payload:m.payload});
+   else if(user.role!=='host'&&m.type==='ffa_input'&&m.input&&typeof m.input==='object')send(room.host,{type:'ffa_input',slot:user.slot,input:m.input});
+   else if(user.role!=='host'&&m.type==='ffa_choose'&&typeof m.card==='string')send(room.host,{type:'ffa_choose',slot:user.slot,card:m.card.slice(0,48)});
+   return;
+  }
+  if(!peer)return;
   // After a finished match, relay rematch votes both ways without closing the room.
   if(m.type==='rematch_ready'){send(peer,{type:'rematch_ready'});return}
   if(m.type==='rematch_start'&&user.role==='host'){send(peer,{type:'rematch_start'});return}
