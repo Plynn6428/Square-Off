@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 6.8.1</title>
+<title>SQUARE OFF | PC 6.9</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -17,7 +17,7 @@ body{display:flex;align-items:center;justify-content:center;padding:24px 12px;ba
 canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
 #hud{position:absolute;inset:0 0 auto;padding:17px 24px;display:none;align-items:flex-start;justify-content:space-between;gap:20px;pointer-events:none;text-shadow:0 2px 8px #000b}#hud.show{display:flex}
 .fighterhud{width:min(33%,320px)}.fighterhud.right{text-align:right}.who{font-size:12px;font-weight:900;letter-spacing:1.1px}.who.cyan{color:var(--p1)}.who.coral{color:var(--p2)}.health{height:12px;margin-top:7px;background:#040a16ba;border:2px solid #ffffff32;border-radius:30px;overflow:hidden}.hpfill{width:100%;height:100%;background:linear-gradient(90deg,#ff444f,#ff8b83);transition:width .15s}.right .hpfill{background:linear-gradient(90deg,#4594ff,#87c7ff)}.health.rightbar{display:flex;justify-content:flex-end}.hpstats{font-size:11px;color:#dce5fa;margin-top:5px;font-weight:700}.centerhud{text-align:center;min-width:128px}.roundtext{font-size:12px;color:#d5e3fd;letter-spacing:2px;font-weight:900}.score{margin-top:2px;font-size:29px;font-weight:1000;letter-spacing:7px}.score span:first-child{color:var(--p1)}.score span:last-child{color:var(--p2)}.score em{font-size:15px;font-style:normal;color:#a7b1c9;vertical-align:4px;margin:0 6px}.maptag{font-size:10px;letter-spacing:1px;color:#a6b6d6}
-/* PC 6.8.1: high-visibility, fixed arcade scoreboard */
+/* PC 6.9: high-visibility, fixed arcade scoreboard */
 #hud{z-index:7;align-items:flex-start}
 .centerhud{position:relative;flex:0 0 auto;min-width:290px;margin:-8px auto 0;padding:7px 15px 10px;background:linear-gradient(160deg,#14243cf7,#070f22f5 68%,#182a42f8);border:3px solid #8feeff;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);box-shadow:0 8px 0 #07101d,0 12px 32px #000b;text-shadow:0 2px 2px #000}
 .score-header{display:flex;align-items:center;justify-content:center;gap:12px;font-size:10px;letter-spacing:3px;font-weight:1000;color:#edfcff}
@@ -35,7 +35,7 @@ canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
 .centerhud .maptag{font-size:10px;color:#c1edff;letter-spacing:2px;font-weight:900;white-space:nowrap}
 @media(max-width:700px){#hud{padding:9px 7px;gap:3px}.fighterhud{width:21%}.centerhud{min-width:185px;padding:5px 7px 7px;margin:-3px auto 0;border-width:2px}.score-header{font-size:8px;letter-spacing:1.3px}.centerhud .score{gap:3px;margin:3px 0}.score-side{width:56px;padding:2px}.score-side small{font-size:8px}.score-side strong{font-size:30px}.score-vs{font-size:9px;padding:3px 2px}.centerhud .roundtext{font-size:10px}.centerhud .maptag{font-size:8px;letter-spacing:1px}}
 
-/* PC 6.8.1: full-size entrance smoothly folds into a tiny live score. */
+/* PC 6.9: full-size entrance smoothly folds into a tiny live score. */
 .centerhud{transition:min-width .8s cubic-bezier(.22,1,.36,1),padding .8s cubic-bezier(.22,1,.36,1),margin .8s cubic-bezier(.22,1,.36,1),border-width .8s ease,background .8s ease}
 .centerhud .score-header,.centerhud .roundtext,.centerhud .maptag,.centerhud .score-side small,.centerhud .score-vs{transition:opacity .4s ease,max-height .7s ease,margin .7s ease,padding .7s ease,border-width .7s ease;overflow:hidden}
 .centerhud .score-side,.centerhud .score-side strong,.centerhud .score{transition:width .8s cubic-bezier(.22,1,.36,1),font-size .8s ease,padding .8s ease,margin .8s ease,gap .8s ease,border-width .8s ease}
@@ -62,7 +62,7 @@ canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
 @media(max-width:500px){.so-color-choices{gap:4px}.so-color-choice{padding:7px 1px}.so-color-choice b{font-size:9px}}
 
 .so-fixed-player{cursor:default!important}.so-fixed-player:hover{transform:none!important}.so-vacant{opacity:.5}
-/* PC 6.8.1 — animated floating-fighter deployment lobby */
+/* PC 6.9 — animated floating-fighter deployment lobby */
 .overlay:has(.so-deploy-lobby){padding:0;overflow:hidden;backdrop-filter:none;background:#061122}
 .overlay:has(.so-deploy-lobby) .panel{width:100%;max-width:none;height:100%;margin:0;animation:none}
 .so-deploy-lobby{position:relative;isolation:isolate;width:100%;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;color:#edf7ff;background:radial-gradient(ellipse 55% 70% at 50% 57%,#25466b 0%,#122440 49%,#050e1e 100%);font-family:Impact,'Arial Black',sans-serif}
@@ -895,7 +895,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.poster-button{transition:none}}
 
 
-/* PC 6.8.1: shared cinematic visual identity for Settings, Help and Online 1v1.
+/* PC 6.9: shared cinematic visual identity for Settings, Help and Online 1v1.
    Same button-free poster artwork, independent foreground HTML, zero gameplay changes. */
 .overlay.menu-screen:has(.splash-page){background:#040b19}
 .overlay.menu-screen .splash-page{position:relative;min-height:100dvh;height:auto;isolation:isolate;overflow-x:hidden;overflow-y:auto;padding:clamp(30px,6dvh,65px) clamp(16px,4vw,52px);background:#040b19;color:#f2f7ff}
@@ -934,7 +934,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:650px) and (min-width:701px){.overlay.menu-screen .splash-page{padding:14px 24px}.overlay.menu-screen .splash-page .page-card{padding:18px 27px}.overlay.menu-screen .splash-page .page-title{font-size:45px;margin:8px 0 12px}.overlay.menu-screen .splash-page .setting-row{min-height:0;padding:8px 15px;margin:6px 0}.overlay.menu-screen .splash-page .page-back{margin-top:10px}}
 
 
-/* PC 6.8.1 — soda draft shares Square Off's cinematic red/blue visual system */
+/* PC 6.9 — soda draft shares Square Off's cinematic red/blue visual system */
 .overlay.vend-screen{background:#040b19;backdrop-filter:none;padding:0;overflow:hidden}
 .overlay.vend-screen::before{content:'';position:absolute;inset:0;opacity:1;pointer-events:none;background:linear-gradient(90deg,#050b1be8,#061026c9 48%,#050b1be8),linear-gradient(0deg,#020612e6,#060e1db3),url('assets/Neon%20Square-Off%20Arena.png') center 38%/cover no-repeat}
 .overlay.vend-screen::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 14% 55%,#ec32501a,transparent 45%),radial-gradient(ellipse at 86% 55%,#1379f923,transparent 45%),linear-gradient(180deg,#02071335,#0308177a)}
@@ -966,7 +966,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.overlay.vend-screen .rounds-product .vend-slot{transition:none}}
 
 
-/* PC 6.8.1: larger soda cans, uncluttered can labels, readable card details */
+/* PC 6.9: larger soda cans, uncluttered can labels, readable card details */
 .overlay.vend-screen .rounds-five .rounds-product .cola-stage{height:clamp(150px,25vh,250px)!important}
 .overlay.vend-screen .rounds-five .rounds-pos-2 .cola-stage{height:clamp(135px,23vh,225px)!important}
 .overlay.vend-screen .rounds-five .soda-illustration{width:auto;max-width:100%;height:100%;transform:rotate(-3deg) scale(1.08);transform-origin:center center;filter:drop-shadow(8px 14px 10px #000b)}
@@ -983,7 +983,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:760px){.overlay.vend-screen .rounds-five .rounds-product .cola-stage{height:clamp(120px,22vh,185px)!important}.overlay.vend-screen .rounds-five .rounds-pos-2 .cola-stage{height:clamp(115px,20vh,170px)!important}.overlay.vend-screen .rounds-five .rounds-product .vend-details{min-height:76px;padding:7px 9px!important}}
 
 
-/* PC 6.8.1 — fully rebuilt soda draft with live character-stat hover comparison */
+/* PC 6.9 — fully rebuilt soda draft with live character-stat hover comparison */
 .overlay.vend-screen .so-draft-redesign{height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column;padding:0;background:linear-gradient(120deg,#071225eb,#0b1726e6)}
 .overlay.vend-screen .so-draft-redesign .rounds-head{position:relative;top:auto;left:auto;right:auto;flex:none;padding:17px 28px 0}
 .overlay.vend-screen .so-draft-redesign .rounds-title{position:relative;top:auto;flex:none;padding:4px 0 14px}
@@ -1033,7 +1033,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:660px) and (min-width:701px){.so-draft-redesign .rounds-title h2{font-size:38px}.so-draft-redesign .rounds-title{padding-bottom:6px}.so-stat-rows{gap:5px}.so-stat-title{padding:5px}.so-stat-preview{font-size:10px}.overlay.vend-screen .so-draft-redesign .rounds-product .vend-details{min-height:68px}}
 
 
-/* PC 6.8.1 — equal five-card draft tiles; no stat color legend */
+/* PC 6.9 — equal five-card draft tiles; no stat color legend */
 .so-draft-redesign .so-soda-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-flow:row;align-items:stretch}
 .so-draft-redesign .so-soda-grid>.rounds-product:nth-child(4){grid-column:1!important;grid-row:2}
 .so-draft-redesign .so-soda-grid>.rounds-product:nth-child(5){grid-column:2!important;grid-row:2}
@@ -1045,14 +1045,14 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-width:700px){.so-draft-redesign .so-soda-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,180px)}.so-draft-redesign .so-soda-grid>.rounds-product:nth-child(4),.so-draft-redesign .so-soda-grid>.rounds-product:nth-child(5){grid-column:auto!important;grid-row:auto}.so-draft-redesign .so-soda-grid>.rounds-product .vend-details{flex-basis:85px;min-height:85px!important;max-height:85px}}
 
 
-/* PC 6.8.1: draft fighter drawn to match the actual in-game sprite proportions */
+/* PC 6.9: draft fighter drawn to match the actual in-game sprite proportions */
 .so-draft-redesign .so-game-fighter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 15px 16px #0008);pointer-events:none}
 .so-draft-redesign .so-game-fighter-svg{height:min(94%,350px);max-width:110%;width:auto;overflow:visible;filter:drop-shadow(0 0 11px #ffffff12)}
 .so-draft-redesign .so-stat-rows{gap:clamp(5px,.78vh,10px)}
 @media(max-height:660px){.so-draft-redesign .so-stat-rows{gap:3px}.so-draft-redesign .so-stat-meta{margin-bottom:2px}}
 
 
-/* PC 6.8.1 — clean, centered unarmed fighter on the soda-selection screen */
+/* PC 6.9 — clean, centered unarmed fighter on the soda-selection screen */
 .so-draft-redesign .so-draft-fighter{overflow:hidden}
 .so-draft-redesign .so-game-fighter{position:absolute;inset:9% 7% 10%;display:flex;justify-content:center;align-items:center;filter:drop-shadow(0 11px 12px #0008)}
 .so-draft-redesign .so-game-fighter-svg{display:block;width:auto;height:min(77%,265px);max-width:90%;overflow:visible}
@@ -1060,14 +1060,14 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:660px){.so-draft-redesign .so-game-fighter-svg{height:min(70%,210px)}}
 
 
-/* PC 6.8.1: restore consistent neon red/blue menu buttons; keep soda draft restored */
+/* PC 6.9: restore consistent neon red/blue menu buttons; keep soda draft restored */
 .poster-menu .poster-play-button{background:linear-gradient(165deg,#c52b48 0%,#8a213c 54%,#451730 100%);border:2px solid #ff798e;color:#fff4f8;box-shadow:0 6px 0 #310d24,0 0 23px #fc47604f,inset 0 1px 0 #ffffff3c;text-shadow:0 2px 4px #200711}
 .poster-menu .poster-play-button:hover,.poster-menu .poster-play-button:focus-visible{background:linear-gradient(165deg,#ec3f5e,#a32749 55%,#5d1d37);border-color:#ffb3bc;box-shadow:0 8px 0 #310d24,0 0 30px #f94f7690;transform:translateY(-2px)}
 .poster-menu .poster-play-button .poster-button-icon{color:#ffffff}
 .poster-menu .poster-button:not(.poster-play-button):hover{border-color:#73d9ff;box-shadow:0 8px 0 #030814,0 0 27px #50baff6b;background:linear-gradient(180deg,#254d72,#102b4c)}
 
 
-/* PC 6.8.1 — match main-menu controls to Settings/Help/Online dark cinematic palette */
+/* PC 6.9 — match main-menu controls to Settings/Help/Online dark cinematic palette */
 .poster-menu .poster-button{background:linear-gradient(180deg,#1b3149ef,#0b1b31f2);border:1px solid #6588a6;border-radius:6px;color:#eef6ff;box-shadow:0 4px 0 #020914,0 0 18px #255b9830,inset 0 1px #e7f4ff19;text-shadow:0 2px 5px #000a}
 .poster-menu .poster-button:hover,.poster-menu .poster-button:focus-visible{background:linear-gradient(180deg,#294867,#122c49);border-color:#9ec5e6;box-shadow:0 6px 0 #020914,0 0 25px #4d9fd45c;transform:translateY(-2px)}
 .poster-menu .poster-play-button{background:linear-gradient(180deg,#293d58,#101f36 80%);border:2px solid #8cabc6;box-shadow:0 6px 0 #030914,0 0 24px #518fbd43,inset 0 1px #f0f8ff30;color:#f6f9ff;text-shadow:0 2px 6px #000b}
@@ -1076,7 +1076,7 @@ body{padding:0 !important;display:block;background:#071223}
 .poster-menu .poster-button:not(.poster-play-button):hover{background:linear-gradient(180deg,#294867,#122c49);border-color:#9ec5e6;box-shadow:0 6px 0 #020914,0 0 25px #4d9fd45c}
 
 
-/* PC 6.8.1 — match Settings' red-to-blue selected controls throughout main menu */
+/* PC 6.9 — match Settings' red-to-blue selected controls throughout main menu */
 .poster-menu .poster-button,.poster-menu .poster-play-button{background:linear-gradient(108deg,#492c47f0 0%,#302a4af0 37%,#21466ff0 100%);border:1px solid #8aaed1;color:#f3f7ff;box-shadow:0 5px 0 #050c1c,0 0 18px #3978bc37,inset 0 1px #e9f5ff3d}
 .poster-menu .poster-button:hover,.poster-menu .poster-button:focus-visible,.poster-menu .poster-play-button:hover,.poster-menu .poster-play-button:focus-visible{background:linear-gradient(108deg,#783950 0%,#4e385d 40%,#306ca5 100%);border-color:#b2d4f5;box-shadow:0 7px 0 #050c1c,0 0 25px #4d8fd483;transform:translateY(-2px)}
 .poster-menu .poster-play-button{border:2px solid #b5cee3;background:linear-gradient(105deg,#69364c,#403856 43%,#275a8d);box-shadow:0 6px 0 #060e20,0 0 25px #427baf58}
@@ -1086,7 +1086,7 @@ body{padding:0 !important;display:block;background:#071223}
 .poster-menu .poster-studio span{color:#a0caff}
 
 
-/* PC 6.8.1 — keep lower menu buttons' red/blue fill consistent on hover */
+/* PC 6.9 — keep lower menu buttons' red/blue fill consistent on hover */
 .poster-menu .poster-secondary .poster-button,
 .poster-menu .poster-secondary .poster-button:hover,
 .poster-menu .poster-secondary .poster-button:focus-visible{
@@ -1101,7 +1101,7 @@ body{padding:0 !important;display:block;background:#071223}
 }
 
 
-/* PC 6.8.1 — one soda effect per line: green gains, red drawbacks */
+/* PC 6.9 — one soda effect per line: green gains, red drawbacks */
 .overlay.vend-screen .vend-desc{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:inherit;text-shadow:none;line-height:1.2;white-space:normal}
 .overlay.vend-screen .vend-effect{display:flex;align-items:baseline;justify-content:center;gap:5px;width:100%;font:800 clamp(11px,1.06vw,15px)/1.2 'Trebuchet MS',Arial,sans-serif;text-align:center;overflow-wrap:break-word}
 .overlay.vend-screen .vend-effect b{flex:none;font-size:1.15em}
@@ -1111,14 +1111,14 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:730px){.overlay.vend-screen .vend-effect{font-size:clamp(10px,.9vw,13px);line-height:1.12;gap:3px}.overlay.vend-screen .vend-desc{gap:2px}}
 
 
-/* PC 6.8.1 — visual-only soda draft: fighter, cans and their descriptions */
+/* PC 6.9 — visual-only soda draft: fighter, cans and their descriptions */
 .overlay.vend-screen .rounds-draft .rounds-head,
 .overlay.vend-screen .rounds-draft .rounds-title,
 .overlay.vend-screen .rounds-draft .rounds-controls{display:none!important}
 .overlay.vend-screen .rounds-draft .rounds-display{inset:0!important;height:100%!important}
 
 
-/* PC 6.8.1 — playful arc selection: five floating soda cans, huge half-screen fighter */
+/* PC 6.9 — playful arc selection: five floating soda cans, huge half-screen fighter */
 .overlay.vend-screen .rounds-five{position:relative!important;width:100vw!important;height:100dvh!important;overflow:hidden!important}
 .overlay.vend-screen .rounds-five .rounds-display{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow:hidden!important}
 .overlay.vend-screen .rounds-five .rounds-hero-wrap{left:50%!important;bottom:-33vh!important;width:min(52vw,690px)!important;height:min(79vh,790px)!important;transform:translateX(-50%)!important;z-index:6!important;pointer-events:none}
@@ -1145,7 +1145,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:640px){.overlay.vend-screen .rounds-five .rounds-product .cola-stage{height:clamp(90px,18vh,150px)!important}.overlay.vend-screen .rounds-five .rounds-pos-0,.overlay.vend-screen .rounds-five .rounds-pos-4{top:12%!important}.overlay.vend-screen .rounds-five .rounds-hero-wrap{bottom:-45vh!important}}
 
 
-/* PC 6.8.1 — in-game-inspired rounded fighter, expressive gaze, longer articulated reach */
+/* PC 6.9 — in-game-inspired rounded fighter, expressive gaze, longer articulated reach */
 .overlay.vend-screen .rounds-five .rounds-hero .hero-body{
  border-radius:clamp(17px,2.5vw,34px)!important;
  box-shadow:inset 9px 9px 0 #ffffff14,inset -10px 0 0 #00000013!important;
@@ -1199,7 +1199,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-width:850px){.overlay.vend-screen .rounds-five .rounds-hero .hero-eyes b{width:clamp(16px,2.7vw,23px)!important;height:clamp(16px,2.7vw,23px)!important}}
 
 
-/* PC 6.8.1: single connected curved arm, visible smile, better fighter framing */
+/* PC 6.9: single connected curved arm, visible smile, better fighter framing */
 .overlay.vend-screen .rounds-five .rounds-hero-wrap{bottom:-22vh!important}
 .overlay.vend-screen .rounds-five .rounds-hero .hero-mouth{
  top:61%!important;bottom:auto!important;left:39%!important;
@@ -1223,7 +1223,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:640px){.overlay.vend-screen .rounds-five .rounds-hero-wrap{bottom:-30vh!important}}
 
 
-/* PC 6.8.1 — two thicker side-mounted curved arms and an elevated cute smile */
+/* PC 6.9 — two thicker side-mounted curved arms and an elevated cute smile */
 .overlay.vend-screen .rounds-five .rounds-hero .hero-mouth{
  top:57%!important;bottom:auto!important;
  border-width:clamp(7px,.66vw,11px)!important;
@@ -1240,7 +1240,7 @@ body{padding:0 !important;display:block;background:#071223}
 .overlay.vend-screen .rounds-five .rounds-hero .hero-limb.arm.right{opacity:0!important}
 
 
-/* PC 6.8.1 — expressive sparkly eyes and thick, clean-ended reaching arms */
+/* PC 6.9 — expressive sparkly eyes and thick, clean-ended reaching arms */
 .overlay.vend-screen .rounds-five .rounds-hero .hero-eyes b{
  position:relative!important;
  width:clamp(25px,2.35vw,41px)!important;
@@ -1263,7 +1263,7 @@ body{padding:0 !important;display:block;background:#071223}
 }
 
 
-/* PC 6.8.1 — glowing upgrades already in the fighter's loadout */
+/* PC 6.9 — glowing upgrades already in the fighter's loadout */
 .overlay.vend-screen .vend-slot.so-stack-ready{position:relative!important;border:2px solid #ffdd79!important;box-shadow:0 0 12px #ffe38caa,0 0 28px #ffc45180,inset 0 0 22px #ffd77721!important;animation:soStackPulse 2s ease-in-out infinite!important}
 .overlay.vend-screen .so-stack-ready .cola-stage{filter:drop-shadow(0 0 14px #ffe9a7) drop-shadow(0 0 18px #ffb53c)!important}
 .overlay.vend-screen .so-stack-tag{position:absolute;top:7px;right:7px;z-index:25;padding:5px 9px;border:1px solid #fff2af;background:#644318f2;color:#fff8cb;font:900 clamp(10px,1vw,13px) Consolas,monospace;letter-spacing:1px;border-radius:5px;box-shadow:0 0 14px #ffd9688f;pointer-events:none}
@@ -1271,7 +1271,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.overlay.vend-screen .vend-slot.so-stack-ready{animation:none!important}}
 
 
-/* PC 6.8.1 — developer map studio */
+/* PC 6.9 — developer map studio */
 .so-editor{width:min(1280px,96vw);margin:auto;color:#e7f2ff;font-family:Arial,sans-serif}
 .so-editor h2{margin:2px 0 12px;font:900 clamp(26px,3vw,42px) Impact,sans-serif}
 .so-editor-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:10px 0}
@@ -1426,6 +1426,12 @@ function soImportedArena(name,seed,width,height,pieces,spawn,symmetry,palette){
   spawn:[spawn[0][0]+ox,spawn[1][0]+ox],spawnY:oy+height-120,
   palette,customImported:true};
 }
+/* PC 6.9: Exclusive, user-designed four-player FFA playlist. */
+SO_FFA_MAPS.push(
+ soImportedArena("SLOPES",80,1700,950,[[5,585,845,360,"slope-up",0],[5,5,585,375,"slope-down",0],[780,200,140,15,"floor",0],[1155,530,130,15,"floor",0],[775,380,150,75,"platform",0]],[[35,885],[1665,885],[150,50],[1550,50]],true,["#172a4a","#31556f","#101b33","#81ccff","#ffa963","#476185","#273b5c","#ffdb8b"]),
+ soImportedArena("PRISON",81,1700,950,[[5,785,330,160,"platform",0],[0,225,445,15,"floor",0],[425,650,175,15,"floor",0],[150,500,195,15,"floor",0],[850,0,275,225,"slope-up",180],[530,300,95,15,"floor",0],[755,445,190,270,"platform",0],[575,915,550,15,"floor",0],[830,840,40,75,"wall",0]],[[40,740],[1660,740],[45,180],[1655,180]],true,["#162d43","#344c61","#132238","#97dcfc","#e8a876","#405a78","#263952","#f0d88b"]),
+ soImportedArena("PLATFORMS",82,2400,1350,[[0,765,1195,585,"slope-down",0],[0,0,1200,545,"slope-up",180],[1030,925,340,15,"floor",0],[1030,495,340,20,"floor",0],[405,590,420,230,"slope-down",0],[1195,240,15,870,"wall",0],[715,415,145,15,"floor",0],[775,625,150,15,"floor",0],[885,1045,105,15,"floor",0]],[[1115,870],[1285,870],[1100,445],[1300,445]],true,["#0f2849","#295e7a","#152540","#82eaff","#fac577","#295774","#203b5d","#ffe08d"])
+);
 const SO_IMPORTED_MAPS=[["BIG 'OL ROOM",1500,850,[[0,750,1500,95,"floor",0]],[[45,705],[1455,705]],true,["#102a53","#22567c","#11203f","#7edcff","#f9a85b","#347d92","#183859","#f6df7b"]],["CAVERN",1120,630,[[5,260,555,365,"slope-up",0],[5,0,555,270,"slope-up",180]],[[90,525],[1030,525]],true,["#102a3a","#216176","#112840","#82e5ff","#59c0b8","#235e79","#18364d","#fbd57f"]],["PEAK",1120,630,[[280,630,15,15,"slope-up",0],[5,475,245,150,"slope-up",0],[255,625,15,15,"slope-up",0],[260,445,300,180,"slope-up",0],[0,335,145,65,"floor",0],[275,200,110,25,"floor",0],[500,125,120,30,"floor",0]],[[90,525],[1030,525]],true,["#193448","#456b87","#1b2643","#a4eeff","#ddaa76","#58688f","#29385a","#ffe28a"]],["THE PYRAMID",1120,630,[[5,230,555,400,"slope-up",0]],[[90,525],[1030,525]],true,["#3b2330","#9a563d","#281d35","#ffd18d","#e8a35d","#925174","#492e56","#fff1a5"]],["CAVE",1450,800,[[0,300,725,500,"slope-down",0],[0,365,725,435,"slope-up",0],[5,0,720,155,"slope-up",180]],[[40,285],[1410,285]],true,["#29133c","#512675","#140f34","#d5a1ff","#9868d8","#503080","#281e51","#f5c2ff"]],["ARENA",1120,630,[[0,594,390,30,"platform",0],[730,594,390,30,"platform",0],[440,265,240,22,"platform",0],[250,395,135,15,"platform",0],[250,395,15,85,"wall",0],[550,285,15,135,"wall",0],[950,220,125,15,"floor",0],[535,605,45,15,"floor",0]],[[60,545],[1060,545]],true,["#14263f","#315c7a","#101d34","#a4e7f2","#79cdd0","#426795","#243c62","#ffe58b"]],["THE CLIMB",1120,630,[[0,590,1120,40,"platform",0],[5,0,555,200,"slope-up",180],[520,195,80,435,"wall",0],[805,485,100,15,"floor",0]],[[60,545],[1060,545]],true,["#24354b","#537783","#151e35","#c7e7bf","#92c3aa","#59798d","#293e54","#fce18b"]],["HIGH JUMP",1400,800,[[5,165,95,630,"platform",0],[180,265,105,15,"floor",0],[405,380,100,15,"floor",0],[630,475,140,15,"floor",0]],[[50,125],[1350,125]],true,["#152044","#3b398b","#101a39","#b8eeff","#ecb65a","#6d56aa","#292c68","#fbf18c"]],["CHASM",1400,800,[[195,500,45,230,"wall",0],[575,630,35,100,"wall",0],[655,375,90,120,"platform",0],[0,725,330,75,"floor",0],[500,725,110,75,"floor",0],[930,525,100,25,"floor",0],[370,205,110,25,"floor",0]],[[45,670],[1355,670]],true,["#171c42","#383470","#121731","#9ee9ff","#cb99e7","#534b9c","#282d58","#ffdf86"]]];
 for(const [name,width,height,pieces,spawn,symmetry,palette] of SO_IMPORTED_MAPS){
  const seed=20+maps.length;
@@ -1871,7 +1877,7 @@ function menu(){
           <button type="button" class="poster-button" id="posterHelp"><span class="poster-button-icon">?</span><span>HELP</span></button>
         </div>
       </nav>
-      <p class="poster-studio">Made by Preston and ChatGPT <span> // PC 6.8.1</span></p>
+      <p class="poster-studio">Made by Preston and ChatGPT <span> // PC 6.9</span></p>
     </div>
   </section>
   <div class="poster-fallback">
@@ -2056,7 +2062,7 @@ const SO_ONLINE_ORDER=['red','blue','green','yellow'];
 const SO_FFA_MAPS=[];
 let soOnlineMode='classic';
 function soCanStartLobby(){
- return netRole==='host'&&(soOnlineMode==='classic'?!!soLobbySlots[1]:soLobbySlots.every(Boolean)&&SO_FFA_MAPS.length>0);
+ return netRole==='host'&&soOnlineMode==='classic'&&!!soLobbySlots[1];
 }
 function soUpdateModeUI(){
  const picker=$('soModePicker');if(!picker)return;
@@ -2070,7 +2076,7 @@ function soUpdateModeUI(){
   ?'4-PLAYER FREE-FOR-ALL • 3 LOSERS PICK SODAS • '+SO_FFA_MAPS.length+' CUSTOM FFA MAPS LOADED'+(SO_FFA_MAPS.length?'':' • AWAITING FFA MAP UPLOADS')
   :'CLASSIC 1V1 • LOSER PICKS A SODA • ORIGINAL MAP PLAYLIST';
  const foot=$('soModeStatus');if(foot)foot.textContent=soOnlineMode==='ffa'
-  ?(SO_FFA_MAPS.length?'FOUR-PLAYER COMBAT DEVELOPMENT IN PROGRESS':'FFA MAP PLAYLIST IS EMPTY — UPLOAD MAPS TO CONTINUE')
+  ?(SO_FFA_MAPS.length?'3 EXCLUSIVE FFA MAPS READY · FOUR-PLAYER COMBAT COMING NEXT':'FFA MAP PLAYLIST IS EMPTY — UPLOAD MAPS TO CONTINUE')
   :(soLobbySlots[1]?'READY TO DEPLOY':'WAITING FOR PLAYER 2...');
  const start=$('beginOnline');if(start){start.disabled=!soCanStartLobby();start.textContent=soOnlineMode==='ffa'?'START FFA':'START MATCH';}
 }
@@ -2268,7 +2274,7 @@ function settings(){state='settings';fullMenu(`<section class="splash-page" aria
  $('shakeOn').onclick=()=>{shakeEnabled=true;savePrefs();settings()};$('shakeOff').onclick=()=>{shakeEnabled=false;savePrefs();settings()};$('backBtn').onclick=menu;$('devStudioBtn').onclick=soDevPin;
 }
 
-/* PC 6.8.1: Local map-design studio. PIN only gates UI, not a security boundary. */
+/* PC 6.9: Local map-design studio. PIN only gates UI, not a security boundary. */
 let soDevTestArena=null,soDevMap=null,soDevSelected=null,soDevTool='platform',soDevDragging=false,soDevDragOffset={x:0,y:0},soDevDrawStart=null,soDevResizeArmed=null,soDevSymmetric=false,soDevIsPlaytesting=false;
 const SO_DEV_W=1120,SO_DEV_H=630;
 function soDevPin(){
@@ -2821,11 +2827,28 @@ function nextRound(){if(state!=='draft'&&state!=='botdraft'&&state!=='online_wai
 // PC 3.16: same maximum jump as before, but releasing jump early cuts the ascent.
 // Repeated fresh presses against a vertical solid face let you climb; holding never auto-climbs.
 function wallTouchDirection(p){
- const tolerance=8;
+ const tolerance=9;
  for(const wall of arena.platforms){
   if(p.y+p.h<=wall.y+7||p.y>=wall.y+wall.h-7)continue;
   if(Math.abs(p.x+p.w-wall.x)<=tolerance)return 1;
   if(Math.abs(p.x-(wall.x+wall.w))<=tolerance)return -1;
+ }
+ // Slopes are polygons, not rectangles: their steep/vertical outer edges
+ // must also count as walls for repeated jump presses.
+ for(const slope of (arena?.devSlopes||[])){
+  const pts=slope.polygon||[];
+  for(let i=0;i<pts.length;i++){
+   const a=pts[i],b=pts[(i+1)%pts.length],dx=b.x-a.x,dy=b.y-a.y;
+   if(Math.abs(dy)<10||Math.abs(dy)<Math.abs(dx)*.8)continue;
+   const top=Math.min(a.y,b.y),bottom=Math.max(a.y,b.y);
+   if(p.y+p.h<=top+6||p.y>=bottom-6)continue;
+   const checkY=Math.max(top+1,Math.min(bottom-1,p.y+p.h*.5));
+   const t=(checkY-a.y)/dy;
+   if(t<0||t>1)continue;
+   const edgeX=a.x+t*dx;
+   if(Math.abs(p.x+p.w-edgeX)<=tolerance)return 1;
+   if(Math.abs(p.x-edgeX)<=tolerance)return -1;
+  }
  }
  return 0;
 }
