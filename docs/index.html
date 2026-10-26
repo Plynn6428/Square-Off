@@ -4440,6 +4440,99 @@ if(b.locklime){
 ctx.strokeStyle=b.col;ctx.globalAlpha=.3;ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(b.x-b.vx*.025,b.y-b.vy*.025);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(b.x-b.vx*.018,b.y-b.vy*.018);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill()}}
 function drawParticles(){for(const p of particles){const a=cap(p.life/(p.max||.5),0,1);ctx.globalAlpha=a;ctx.fillStyle=p.col;if(p.shape==='square'){const size=p.r*Math.max(.35,a);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot||0);ctx.fillRect(-size/2,-size/2,size,size);ctx.restore();}else{ctx.beginPath();ctx.arc(p.x,p.y,p.r*Math.max(.1,a),0,TAU);ctx.fill()}}ctx.globalAlpha=1;for(const t of texts){ctx.globalAlpha=cap(t.life,0,1);ctx.font='900 19px Impact, Arial Black, sans-serif';ctx.textAlign='center';ctx.strokeStyle='#111a2d';ctx.lineWidth=5;ctx.strokeText(t.msg,t.x,t.y);ctx.fillStyle=t.col;ctx.fillText(t.msg,t.x,t.y)}ctx.globalAlpha=1}
 let soDevPreviewFighters=[];
+
+function ffaStart(){
+ ffaOn=true;ffaSeats=soLobbySlots.slice();ffaInputs={};ffaPlayers=ffaSeats.map((v,i)=>v?makePlayer(i):null);
+ ffaPlayers.forEach((p,i)=>{if(p)p.color=['#ff595b','#4594ff','#53dc85','#ffd34c'][i]});
+ scores=[0,0,0,0];round=1;arenaIndex=Math.floor(Math.random()*SO_FFA_MAPS.length);ffaBegin();
+}
+function ffaBegin(){
+ arena=SO_FFA_MAPS[arenaIndex%SO_FFA_MAPS.length];updateArenaCamera();
+ bullets=[];fireBombs=[];effectWaves=[];particles=[];texts=[];moveableBlocks=[];clock=0;winner=null;
+ ffaPicks={};ffaOptions={};ffaTimer=0;ffaSnapshotAt=0;
+ for(const p of ffaPlayers){if(!p)continue;const a=arena.devSpawn[p.id];p.x=a.x-p.w/2;p.y=a.y-p.h;p.vx=p.vy=0;p.hp=p.stats.maxHp;
+ p.dead=false;p.hiddenBody=false;p.invuln=.7;p.grounded=false;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;
+ p.shieldTime=p.shieldCD=0;p.jumpHeld=p.dropHeld=p.blockHeld=p.dashHeld=false;p.poison=[];p.pulls=[];
+ p.autoBlocks=[];p.burnUntil=0;p.slowUntil=0;p.coldUntil=0;p.burstLeft=0;p.healthTrail=p.hp;p.healTrailFrom=p.hp;
+ p.aim=p.id%2?Math.PI:0;p.visualFacing=p.id%2?-1:1;}
+ p1=ffaPlayers[0];p2=ffaPlayers[1];state='playing';hideOverlay();hud.classList.add('show');
+ setMusicTheme('battle');ffaHud();sendNet({type:'ffa_round',payload:ffaPack()});
+}
+function ffaPack(){return {state,round,arenaIndex,scores,players:ffaPlayers,clock,bullets,fireBombs,effectWaves,winner}}
+function ffaReceive(q){
+ if(!q||!Array.isArray(q.players))return;const changed=!arena||arena!==SO_FFA_MAPS[q.arenaIndex%SO_FFA_MAPS.length];
+ ffaPlayers=q.players;p1=ffaPlayers[0];p2=ffaPlayers[1];scores=q.scores;round=q.round;arenaIndex=q.arenaIndex;
+ arena=SO_FFA_MAPS[arenaIndex%SO_FFA_MAPS.length];if(changed)updateArenaCamera();
+ clock=q.clock;bullets=q.bullets||[];fireBombs=q.fireBombs||[];effectWaves=q.effectWaves||[];winner=q.winner;
+ if(q.state==='playing'||q.state==='roundover'){state=q.state;hideOverlay();hud.classList.add('show')}ffaHud();
+}
+function ffaHud(){
+ $('roundNo').textContent='FFA ROUND '+round;$('mapName').textContent=arena.name;
+ $('name1').textContent='RED '+scores[0];$('name2').textContent='BLUE '+scores[1]+' · GREEN '+scores[2]+' · YELLOW '+scores[3];
+ $('score1').textContent=scores[0];$('score2').textContent=Math.max(...scores.slice(1));updateHUD();
+}
+function ffaEliminate(p){
+ if(!p||p.hiddenBody)return;p.dead=true;p.hp=0;p.hiddenBody=true;
+ deathBurst(p.x+p.w/2,p.y+p.h*.47,p.color);ffaCheck();
+}
+function ffaCheck(){
+ if(state!=='playing')return;
+ for(const p of ffaPlayers)if(p&&!p.hiddenBody&&p.hp<=0)ffaEliminate(p);
+ const alive=ffaPlayers.filter(p=>p&&!p.dead&&!p.hiddenBody);if(alive.length>1)return;
+ winner=alive[0]?.id??null;if(winner!==null)scores[winner]++;state='roundover';ffaTimer=.9;
+ sendNet({type:'ffa_snapshot',payload:ffaPack()});
+}
+function ffaDisconnect(id){
+ if(id<0||id>3)return;ffaSeats[id]=false;ffaInputs[id]={};const p=ffaPlayers[id];
+ if(p&&!p.dead)ffaEliminate(p);
+ if(state==='ffa_draft')ffaAdvance();
+}
+function ffaTick(dt){
+ if(netRole!=='host')return;clock+=dt;
+ if(state==='roundover'){ffaTimer-=dt;if(ffaTimer<=0)ffaAfter();return}
+ if(state!=='playing')return;
+ for(let step=0;step<2;step++){let sd=dt/2;
+ for(const p of ffaPlayers){if(!p||p.dead)continue;handleHuman(p,sd);physicsPlayer(p,sd)}
+ bulletPhysics(sd);bombPhysics(sd);if(state!=='playing')break}
+ ffaCheck();
+ if(clock-ffaSnapshotAt>.05){ffaSnapshotAt=clock;sendNet({type:'ffa_snapshot',payload:ffaPack()})}
+}
+function ffaAfter(){
+ if(scores.some(n=>n>=5)){ffaEnd(winner);sendNet({type:'ffa_end',payload:{winner}});return}
+ state='ffa_draft';ffaPicks={};ffaOptions={};
+ ffaPlayers.forEach((p,id)=>{if(p&&ffaSeats[id]&&id!==winner)ffaOptions[id]=cardOptions(p).map(c=>c.id)});
+ sendNet({type:'ffa_draft',payload:{winner,options:ffaOptions}});ffaDraft({winner,options:ffaOptions});ffaAdvance();
+}
+function ffaDraft(q){
+ state='ffa_draft';setMusicTheme('cola');
+ const id=soOwnSlot-1,ids=q.options?.[id]||[];
+ if(!ids.length){showOverlay('<div class="net-card"><h2>ROUND COMPLETE</h2><p>Waiting for soda selections…</p></div>');return}
+ const opts=ids.map(i=>ITEMS.find(c=>c.id===i)).filter(Boolean);
+ overlay.classList.add('vend-screen');showOverlay(vendingMarkup(opts,false,true));
+ panel.querySelectorAll('.vend-slot').forEach(b=>{const i=Number(b.dataset.i);
+ b.onpointerenter=()=>reachForCola(i);b.onpointerleave=resetColaReach;
+ b.onclick=()=>{if(!opts[i])return;if(netRole==='host')ffaChoose(id,opts[i].id);
+ else sendNet({type:'ffa_choose',card:opts[i].id});
+ showOverlay('<div class="net-card"><h2>SODA SELECTED</h2><p>Waiting for everyone else…</p></div>')};
+ });requestAnimationFrame(resetColaReach);
+}
+function ffaChoose(id,cardId){
+ if(state!=='ffa_draft'||!ffaOptions[id]?.includes(cardId)||Object.hasOwn(ffaPicks,id))return;
+ const card=ITEMS.find(c=>c.id===cardId),p=ffaPlayers[id];if(!card||!p)return;
+ applyCard(p,card);ffaPicks[id]=cardId;ffaAdvance();
+}
+function ffaAdvance(){
+ if(netRole!=='host'||state!=='ffa_draft')return;
+ if(Object.keys(ffaOptions).some(id=>ffaSeats[+id]&&!Object.hasOwn(ffaPicks,id)))return;
+ round++;arenaIndex=(arenaIndex+1)%SO_FFA_MAPS.length;ffaBegin();
+}
+function ffaEnd(id){
+ state='gameover';setMusicTheme('menu');mouse.down=false;
+ const label=['RED','BLUE','GREEN','YELLOW'][id]||'NO ONE';
+ showOverlay('<div class="net-card"><h2>'+label+' WINS FFA!</h2><p>FIRST TO FIVE</p><p>'+scores.map((n,i)=>['RED','BLUE','GREEN','YELLOW'][i]+': '+n).join(' · ')+'</p><button class="btn" id="ffaLeave">LEAVE ROOM</button></div>');
+ $('ffaLeave').onclick=menu;
+}
+
 function render(){
  const guestDraw=netRole==='guest'&&state==='playing'&&p1&&p2?blendedGuestPlayers(performance.now()):null;
  const renderP1=guestDraw?{...p1,x:guestDraw[0].x,y:guestDraw[0].y}:p1;
