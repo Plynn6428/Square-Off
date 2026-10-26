@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>SQUARE OFF | PC 6.2</title>
+<title>SQUARE OFF | PC 6.3</title>
 <style>
 :root{--bg:#090c18;--cyan:#5cebdc;--red:#ff595b;--p1:#ff595b;--p2:#4594ff;--yellow:#ffdf89;--muted:#b8c1d8;--edge:rgba(210,229,255,.16)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -17,7 +17,7 @@ body{display:flex;align-items:center;justify-content:center;padding:24px 12px;ba
 canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
 #hud{position:absolute;inset:0 0 auto;padding:17px 24px;display:none;align-items:flex-start;justify-content:space-between;gap:20px;pointer-events:none;text-shadow:0 2px 8px #000b}#hud.show{display:flex}
 .fighterhud{width:min(33%,320px)}.fighterhud.right{text-align:right}.who{font-size:12px;font-weight:900;letter-spacing:1.1px}.who.cyan{color:var(--p1)}.who.coral{color:var(--p2)}.health{height:12px;margin-top:7px;background:#040a16ba;border:2px solid #ffffff32;border-radius:30px;overflow:hidden}.hpfill{width:100%;height:100%;background:linear-gradient(90deg,#ff444f,#ff8b83);transition:width .15s}.right .hpfill{background:linear-gradient(90deg,#4594ff,#87c7ff)}.health.rightbar{display:flex;justify-content:flex-end}.hpstats{font-size:11px;color:#dce5fa;margin-top:5px;font-weight:700}.centerhud{text-align:center;min-width:128px}.roundtext{font-size:12px;color:#d5e3fd;letter-spacing:2px;font-weight:900}.score{margin-top:2px;font-size:29px;font-weight:1000;letter-spacing:7px}.score span:first-child{color:var(--p1)}.score span:last-child{color:var(--p2)}.score em{font-size:15px;font-style:normal;color:#a7b1c9;vertical-align:4px;margin:0 6px}.maptag{font-size:10px;letter-spacing:1px;color:#a6b6d6}
-/* PC 6.2: high-visibility, fixed arcade scoreboard */
+/* PC 6.3: high-visibility, fixed arcade scoreboard */
 #hud{z-index:7;align-items:flex-start}
 .centerhud{position:relative;flex:0 0 auto;min-width:290px;margin:-8px auto 0;padding:7px 15px 10px;background:linear-gradient(160deg,#14243cf7,#070f22f5 68%,#182a42f8);border:3px solid #8feeff;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);box-shadow:0 8px 0 #07101d,0 12px 32px #000b;text-shadow:0 2px 2px #000}
 .score-header{display:flex;align-items:center;justify-content:center;gap:12px;font-size:10px;letter-spacing:3px;font-weight:1000;color:#edfcff}
@@ -35,7 +35,7 @@ canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
 .centerhud .maptag{font-size:10px;color:#c1edff;letter-spacing:2px;font-weight:900;white-space:nowrap}
 @media(max-width:700px){#hud{padding:9px 7px;gap:3px}.fighterhud{width:21%}.centerhud{min-width:185px;padding:5px 7px 7px;margin:-3px auto 0;border-width:2px}.score-header{font-size:8px;letter-spacing:1.3px}.centerhud .score{gap:3px;margin:3px 0}.score-side{width:56px;padding:2px}.score-side small{font-size:8px}.score-side strong{font-size:30px}.score-vs{font-size:9px;padding:3px 2px}.centerhud .roundtext{font-size:10px}.centerhud .maptag{font-size:8px;letter-spacing:1px}}
 
-/* PC 6.2: full-size entrance smoothly folds into a tiny live score. */
+/* PC 6.3: full-size entrance smoothly folds into a tiny live score. */
 .centerhud{transition:min-width .8s cubic-bezier(.22,1,.36,1),padding .8s cubic-bezier(.22,1,.36,1),margin .8s cubic-bezier(.22,1,.36,1),border-width .8s ease,background .8s ease}
 .centerhud .score-header,.centerhud .roundtext,.centerhud .maptag,.centerhud .score-side small,.centerhud .score-vs{transition:opacity .4s ease,max-height .7s ease,margin .7s ease,padding .7s ease,border-width .7s ease;overflow:hidden}
 .centerhud .score-side,.centerhud .score-side strong,.centerhud .score{transition:width .8s cubic-bezier(.22,1,.36,1),font-size .8s ease,padding .8s ease,margin .8s ease,gap .8s ease,border-width .8s ease}
@@ -62,7 +62,7 @@ canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
 @media(max-width:500px){.so-color-choices{gap:4px}.so-color-choice{padding:7px 1px}.so-color-choice b{font-size:9px}}
 
 .so-fixed-player{cursor:default!important}.so-fixed-player:hover{transform:none!important}.so-vacant{opacity:.5}
-/* PC 6.2 — animated floating-fighter deployment lobby */
+/* PC 6.3 — animated floating-fighter deployment lobby */
 .overlay:has(.so-deploy-lobby){padding:0;overflow:hidden;backdrop-filter:none;background:#061122}
 .overlay:has(.so-deploy-lobby) .panel{width:100%;max-width:none;height:100%;margin:0;animation:none}
 .so-deploy-lobby{position:relative;isolation:isolate;width:100%;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;color:#edf7ff;background:radial-gradient(ellipse 55% 70% at 50% 57%,#25466b 0%,#122440 49%,#050e1e 100%);font-family:Impact,'Arial Black',sans-serif}
@@ -90,10 +90,10 @@ canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
 .so-deploy-slot-4{left:88%;top:3%;z-index:1;transform:translateX(-50%) scale(.79)}
 .so-deploy-aura{position:absolute;bottom:12%;width:88%;height:63%;border-radius:50%;background:radial-gradient(ellipse,var(--deploy-color) 0%,transparent 70%);opacity:.12;filter:blur(32px)}
 .so-deploy-fighter{position:relative;width:clamp(85px,12vw,175px);height:72%;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 14px 22px #000a);animation:soFloating 3.4s ease-in-out infinite;animation-delay:calc(var(--deploy-order)*-.63s)}
-.so-lobby-sprite{width:100%;height:100%;overflow:visible;transform:rotate(-5deg);animation:soDrift 4.7s ease-in-out infinite alternate;animation-delay:calc(var(--deploy-order)*-.77s)}
-.so-deploy-slot:nth-child(even) .so-lobby-sprite{transform:rotate(5deg)}
+.so-lobby-sprite{width:100%;height:100%;overflow:visible;transform:rotate(-3deg);animation:soDrift 4.7s ease-in-out infinite alternate;animation-delay:calc(var(--deploy-order)*-.77s)}
+.so-deploy-slot:nth-child(even) .so-lobby-sprite{transform:rotate(3deg)}
 @keyframes soFloating{0%,100%{transform:translateY(-8px)}50%{transform:translateY(15px)}}
-@keyframes soDrift{0%{rotate:-5deg}100%{rotate:7deg}}
+@keyframes soDrift{0%{rotate:-3deg}100%{rotate:3deg}}
 .so-deploy-platform{height:8px;width:65%;background:var(--deploy-color);opacity:.7;box-shadow:0 0 30px var(--deploy-color);border-radius:50%;filter:blur(5px);margin-bottom:12px}
 .so-deploy-label{display:flex;flex-direction:column;align-items:center;gap:3px;text-shadow:0 2px 4px #000b}
 .so-deploy-label b{font-size:clamp(14px,1.5vw,20px);letter-spacing:2px;color:#fff}
@@ -870,7 +870,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.poster-button{transition:none}}
 
 
-/* PC 6.2: shared cinematic visual identity for Settings, Help and Online 1v1.
+/* PC 6.3: shared cinematic visual identity for Settings, Help and Online 1v1.
    Same button-free poster artwork, independent foreground HTML, zero gameplay changes. */
 .overlay.menu-screen:has(.splash-page){background:#040b19}
 .overlay.menu-screen .splash-page{position:relative;min-height:100dvh;height:auto;isolation:isolate;overflow-x:hidden;overflow-y:auto;padding:clamp(30px,6dvh,65px) clamp(16px,4vw,52px);background:#040b19;color:#f2f7ff}
@@ -909,7 +909,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:650px) and (min-width:701px){.overlay.menu-screen .splash-page{padding:14px 24px}.overlay.menu-screen .splash-page .page-card{padding:18px 27px}.overlay.menu-screen .splash-page .page-title{font-size:45px;margin:8px 0 12px}.overlay.menu-screen .splash-page .setting-row{min-height:0;padding:8px 15px;margin:6px 0}.overlay.menu-screen .splash-page .page-back{margin-top:10px}}
 
 
-/* PC 6.2 — soda draft shares Square Off's cinematic red/blue visual system */
+/* PC 6.3 — soda draft shares Square Off's cinematic red/blue visual system */
 .overlay.vend-screen{background:#040b19;backdrop-filter:none;padding:0;overflow:hidden}
 .overlay.vend-screen::before{content:'';position:absolute;inset:0;opacity:1;pointer-events:none;background:linear-gradient(90deg,#050b1be8,#061026c9 48%,#050b1be8),linear-gradient(0deg,#020612e6,#060e1db3),url('assets/Neon%20Square-Off%20Arena.png') center 38%/cover no-repeat}
 .overlay.vend-screen::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 14% 55%,#ec32501a,transparent 45%),radial-gradient(ellipse at 86% 55%,#1379f923,transparent 45%),linear-gradient(180deg,#02071335,#0308177a)}
@@ -941,7 +941,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.overlay.vend-screen .rounds-product .vend-slot{transition:none}}
 
 
-/* PC 6.2: larger soda cans, uncluttered can labels, readable card details */
+/* PC 6.3: larger soda cans, uncluttered can labels, readable card details */
 .overlay.vend-screen .rounds-five .rounds-product .cola-stage{height:clamp(150px,25vh,250px)!important}
 .overlay.vend-screen .rounds-five .rounds-pos-2 .cola-stage{height:clamp(135px,23vh,225px)!important}
 .overlay.vend-screen .rounds-five .soda-illustration{width:auto;max-width:100%;height:100%;transform:rotate(-3deg) scale(1.08);transform-origin:center center;filter:drop-shadow(8px 14px 10px #000b)}
@@ -958,7 +958,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:760px){.overlay.vend-screen .rounds-five .rounds-product .cola-stage{height:clamp(120px,22vh,185px)!important}.overlay.vend-screen .rounds-five .rounds-pos-2 .cola-stage{height:clamp(115px,20vh,170px)!important}.overlay.vend-screen .rounds-five .rounds-product .vend-details{min-height:76px;padding:7px 9px!important}}
 
 
-/* PC 6.2 — fully rebuilt soda draft with live character-stat hover comparison */
+/* PC 6.3 — fully rebuilt soda draft with live character-stat hover comparison */
 .overlay.vend-screen .so-draft-redesign{height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column;padding:0;background:linear-gradient(120deg,#071225eb,#0b1726e6)}
 .overlay.vend-screen .so-draft-redesign .rounds-head{position:relative;top:auto;left:auto;right:auto;flex:none;padding:17px 28px 0}
 .overlay.vend-screen .so-draft-redesign .rounds-title{position:relative;top:auto;flex:none;padding:4px 0 14px}
@@ -1008,7 +1008,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:660px) and (min-width:701px){.so-draft-redesign .rounds-title h2{font-size:38px}.so-draft-redesign .rounds-title{padding-bottom:6px}.so-stat-rows{gap:5px}.so-stat-title{padding:5px}.so-stat-preview{font-size:10px}.overlay.vend-screen .so-draft-redesign .rounds-product .vend-details{min-height:68px}}
 
 
-/* PC 6.2 — equal five-card draft tiles; no stat color legend */
+/* PC 6.3 — equal five-card draft tiles; no stat color legend */
 .so-draft-redesign .so-soda-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-flow:row;align-items:stretch}
 .so-draft-redesign .so-soda-grid>.rounds-product:nth-child(4){grid-column:1!important;grid-row:2}
 .so-draft-redesign .so-soda-grid>.rounds-product:nth-child(5){grid-column:2!important;grid-row:2}
@@ -1020,14 +1020,14 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-width:700px){.so-draft-redesign .so-soda-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,180px)}.so-draft-redesign .so-soda-grid>.rounds-product:nth-child(4),.so-draft-redesign .so-soda-grid>.rounds-product:nth-child(5){grid-column:auto!important;grid-row:auto}.so-draft-redesign .so-soda-grid>.rounds-product .vend-details{flex-basis:85px;min-height:85px!important;max-height:85px}}
 
 
-/* PC 6.2: draft fighter drawn to match the actual in-game sprite proportions */
+/* PC 6.3: draft fighter drawn to match the actual in-game sprite proportions */
 .so-draft-redesign .so-game-fighter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 15px 16px #0008);pointer-events:none}
 .so-draft-redesign .so-game-fighter-svg{height:min(94%,350px);max-width:110%;width:auto;overflow:visible;filter:drop-shadow(0 0 11px #ffffff12)}
 .so-draft-redesign .so-stat-rows{gap:clamp(5px,.78vh,10px)}
 @media(max-height:660px){.so-draft-redesign .so-stat-rows{gap:3px}.so-draft-redesign .so-stat-meta{margin-bottom:2px}}
 
 
-/* PC 6.2 — clean, centered unarmed fighter on the soda-selection screen */
+/* PC 6.3 — clean, centered unarmed fighter on the soda-selection screen */
 .so-draft-redesign .so-draft-fighter{overflow:hidden}
 .so-draft-redesign .so-game-fighter{position:absolute;inset:9% 7% 10%;display:flex;justify-content:center;align-items:center;filter:drop-shadow(0 11px 12px #0008)}
 .so-draft-redesign .so-game-fighter-svg{display:block;width:auto;height:min(77%,265px);max-width:90%;overflow:visible}
@@ -1035,14 +1035,14 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:660px){.so-draft-redesign .so-game-fighter-svg{height:min(70%,210px)}}
 
 
-/* PC 6.2: restore consistent neon red/blue menu buttons; keep soda draft restored */
+/* PC 6.3: restore consistent neon red/blue menu buttons; keep soda draft restored */
 .poster-menu .poster-play-button{background:linear-gradient(165deg,#c52b48 0%,#8a213c 54%,#451730 100%);border:2px solid #ff798e;color:#fff4f8;box-shadow:0 6px 0 #310d24,0 0 23px #fc47604f,inset 0 1px 0 #ffffff3c;text-shadow:0 2px 4px #200711}
 .poster-menu .poster-play-button:hover,.poster-menu .poster-play-button:focus-visible{background:linear-gradient(165deg,#ec3f5e,#a32749 55%,#5d1d37);border-color:#ffb3bc;box-shadow:0 8px 0 #310d24,0 0 30px #f94f7690;transform:translateY(-2px)}
 .poster-menu .poster-play-button .poster-button-icon{color:#ffffff}
 .poster-menu .poster-button:not(.poster-play-button):hover{border-color:#73d9ff;box-shadow:0 8px 0 #030814,0 0 27px #50baff6b;background:linear-gradient(180deg,#254d72,#102b4c)}
 
 
-/* PC 6.2 — match main-menu controls to Settings/Help/Online dark cinematic palette */
+/* PC 6.3 — match main-menu controls to Settings/Help/Online dark cinematic palette */
 .poster-menu .poster-button{background:linear-gradient(180deg,#1b3149ef,#0b1b31f2);border:1px solid #6588a6;border-radius:6px;color:#eef6ff;box-shadow:0 4px 0 #020914,0 0 18px #255b9830,inset 0 1px #e7f4ff19;text-shadow:0 2px 5px #000a}
 .poster-menu .poster-button:hover,.poster-menu .poster-button:focus-visible{background:linear-gradient(180deg,#294867,#122c49);border-color:#9ec5e6;box-shadow:0 6px 0 #020914,0 0 25px #4d9fd45c;transform:translateY(-2px)}
 .poster-menu .poster-play-button{background:linear-gradient(180deg,#293d58,#101f36 80%);border:2px solid #8cabc6;box-shadow:0 6px 0 #030914,0 0 24px #518fbd43,inset 0 1px #f0f8ff30;color:#f6f9ff;text-shadow:0 2px 6px #000b}
@@ -1051,7 +1051,7 @@ body{padding:0 !important;display:block;background:#071223}
 .poster-menu .poster-button:not(.poster-play-button):hover{background:linear-gradient(180deg,#294867,#122c49);border-color:#9ec5e6;box-shadow:0 6px 0 #020914,0 0 25px #4d9fd45c}
 
 
-/* PC 6.2 — match Settings' red-to-blue selected controls throughout main menu */
+/* PC 6.3 — match Settings' red-to-blue selected controls throughout main menu */
 .poster-menu .poster-button,.poster-menu .poster-play-button{background:linear-gradient(108deg,#492c47f0 0%,#302a4af0 37%,#21466ff0 100%);border:1px solid #8aaed1;color:#f3f7ff;box-shadow:0 5px 0 #050c1c,0 0 18px #3978bc37,inset 0 1px #e9f5ff3d}
 .poster-menu .poster-button:hover,.poster-menu .poster-button:focus-visible,.poster-menu .poster-play-button:hover,.poster-menu .poster-play-button:focus-visible{background:linear-gradient(108deg,#783950 0%,#4e385d 40%,#306ca5 100%);border-color:#b2d4f5;box-shadow:0 7px 0 #050c1c,0 0 25px #4d8fd483;transform:translateY(-2px)}
 .poster-menu .poster-play-button{border:2px solid #b5cee3;background:linear-gradient(105deg,#69364c,#403856 43%,#275a8d);box-shadow:0 6px 0 #060e20,0 0 25px #427baf58}
@@ -1061,7 +1061,7 @@ body{padding:0 !important;display:block;background:#071223}
 .poster-menu .poster-studio span{color:#a0caff}
 
 
-/* PC 6.2 — keep lower menu buttons' red/blue fill consistent on hover */
+/* PC 6.3 — keep lower menu buttons' red/blue fill consistent on hover */
 .poster-menu .poster-secondary .poster-button,
 .poster-menu .poster-secondary .poster-button:hover,
 .poster-menu .poster-secondary .poster-button:focus-visible{
@@ -1076,7 +1076,7 @@ body{padding:0 !important;display:block;background:#071223}
 }
 
 
-/* PC 6.2 — one soda effect per line: green gains, red drawbacks */
+/* PC 6.3 — one soda effect per line: green gains, red drawbacks */
 .overlay.vend-screen .vend-desc{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:inherit;text-shadow:none;line-height:1.2;white-space:normal}
 .overlay.vend-screen .vend-effect{display:flex;align-items:baseline;justify-content:center;gap:5px;width:100%;font:800 clamp(11px,1.06vw,15px)/1.2 'Trebuchet MS',Arial,sans-serif;text-align:center;overflow-wrap:break-word}
 .overlay.vend-screen .vend-effect b{flex:none;font-size:1.15em}
@@ -1086,14 +1086,14 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:730px){.overlay.vend-screen .vend-effect{font-size:clamp(10px,.9vw,13px);line-height:1.12;gap:3px}.overlay.vend-screen .vend-desc{gap:2px}}
 
 
-/* PC 6.2 — visual-only soda draft: fighter, cans and their descriptions */
+/* PC 6.3 — visual-only soda draft: fighter, cans and their descriptions */
 .overlay.vend-screen .rounds-draft .rounds-head,
 .overlay.vend-screen .rounds-draft .rounds-title,
 .overlay.vend-screen .rounds-draft .rounds-controls{display:none!important}
 .overlay.vend-screen .rounds-draft .rounds-display{inset:0!important;height:100%!important}
 
 
-/* PC 6.2 — playful arc selection: five floating soda cans, huge half-screen fighter */
+/* PC 6.3 — playful arc selection: five floating soda cans, huge half-screen fighter */
 .overlay.vend-screen .rounds-five{position:relative!important;width:100vw!important;height:100dvh!important;overflow:hidden!important}
 .overlay.vend-screen .rounds-five .rounds-display{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow:hidden!important}
 .overlay.vend-screen .rounds-five .rounds-hero-wrap{left:50%!important;bottom:-33vh!important;width:min(52vw,690px)!important;height:min(79vh,790px)!important;transform:translateX(-50%)!important;z-index:6!important;pointer-events:none}
@@ -1120,7 +1120,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:640px){.overlay.vend-screen .rounds-five .rounds-product .cola-stage{height:clamp(90px,18vh,150px)!important}.overlay.vend-screen .rounds-five .rounds-pos-0,.overlay.vend-screen .rounds-five .rounds-pos-4{top:12%!important}.overlay.vend-screen .rounds-five .rounds-hero-wrap{bottom:-45vh!important}}
 
 
-/* PC 6.2 — in-game-inspired rounded fighter, expressive gaze, longer articulated reach */
+/* PC 6.3 — in-game-inspired rounded fighter, expressive gaze, longer articulated reach */
 .overlay.vend-screen .rounds-five .rounds-hero .hero-body{
  border-radius:clamp(17px,2.5vw,34px)!important;
  box-shadow:inset 9px 9px 0 #ffffff14,inset -10px 0 0 #00000013!important;
@@ -1174,7 +1174,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-width:850px){.overlay.vend-screen .rounds-five .rounds-hero .hero-eyes b{width:clamp(16px,2.7vw,23px)!important;height:clamp(16px,2.7vw,23px)!important}}
 
 
-/* PC 6.2: single connected curved arm, visible smile, better fighter framing */
+/* PC 6.3: single connected curved arm, visible smile, better fighter framing */
 .overlay.vend-screen .rounds-five .rounds-hero-wrap{bottom:-22vh!important}
 .overlay.vend-screen .rounds-five .rounds-hero .hero-mouth{
  top:61%!important;bottom:auto!important;left:39%!important;
@@ -1198,7 +1198,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(max-height:640px){.overlay.vend-screen .rounds-five .rounds-hero-wrap{bottom:-30vh!important}}
 
 
-/* PC 6.2 — two thicker side-mounted curved arms and an elevated cute smile */
+/* PC 6.3 — two thicker side-mounted curved arms and an elevated cute smile */
 .overlay.vend-screen .rounds-five .rounds-hero .hero-mouth{
  top:57%!important;bottom:auto!important;
  border-width:clamp(7px,.66vw,11px)!important;
@@ -1215,7 +1215,7 @@ body{padding:0 !important;display:block;background:#071223}
 .overlay.vend-screen .rounds-five .rounds-hero .hero-limb.arm.right{opacity:0!important}
 
 
-/* PC 6.2 — expressive sparkly eyes and thick, clean-ended reaching arms */
+/* PC 6.3 — expressive sparkly eyes and thick, clean-ended reaching arms */
 .overlay.vend-screen .rounds-five .rounds-hero .hero-eyes b{
  position:relative!important;
  width:clamp(25px,2.35vw,41px)!important;
@@ -1238,7 +1238,7 @@ body{padding:0 !important;display:block;background:#071223}
 }
 
 
-/* PC 6.2 — glowing upgrades already in the fighter's loadout */
+/* PC 6.3 — glowing upgrades already in the fighter's loadout */
 .overlay.vend-screen .vend-slot.so-stack-ready{position:relative!important;border:2px solid #ffdd79!important;box-shadow:0 0 12px #ffe38caa,0 0 28px #ffc45180,inset 0 0 22px #ffd77721!important;animation:soStackPulse 2s ease-in-out infinite!important}
 .overlay.vend-screen .so-stack-ready .cola-stage{filter:drop-shadow(0 0 14px #ffe9a7) drop-shadow(0 0 18px #ffb53c)!important}
 .overlay.vend-screen .so-stack-tag{position:absolute;top:7px;right:7px;z-index:25;padding:5px 9px;border:1px solid #fff2af;background:#644318f2;color:#fff8cb;font:900 clamp(10px,1vw,13px) Consolas,monospace;letter-spacing:1px;border-radius:5px;box-shadow:0 0 14px #ffd9688f;pointer-events:none}
@@ -1246,7 +1246,7 @@ body{padding:0 !important;display:block;background:#071223}
 @media(prefers-reduced-motion:reduce){.overlay.vend-screen .vend-slot.so-stack-ready{animation:none!important}}
 
 
-/* PC 6.2 — developer map studio */
+/* PC 6.3 — developer map studio */
 .so-editor{width:min(1280px,96vw);margin:auto;color:#e7f2ff;font-family:Arial,sans-serif}
 .so-editor h2{margin:2px 0 12px;font:900 clamp(26px,3vw,42px) Impact,sans-serif}
 .so-editor-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:10px 0}
@@ -1846,7 +1846,7 @@ function menu(){
           <button type="button" class="poster-button" id="posterHelp"><span class="poster-button-icon">?</span><span>HELP</span></button>
         </div>
       </nav>
-      <p class="poster-studio">Made by Preston and ChatGPT <span> // PC 6.2</span></p>
+      <p class="poster-studio">Made by Preston and ChatGPT <span> // PC 6.3</span></p>
     </div>
   </section>
   <div class="poster-fallback">
@@ -2030,12 +2030,11 @@ let soLobbySlots=[true,false,false,false],soOwnSlot=1;
 function soLobbyFighterSVG(color){
  return '<svg class="so-lobby-sprite" viewBox="0 0 110 150" aria-hidden="true">'+
  '<g class="so-lobby-body">'+
- '<path d="M27 83 L13 110 M83 83 L97 110 M46 108 L39 138 M64 108 L71 138" stroke="'+color+'" stroke-width="12" stroke-linecap="round" fill="none"/>'+
- '<path d="M27 83 L13 110 M83 83 L97 110 M46 108 L39 138 M64 108 L71 138" stroke="#0a1426" stroke-width="2" stroke-linecap="round" fill="none"/>'+
- '<rect x="20" y="18" width="70" height="90" rx="12" fill="'+color+'" stroke="#081326" stroke-width="5"/>'+
- '<path d="M31 33 L78 33" stroke="#ffffff" stroke-width="7" stroke-opacity=".17" stroke-linecap="round"/>'+
- '<circle cx="44" cy="65" r="4" fill="#102036"/><circle cx="68" cy="65" r="4" fill="#102036"/>'+
- '<path d="M43 81 Q56 94 69 81" stroke="#102036" stroke-width="4" fill="none" stroke-linecap="round"/>'+
+ '<path d="M31 82 L18 106 M79 82 L92 106 M47 91 L43 133 M63 91 L67 133" stroke="'+color+'" stroke-width="10" stroke-linecap="round" fill="none"/>'+
+ '<rect x="19" y="24" width="72" height="72" rx="11" fill="'+color+'" stroke="#081326" stroke-width="5"/>'+
+ '<path d="M31 37 L77 37" stroke="#ffffff" stroke-width="7" stroke-opacity=".16" stroke-linecap="round"/>'+
+ '<circle cx="45" cy="57" r="4" fill="#102036"/><circle cx="67" cy="57" r="4" fill="#102036"/>'+
+ '<path d="M44 71 Q56 82 68 71" stroke="#102036" stroke-width="4" fill="none" stroke-linecap="round"/>'+
  '</g></svg>';
 }
 function soLobbyColorMarkup(){
@@ -2209,7 +2208,7 @@ function settings(){state='settings';fullMenu(`<section class="splash-page" aria
  $('shakeOn').onclick=()=>{shakeEnabled=true;savePrefs();settings()};$('shakeOff').onclick=()=>{shakeEnabled=false;savePrefs();settings()};$('backBtn').onclick=menu;$('devStudioBtn').onclick=soDevPin;
 }
 
-/* PC 6.2: Local map-design studio. PIN only gates UI, not a security boundary. */
+/* PC 6.3: Local map-design studio. PIN only gates UI, not a security boundary. */
 let soDevTestArena=null,soDevMap=null,soDevSelected=null,soDevTool='platform',soDevDragging=false,soDevDragOffset={x:0,y:0},soDevDrawStart=null,soDevResizeArmed=null,soDevSymmetric=false,soDevIsPlaytesting=false;
 const SO_DEV_W=1120,SO_DEV_H=630;
 function soDevPin(){
