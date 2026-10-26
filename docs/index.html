@@ -1750,7 +1750,7 @@ function refreshMusic(){if(!muted&&musicEnabled)beginMusic();musicStep=0;if(audi
 window.addEventListener('pointerdown',beginMusic,{capture:true});window.addEventListener('keydown',beginMusic,{capture:true});
 function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classList.add('menu-screen');showOverlay(html)}
 function menu(){
- soDevPlaytest=false;$('soDevEndTest')?.remove();
+ soDevPlaytest=false;soDevTestArena=null;$('soDevEndTest')?.remove();
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
  fullMenu(`<main class="splash" aria-label="Square Off main menu">
@@ -2060,7 +2060,7 @@ function settings(){state='settings';fullMenu(`<section class="splash-page" aria
 }
 
 /* PC 5.9.1: Local map-design studio. PIN only gates UI, not a security boundary. */
-let soDevMap=null,soDevSelected=null,soDevTool='platform',soDevDragging=false,soDevDragOffset={x:0,y:0},soDevDrawStart=null,soDevSymmetric=false,soDevPlaytest=false;
+let soDevTestArena=null,soDevMap=null,soDevSelected=null,soDevTool='platform',soDevDragging=false,soDevDragOffset={x:0,y:0},soDevDrawStart=null,soDevSymmetric=false,soDevPlaytest=false;
 const SO_DEV_W=1120,SO_DEV_H=630;
 function soDevPin(){
  state='dev_pin';
@@ -2159,14 +2159,13 @@ function soDevPlaytest(){
  const custom={name:soDevMap.name||'CUSTOM ARENA',seed:1,width:soDevMap.width,height:soDevMap.height,bounds:b,platforms:combined,spawnY:b.bottom-120,spawn:spawn.map(p=>p.x),devSpawn:spawn};
  soDevPlaytest=true;practiceMode=true;netRole=null;
  p1=makePlayer(0);p2=makePlayer(1);scores=[0,0];round=1;
- const saved=practiceArena;
- practiceArena=custom;startRound(true);practiceArena=saved;
+ soDevTestArena=custom;startRound(true);
  arena=custom;updateArenaCamera();moveableBlocks=[];
  for(const p of [p1,p2]){const at=spawn[p.id];p.x=at.x-p.w/2;p.y=at.y-p.h;p.vx=0;p.vy=0;p.grounded=false;p.invuln=1.5;}
  const exit=document.createElement('button');exit.id='soDevEndTest';exit.textContent='END PLAYTEST / EDIT MAP';exit.style.cssText='position:absolute;top:70px;left:12px;z-index:100;background:#10263d;color:#fff;border:2px solid #e0c26a;border-radius:7px;padding:9px 14px;font-weight:900;cursor:pointer';
  $('game').append(exit);exit.onclick=soDevEndTest;
 }
-function soDevEndTest(){soDevPlaytest=false;practiceMode=false;$('soDevEndTest')?.remove();soDevEditor()}
+function soDevEndTest(){soDevPlaytest=false;soDevTestArena=null;practiceMode=false;$('soDevEndTest')?.remove();soDevEditor()}
 function soDevEditor(){
  state='dev_editor';hud.classList.remove('show');overlay.classList.remove('vend-screen');overlay.classList.add('menu-screen');
  showOverlay(`<section class="so-editor"><div class="so-editor-toolbar"><h2>DEV MAP STUDIO</h2><button id="soDevExit">EXIT</button></div>
@@ -2231,7 +2230,7 @@ function startPractice(){
 }
 function resetPracticeBuild(){if(!practiceMode)return;const previous=p1; p1=makePlayer(0);p1.x=previous.x;p1.y=previous.y;p1.vx=p1.vy=0;p1.invuln=.4;bullets=[];refreshPracticePanel();toast('BUILD RESET');}
 function startMatch(){if(netRole)disconnectOnline();practiceMode=false;$('practicePanel')?.classList.add('hidden');colaSelectionPending=false;mouse.down=false;mouse.used=false;keys.clear();scores=[0,0];round=1;p1=makePlayer(0);p2=makePlayer(1);arenaIndex=Math.floor(Math.random()*maps.length);startRound(true)}
-function startRound(first=false){mouse.down=false;arena=practiceMode?practiceArena:maps[arenaIndex];updateArenaCamera();moveableBlocks=practiceMode?[]:makeCrateStacks(arena);const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.crouched=false;p.h=60*(p.w/48);p.visualCrouch=0;p.jumpPose=0;p.landPose=0;p.roofSquash=0;p.visualFacing=i===0?1:-1;arenaSpawn(p);p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.healthTrail=p.hp;p.healthTrailHold=0;p.healTrailFrom=p.hp;p.healTrailHold=0;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.jumpRiseActive=false;p.wallJumpCD=0;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;p.hiddenBody=false;p.burstLeft=0;p.burstTimer=0;p.autoBlocks=[];p.poison=[];p.slowUntil=0;p.coldHits=0;p.coldUntil=0;p.pulls=[];p.dashCD=0;p.dashTime=0;p.secondWindReady=p.stats.secondwind>0;p.lastHurt=0;p.chainHits=0;p.timeWarpUntil=0;p.lastHurt=clock;p.burnUntil=0;p.burnDps=0;});bullets=[];fireBombs=[];effectWaves=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;netLastSnapshot=-1;aiThink=0;aiPlan={move:0,jump:false,block:false};botStyle='rusher';botStyleTime=9999;botStrategyAge=0;botJumpGoal=null;botRoamTimer=0;botStuckTime=0;botLastX=p2.x;state='playing';$('game').classList.toggle('practice-active',practiceMode);setMusicTheme('battle');hideOverlay();hud.classList.add('show');hint.classList.remove('show');hint.textContent='';$('name1').textContent='RED • PLAYER 1';$('name2').textContent=netRole?'BLUE • GUEST':'BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS • LOSE A ROUND TO PICK A COLA');else toast(`ROUND ${round} • ${arena.name}`);
+function startRound(first=false){mouse.down=false;arena=soDevPlaytest&&soDevTestArena?soDevTestArena:practiceMode?practiceArena:maps[arenaIndex];updateArenaCamera();moveableBlocks=practiceMode?[]:makeCrateStacks(arena);const s1=p1.stats,s2=p2.stats;[p1,p2].forEach((p,i)=>{p.crouched=false;p.h=60*(p.w/48);p.visualCrouch=0;p.jumpPose=0;p.landPose=0;p.roofSquash=0;p.visualFacing=i===0?1:-1;arenaSpawn(p);p.vx=0;p.vy=0;p.hp=p.stats.maxHp;p.healthTrail=p.hp;p.healthTrailHold=0;p.healTrailFrom=p.hp;p.healTrailHold=0;p.ammo=p.stats.ammo;p.reload=0;p.shootCD=0;p.shieldTime=0;p.shieldCD=0;p.hitflash=0;p.faceHit=0;p.faceShoot=0;p.invuln=.65;p.grounded=true;p.jumps=0;p.jumpHeld=false;p.jumpRiseActive=false;p.wallJumpCD=0;p.blockHeld=false;p.aiHop=0;p.aimErrorTime=0;p.aimError=0;p.dead=false;p.aim=i===0?0:Math.PI;p.aimTilt=0;p.dropTime=0;p.dropHeld=false;p.hiddenBody=false;p.burstLeft=0;p.burstTimer=0;p.autoBlocks=[];p.poison=[];p.slowUntil=0;p.coldHits=0;p.coldUntil=0;p.pulls=[];p.dashCD=0;p.dashTime=0;p.secondWindReady=p.stats.secondwind>0;p.lastHurt=0;p.chainHits=0;p.timeWarpUntil=0;p.lastHurt=clock;p.burnUntil=0;p.burnDps=0;});bullets=[];fireBombs=[];effectWaves=[];particles=[];texts=[];winner=null;loser=null;shake=0;clock=0;netLastSnapshot=-1;aiThink=0;aiPlan={move:0,jump:false,block:false};botStyle='rusher';botStyleTime=9999;botStrategyAge=0;botJumpGoal=null;botRoamTimer=0;botStuckTime=0;botLastX=p2.x;state='playing';$('game').classList.toggle('practice-active',practiceMode);setMusicTheme('battle');hideOverlay();hud.classList.add('show');hint.classList.remove('show');hint.textContent='';$('name1').textContent='RED • PLAYER 1';$('name2').textContent=netRole?'BLUE • GUEST':'BLUE • BOT';$('roundNo').textContent=`ROUND ${round}`;$('score1').textContent=scores[0];$('score2').textContent=scores[1];$('mapName').textContent=arena.name;toasts.innerHTML='';if(first)toast('FIRST TO 5 WINS • LOSE A ROUND TO PICK A COLA');else toast(`ROUND ${round} • ${arena.name}`);
  // 4.4: The host may NOT fight until the guest confirms it loaded this round.
  if(netRole==='host'&&netConnected)onlineRoundPrepare();
  const coarse=window.matchMedia('(pointer:coarse)').matches;touchEl.style.display='none';updateHUD();}
