@@ -4537,7 +4537,7 @@ function ffaEnd(id){
 }
 
 function render(){
- const guestDraw=netRole==='guest'&&state==='playing'&&p1&&p2?blendedGuestPlayers(performance.now()):null;
+ const guestDraw=!ffaOn&&netRole==='guest'&&state==='playing'&&p1&&p2?blendedGuestPlayers(performance.now()):null;
  const renderP1=guestDraw?{...p1,x:guestDraw[0].x,y:guestDraw[0].y}:p1;
  const renderP2=guestDraw?{...p2,x:guestDraw[1].x,y:guestDraw[1].y}:p2;
  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(renderScaleX,0,0,renderScaleY,0,0);ctx.save();ctx.translate(cameraX,cameraY);ctx.scale(cameraScale,cameraScale);if(shakeEnabled&&shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();drawBullets();drawEffectWaves();drawBlockEffects();drawPlayer(renderP1);drawPlayer(renderP2);if(ffaOn)for(const f of ffaPlayers.slice(2))drawPlayer(f);if(soDevIsPlaytesting)for(const fighter of soDevPreviewFighters)drawPlayer(fighter);drawFrostbiteArmor(renderP1);drawFrostbiteArmor(renderP2);if(ffaOn)for(const f of ffaPlayers.slice(2))drawFrostbiteArmor(f);drawParticles();ctx.restore();
