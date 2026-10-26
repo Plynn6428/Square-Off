@@ -1862,6 +1862,7 @@ function refreshMusic(){if(!muted&&musicEnabled)beginMusic();musicStep=0;if(audi
 window.addEventListener('pointerdown',beginMusic,{capture:true});window.addEventListener('keydown',beginMusic,{capture:true});
 function fullMenu(html){overlay.classList.remove('vend-screen');overlay.classList.add('menu-screen');showOverlay(html)}
 function menu(){
+ ffaOn=false;ffaPlayers=[];
  soDevIsPlaytesting=false;soDevTestArena=null;$('soDevEndTest')?.remove();
  if(netRole)disconnectOnline();
  state='menu';practiceMode=false;$('game').classList.remove('practice-active');$('practicePanel')?.classList.add('hidden');setMusicTheme('menu');keys.clear();mouse.down=false;hud.classList.remove('show');hint.classList.remove('show');touchEl.style.display='none';
@@ -2212,6 +2213,7 @@ function handleOnlineMessage(m){
  if(m.type==='ffa_choose'&&ffaOn&&netRole==='host'){ffaChoose(m.slot-1,m.card);return}
  if(m.type==='ffa_left'&&ffaOn){ffaDisconnect(m.slot-1);return}
  if(m.type==='lobby_state'&&Array.isArray(m.slots)){
+  if(ffaOn&&netRole!=='host'){return}
   soLobbySlots=[0,1,2,3].map(i=>!!m.slots[i]);
   netGuestReady=soLobbySlots[1];
   soRefreshLobbyColors();
@@ -2226,7 +2228,7 @@ function handleOnlineMessage(m){
  }
  if(m.type==='created'||m.type==='joined'){netCode=m.code;netConnected=true;soOwnSlot=m.slot|| (netRole==='host'?1:2);if(soOwnSlot>2)netRole='spectator';netGuestReady=false;onlineLobby();return}
  if(m.type==='player_joined'&&netRole==='host'){if(m.slot===2)netGuestReady=true;soRefreshLobbyColors();soUpdateModeUI();return}
- if(m.type==='player_left'){soResetRematch();remoteKeys={};netGuestReady=false;if(netRole==='host'){state='online_lobby';onlineLobby();onlineMessage('Friend disconnected. Waiting for another player.',true)}else{state='online_disconnected';showOverlay('<div class="net-card"><h2>HOST LEFT</h2><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}return}
+ if(m.type==='player_left'){if(ffaOn)return;soResetRematch();remoteKeys={};netGuestReady=false;if(netRole==='host'){state='online_lobby';onlineLobby();onlineMessage('Friend disconnected. Waiting for another player.',true)}else{state='online_disconnected';showOverlay('<div class="net-card"><h2>HOST LEFT</h2><button class="btn" id="netBack">BACK TO MENU</button></div>');$('netBack').onclick=menu}return}
  if(m.type==='rematch_ready'&&['gameover','online_rematch_wait'].includes(state)){
   soRematchPeerReady=true;soShowRematchStatus();soTryStartRematch();return;
  }
@@ -2941,7 +2943,7 @@ function bombExplosion(b){
   target.vx+=Math.sign(cx-x||1)*190;target.vy-=170;
   target.hitflash=.17;burst(cx,cy,target.color,9,140);
   if(target.hp<=0){target.hp=0;target.dead=true;
-   if(ffaOn)ffaEliminate(target);else if(practiceMode)practiceKill(target);else finishRound(1-target.id);
+   if(ffaOn)ffaEliminate(target);else if(ffaOn)ffaEliminate(target);else if(practiceMode)practiceKill(target);else finishRound(1-target.id);
   }
  }
 }
@@ -3053,8 +3055,8 @@ function blockEffect(p){
  if(st.fire){launchFireBombs(p,st.fire)}
  if(st.frost){waveEffect('frost',px,py,closeRadius,.55);if(near)applyFrostbite(enemy,st.frost)}
  if(st.boomerang){let radius=130*(1+.25*(st.boomerang-1));waveEffect('boomerang',px,py,radius,.48);for(const b of bullets)if(Math.hypot(b.x-px,b.y-py)<radius&&!terrainBlocks(px,py,b.x,b.y,1)){b.vx*=-1;b.vy*=-1;b.owner=p.id;b.selfArmed=false;b.col='#ffdc4b';burst(b.x,b.y,'#dcff9d',4,80)}}
- if(enemy.hp<=0&&!enemy.dead){enemy.hp=0;enemy.dead=true;if(practiceMode)practiceKill(enemy);else finishRound(p.id)}
- if(p.hp<=0&&!p.dead){p.hp=0;p.dead=true;if(practiceMode)practiceKill(p);else finishRound(enemy.id)}
+ if(enemy.hp<=0&&!enemy.dead){enemy.hp=0;enemy.dead=true;if(ffaOn)ffaEliminate(enemy);else if(practiceMode)practiceKill(enemy);else finishRound(p.id)}
+ if(p.hp<=0&&!p.dead){p.hp=0;p.dead=true;if(ffaOn)ffaEliminate(p);else if(practiceMode)practiceKill(p);else finishRound(enemy.id)}
 }
 function hazardShieldLaunch(p){
  // Emergency rebound: shield against the four DEADLY arena borders only.
@@ -3530,11 +3532,11 @@ function physicsPlayer(p,dt){
  if(p.stats.float>0&&p.jumpRiseActive===false&&p.vy>0&&p.jumpHeld)p.vy=Math.min(p.vy,Math.max(115,390*(1-.35)));
  if(p.stats.regen>0&&clock-(p.lastHurt||0)>=5&&p.hp>0&&!p.dead)p.hp=Math.min(p.stats.maxHp,p.hp+2*p.stats.regen*dt);
  if(p.burnUntil>clock&&!p.dead){dealDamage(p,(p.burnDps||5)*dt,p.burnOwner===0?p1:p2,'burn');if(Math.random()<dt*15)particles.push({x:p.x+rand(6,p.w-6),y:p.y+rand(8,p.h-7),vx:rand(-18,18),vy:rand(-95,-42),life:.43,max:.43,r:rand(2,4),col:Math.random()<.5?'#ffb74d':'#ff693b'});
- if(Math.random()<dt*6)particles.push({x:p.x+rand(7,p.w-7),y:p.y+rand(5,p.h-10),vx:rand(-12,12),vy:rand(-43,-15),life:.75,max:.75,r:rand(3,6),col:'#96929b'});if(p.hp<=0){p.dead=true;if(practiceMode)practiceKill(p);else finishRound(1-p.id)}}
+ if(Math.random()<dt*6)particles.push({x:p.x+rand(7,p.w-7),y:p.y+rand(5,p.h-10),vx:rand(-12,12),vy:rand(-43,-15),life:.75,max:.75,r:rand(3,6),col:'#96929b'});if(p.hp<=0){p.dead=true;if(ffaOn)ffaEliminate(p);else if(practiceMode)practiceKill(p);else finishRound(1-p.id)}}
  // Repeat blocks have independent 0.5 second windows, without restarting cooldown.
  for(let i=p.autoBlocks.length-1;i>=0;i--){p.autoBlocks[i]-=dt;if(p.autoBlocks[i]<=0){p.autoBlocks.splice(i,1);activateBlock(p,true)}}
  if(p.burstLeft>0&&!p.dead){p.burstTimer-=dt;if(p.burstTimer<=0){if(fireSingle(p,0,p.stats.spraypray>0?.55:1)){p.burstLeft--;p.burstTimer=p.stats.spraypray>0?.078:.105}else p.burstLeft=0}}
- if(p.poison?.length){for(let i=p.poison.length-1;i>=0;i--){const e=p.poison[i],elapsed=Math.min(dt,e.time);e.pending=(e.pending||0)+elapsed*e.dps;e.tick=(e.tick||0)+elapsed;e.time-=dt;if(Math.random()<dt*16)particles.push({x:p.x+rand(8,p.w-8),y:p.y+rand(6,p.h-8),vx:rand(-18,18),vy:rand(-55,-20),life:.35,max:.35,r:rand(2,4),col:Math.random()<.25?'#baff76':'#76ef81'});if(e.tick>=.4||e.time<=0){dealDamage(p,e.pending,e.owner===0?p1:e.owner===1?p2:null,'poison');e.pending=0;e.tick=0;}if(e.time<=0)p.poison.splice(i,1)}if(p.hp<=0&&!p.dead){p.hp=0;p.dead=true;if(practiceMode)practiceKill(p);else finishRound(1-p.id)}}
+ if(p.poison?.length){for(let i=p.poison.length-1;i>=0;i--){const e=p.poison[i],elapsed=Math.min(dt,e.time);e.pending=(e.pending||0)+elapsed*e.dps;e.tick=(e.tick||0)+elapsed;e.time-=dt;if(Math.random()<dt*16)particles.push({x:p.x+rand(8,p.w-8),y:p.y+rand(6,p.h-8),vx:rand(-18,18),vy:rand(-55,-20),life:.35,max:.35,r:rand(2,4),col:Math.random()<.25?'#baff76':'#76ef81'});if(e.tick>=.4||e.time<=0){dealDamage(p,e.pending,e.owner===0?p1:e.owner===1?p2:null,'poison');e.pending=0;e.tick=0;}if(e.time<=0)p.poison.splice(i,1)}if(p.hp<=0&&!p.dead){p.hp=0;p.dead=true;if(ffaOn)ffaEliminate(p);else if(practiceMode)practiceKill(p);else finishRound(1-p.id)}}
  if(p.pulls?.length){for(let i=p.pulls.length-1;i>=0;i--){
   const e=p.pulls[i];e.time-=dt;const source=e.source===0?p1:p2;
   if(!source||source.dead||p.dead||!vortexLineVisible(source,p)||e.time<=0){p.pulls.splice(i,1);continue;}
@@ -3685,7 +3687,7 @@ function physicsPlayer(p,dt){
    p.hazardCooldown=.65;dealDamage(p,12);p.hitflash=.22;
    burst(p.x+p.w/2,p.y+p.h/2,'#ff6474',18,190);
    waveEffect('fire',p.x+p.w/2,p.y+p.h/2,42,.3);
-   if(p.hp<=0){p.dead=true;if(practiceMode)practiceKill(p);else finishRound(1-p.id)}
+   if(p.hp<=0){p.dead=true;if(ffaOn)ffaEliminate(p);else if(practiceMode)practiceKill(p);else finishRound(1-p.id)}
   }
  }
  // Prevent pulls and knockback from imparting unrealistic speed through solids.
@@ -3702,7 +3704,7 @@ function shotImpactExtras(b,x,y){
    const dist=Math.hypot(target.x+target.w/2-x,target.y+target.h/2-y);
    if(dist<radius&&!terrainBlocks(x,y,target.x+target.w/2,target.y+target.h/2,0)){
     dealDamage(target,b.damage*(b.boomberry>=2?.45:.35),owner);
-    if(target.hp<=0){target.dead=true;if(practiceMode)practiceKill(target);else finishRound(owner.id)}
+    if(target.hp<=0){target.dead=true;if(ffaOn)ffaEliminate(target);else if(practiceMode)practiceKill(target);else finishRound(owner.id)}
    }
   }
  }
