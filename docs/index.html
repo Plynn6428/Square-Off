@@ -2060,7 +2060,7 @@ function settings(){state='settings';fullMenu(`<section class="splash-page" aria
 }
 
 /* PC 5.9.4: Local map-design studio. PIN only gates UI, not a security boundary. */
-let soDevTestArena=null,soDevMap=null,soDevSelected=null,soDevTool='platform',soDevDragging=false,soDevDragOffset={x:0,y:0},soDevDrawStart=null,soDevSymmetric=false,soDevIsPlaytesting=false;
+let soDevTestArena=null,soDevMap=null,soDevSelected=null,soDevTool='platform',soDevDragging=false,soDevDragOffset={x:0,y:0},soDevDrawStart=null,soDevResizeArmed=null,soDevSymmetric=false,soDevIsPlaytesting=false;
 const SO_DEV_W=1120,SO_DEV_H=630;
 function soDevPin(){
  state='dev_pin';
@@ -2095,21 +2095,21 @@ function soDevDoubleClick(e){
  const target=e.target.closest('[data-kind="platform"]');
  if(!target)return;
  const i=Number(target.dataset.index),p=soDevMap.platforms[i];if(!p)return;
- soDevSelected={type:'platform',i};
- soDevTool='select';soDevDragging=false;soDevDrawStart=null;
- const pos=soDevCoords(e),mirror=soDevSymmetric&&target.dataset.mirrored==='true';
- // Resize directly from the opposite corner, starting at the double-click point.
- const right=mirror?soDevMap.width-p.x:p.x+p.w,bottom=p.y+p.h;
- soDevDrawStart={x:mirror?soDevMap.width-right:p.x,y:p.y};
- soDevDragOffset={x:0,y:0,mirrored:mirror};
- soDevDragging=true;
- try{$('soDevSvg').setPointerCapture(e.pointerId)}catch(_){}
+ const mirrored=soDevSymmetric&&target.dataset.mirrored==='true';
+ soDevSelected={type:'platform',i};soDevTool='select';
+ soDevDragging=false;soDevDrawStart=null;
+ soDevResizeArmed={i,mirrored};
  soDevRender();
- $('soDevStatus').textContent='RESIZE MODE: drag to set the new dimensions, release to finish.';
+ $('soDevStatus').textContent='RESIZE READY: click and drag the selected piece to set its new width and height.';
 }
 function soDevDown(e){
  if(e.button!==0)return;
  const pt=soDevCoords(e),target=e.target.closest('[data-kind]');
+ if(soDevResizeArmed){
+  const arm=soDevResizeArmed,p=soDevMap.platforms[arm.i];
+  if(p){soDevSelected={type:'platform',i:arm.i};soDevDrawStart={x:arm.mirrored?soDevMap.width-p.x-p.w:p.x,y:p.y};soDevDragging=true;soDevResizeArmed=null;e.currentTarget.setPointerCapture(e.pointerId);soDevRender();return}
+  soDevResizeArmed=null;
+ }
  if(target){
   soDevSelected={type:target.dataset.kind,i:Number(target.dataset.index)};
   const mirrored=soDevSymmetric&&target.dataset.mirrored==='true';
