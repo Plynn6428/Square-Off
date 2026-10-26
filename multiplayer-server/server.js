@@ -8,11 +8,13 @@ const clients = new WeakMap();
 const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function code(){let c;do{c=Array.from(crypto.randomBytes(6),v=>alphabet[v%alphabet.length]).join('')}while(rooms.has(c));return c;}
 function send(ws,obj){if(ws?.readyState===WebSocket.OPEN){if(obj.type==='snapshot'&&ws.bufferedAmount>48000)return;if(obj.type==='input'&&ws.bufferedAmount>16000)return;ws.send(JSON.stringify(obj));}}
+function lobbyState(room){const seats=[room.host,room.guest,...room.extra];for(const peer of seats)send(peer,{type:'lobby_state',slots:seats.map(Boolean)});}
 function cleanup(ws){const info=clients.get(ws);if(!info)return;clients.delete(ws);const room=rooms.get(info.code);if(!room)return;
- if(info.role==='host'){send(room.guest,{type:'player_left'});if(room.guest)clients.delete(room.guest);rooms.delete(info.code)}
- else if(room.guest===ws){room.guest=null;room.started=false;send(room.host,{type:'player_left'});}
+ if(info.role==='host'){for(const other of [room.guest,...room.extra]){send(other,{type:'player_left'});if(other)clients.delete(other)}rooms.delete(info.code)}
+ else if(room.guest===ws){room.guest=null;room.started=false;send(room.host,{type:'player_left'});lobbyState(room)}
+ else {const slot=room.extra.indexOf(ws);if(slot>=0){room.extra[slot]=null;lobbyState(room)}}
 }
-const server=http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});res.end(JSON.stringify({name:'Square Off multiplayer relay',status:'ok',rooms:rooms.size,players:[...rooms.values()].reduce((n,r)=>n+1+(r.guest?1:0),0)}));});
+const server=http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});res.end(JSON.stringify({name:'Square Off multiplayer relay',status:'ok',rooms:rooms.size,players:[...rooms.values()].reduce((n,r)=>n+1+(r.guest?1:0)+r.extra.filter(Boolean).length,0)}));});
 const wss=new WebSocketServer({server,maxPayload:1024*1024,perMessageDeflate:false});
 wss.on('connection',ws=>{
  ws.isAlive=true;ws.on('pong',()=>ws.isAlive=true);
@@ -27,31 +29,25 @@ wss.on('connection',ws=>{
   const user=clients.get(ws);
   if(!user){
    if(m.type==='create'){
-    const c=code();rooms.set(c,{code:c,host:ws,guest:null,started:false,colors:['red','blue'],created:Date.now()});clients.set(ws,{code:c,role:'host'});send(ws,{type:'created',code:c});return;
+    const c=code();rooms.set(c,{code:c,host:ws,guest:null,extra:[null,null],started:false,created:Date.now()});clients.set(ws,{code:c,role:'host'});send(ws,{type:'created',code:c,slot:1});lobbyState(rooms.get(c));return;
    }
    if(m.type==='join'){
     const c=String(m.code||'').trim().toUpperCase(),room=rooms.get(c);
     if(!room){send(ws,{type:'error',message:'Room not found. Check the code.'});return}
-    if(room.guest){send(ws,{type:'error',message:'Room is full (2 players max).'});return}
     if(room.started){send(ws,{type:'error',message:'Match already started.'});return}
-    room.guest=ws;clients.set(ws,{code:c,role:'guest'});send(ws,{type:'joined',code:c});send(ws,{type:'color_state',colors:room.colors});send(room.host,{type:'player_joined'});send(room.host,{type:'color_state',colors:room.colors});return;
+    const slot=!room.guest?2:!room.extra[0]?3:!room.extra[1]?4:0;
+    if(!slot){send(ws,{type:'error',message:'Room is full (4 players max).'});return}
+    if(slot===2)room.guest=ws;else room.extra[slot-3]=ws;
+    clients.set(ws,{code:c,role:slot===2?'guest':'spectator',slot});
+    send(ws,{type:'joined',code:c,slot});
+    send(room.host,{type:'player_joined',slot});
+    lobbyState(room);return;
    }
    send(ws,{type:'error',message:'Create or join a room first.'});return;
   }
   const room=rooms.get(user.code);if(!room)return;
   const peer=user.role==='host'?room.guest:room.host;
-  // Lobby colors are room-authoritative and unique across both players.
-  // Allow selection before the match starts, broadcast to both clients.
-  if(m.type==='color_select'&&!room.started){
-   const index=user.role==='host'?0:1;
-   const color=String(m.color||'').toLowerCase();
-   if(['red','blue','green','yellow'].includes(color)&&room.colors[1-index]!==color)room.colors[index]=color;
-   send(room.host,{type:'color_state',colors:room.colors});
-   send(room.guest,{type:'color_state',colors:room.colors});
-   return;
-  }
-
-  if(user.role==='host'&&m.type==='start'&&peer){room.started=true;send(peer,{type:'start'});return}
+  if(user.role==='host'&&m.type==='start'&&peer){room.started=true;send(peer,{type:'start'});for(const spectator of room.extra)send(spectator,{type:'spectate_wait'});return}
   if(!room.started||!peer)return;
   // After a finished match, relay rematch votes both ways without closing the room.
   if(m.type==='rematch_ready'){send(peer,{type:'rematch_ready'});return}
