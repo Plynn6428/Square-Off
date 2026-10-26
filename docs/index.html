@@ -1427,6 +1427,7 @@ function soImportedArena(name,seed,width,height,pieces,spawn,symmetry,palette){
   palette,customImported:true};
 }
 /* PC 6.9: Exclusive, user-designed four-player FFA playlist. */
+const SO_FFA_MAPS=[];
 SO_FFA_MAPS.push(
  soImportedArena("SLOPES",80,1700,950,[[5,585,845,360,"slope-up",0],[5,5,585,375,"slope-down",0],[780,200,140,15,"floor",0],[1155,530,130,15,"floor",0],[775,380,150,75,"platform",0]],[[35,885],[1665,885],[150,50],[1550,50]],true,["#172a4a","#31556f","#101b33","#81ccff","#ffa963","#476185","#273b5c","#ffdb8b"]),
  soImportedArena("PRISON",81,1700,950,[[5,785,330,160,"platform",0],[0,225,445,15,"floor",0],[425,650,175,15,"floor",0],[150,500,195,15,"floor",0],[850,0,275,225,"slope-up",180],[530,300,95,15,"floor",0],[755,445,190,270,"platform",0],[575,915,550,15,"floor",0],[830,840,40,75,"wall",0]],[[40,740],[1660,740],[45,180],[1655,180]],true,["#162d43","#344c61","#132238","#97dcfc","#e8a876","#405a78","#263952","#f0d88b"]),
@@ -2059,7 +2060,7 @@ const SO_ONLINE_COLORS={red:'#ff595b',blue:'#4594ff',green:'#53dc85',yellow:'#ff
 const SO_ONLINE_ORDER=['red','blue','green','yellow'];
 /* Dedicated future 4-player playlist: never mix with Classic duel maps.
    Uploaded FFA maps will be imported here, with four spawn points each. */
-const SO_FFA_MAPS=[];
+
 let soOnlineMode='classic';
 function soCanStartLobby(){
  return netRole==='host'&&soOnlineMode==='classic'&&!!soLobbySlots[1];
