@@ -2204,7 +2204,7 @@ function onlineGuestDraft(ids){
 }
 function handleOnlineMessage(m){
  if(m.type==='error'){onlineMessage(m.message||'Room error.',true);return}
- if(m.type==='ffa_start'){ffaOn=true;ffaSeats=m.slots||soLobbySlots;if(netRole==='host')ffaStart();else{state='ffa_wait';showOverlay('<div class="net-card"><h2>FFA STARTING</h2></div>')}return}
+ if(m.type==='ffa_start'){ffaOn=true;ffaSeats=m.slots||soLobbySlots;soLobbySlots=ffaSeats.slice();soOnlineMode='ffa';if(netRole==='host')ffaStart();else{state='ffa_wait';showOverlay('<div class="net-card"><h2>FFA STARTING</h2></div>')}return}
  if(m.type==='ffa_snapshot'&&ffaOn&&netRole!=='host'){ffaReceive(m.payload);return}
  if(m.type==='ffa_round'&&ffaOn&&netRole!=='host'){ffaReceive(m.payload);return}
  if(m.type==='ffa_draft'&&ffaOn&&netRole!=='host'){ffaDraft(m.payload);return}
@@ -2213,7 +2213,7 @@ function handleOnlineMessage(m){
  if(m.type==='ffa_choose'&&ffaOn&&netRole==='host'){ffaChoose(m.slot-1,m.card);return}
  if(m.type==='ffa_left'&&ffaOn){ffaDisconnect(m.slot-1);return}
  if(m.type==='lobby_state'&&Array.isArray(m.slots)){
-  if(ffaOn&&netRole!=='host'){return}
+  if(ffaOn){return}
   soLobbySlots=[0,1,2,3].map(i=>!!m.slots[i]);
   netGuestReady=soLobbySlots[1];
   soRefreshLobbyColors();
@@ -2932,18 +2932,18 @@ function bombExplosion(b){
  const x=b.x,y=b.y,radius=90;
  burst(x,y,'#ff8736',26,260);burst(x,y,'#ffe08a',12,190);waveEffect('fire',x,y,radius,.43);
  shake=Math.max(shake,5);sound(155,.22,'sawtooth',.08,.45);
- for(const target of [p1,p2]){
+ for(const target of (ffaOn?ffaPlayers:[p1,p2])){
   if(!target||target.dead||target.hiddenBody)continue;
   const cx=target.x+target.w/2,cy=target.y+target.h/2;
   const d=Math.hypot(cx-x,cy-y);
   if(d>radius||!clearBlastPath(x,y,target)||target.shieldTime>0||target.invuln>0)continue;
   // Friendly fire: the exact same per-bomb damage to the owner or opponent.
   // Every bomb deals damage independently if the target is exposed and in range.
-  dealDamage(target,25*b.stacks,b.owner===0?p1:p2);
+  dealDamage(target,25*b.stacks,ffaOn?ffaPlayers[b.owner]:(b.owner===0?p1:p2));
   target.vx+=Math.sign(cx-x||1)*190;target.vy-=170;
   target.hitflash=.17;burst(cx,cy,target.color,9,140);
   if(target.hp<=0){target.hp=0;target.dead=true;
-   if(ffaOn)ffaEliminate(target);else if(ffaOn)ffaEliminate(target);else if(practiceMode)practiceKill(target);else finishRound(1-target.id);
+   if(ffaOn)ffaEliminate(target);else if(practiceMode)practiceKill(target);else finishRound(1-target.id);
   }
  }
 }
