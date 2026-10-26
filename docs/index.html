@@ -2694,7 +2694,7 @@ function segmentIntersectsRect(ax,ay,bx,by,rect,pad=0){
 }
 function terrainBlocks(ax,ay,bx,by,pad=0){
  if(!arena?.platforms)return false;
- return solidCrateTerrain().some(pl=>segmentIntersectsRect(ax,ay,bx,by,pl,pad));
+ return solidCrateTerrain().some(pl=>segmentIntersectsRect(ax,ay,bx,by,pl,pad))||(soDevIsPlaytesting&&arena.devSlopes?.some(shape=>soDevBulletPolygon(ax,ay,bx,by,shape.polygon,pad)));
 }
 function clearBlastPath(x,y,target){
  // Multiple visible body points so a floor/wall reliably shields the fighter.
@@ -3360,20 +3360,46 @@ function guideLockOnBullet(b,opponent,dt){
   b.laserPoint={x:b.x+Math.cos(velAngle)*beamLen,y:b.y+Math.sin(velAngle)*beamLen};
  }
 }
-function soDevBulletPolygon(x1,y1,x2,y2,pts,r){
- const dx=x2-x1,dy=y2-y1,cross=(a,b,c,d)=>a*d-b*c;
+function soDevBulletPolygon(x1,y1,x2,y2,pts,r=0){
+ // Swept-circle against every polygon edge and vertex: prevents fast rounds
+ // tunnelling through narrow or rotated DEV slopes, even at shallow angles.
+ if(!pts||pts.length<3)return null;
+ const dx=x2-x1,dy=y2-y1,rr=Math.max(0,r),eps=1e-7;
+ const inside=(x,y)=>{let yes=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){
+  const a=pts[i],b=pts[j];
+  if((a.y>y)!==(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)yes=!yes;
+ }return yes};
  let best=null;
- const inside=(x,y)=>{let yes=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const a=pts[i],b=pts[j];if((a.y>y)!==(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)yes=!yes;}return yes};
- if(inside(x1,y1))return {t:0,x:x1,y:y1,nx:0,ny:-1};
- for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],ex=b.x-a.x,ey=b.y-a.y,den=cross(dx,dy,ex,ey);if(Math.abs(den)<1e-8)continue;
-  const px=a.x-x1,py=a.y-y1,t=cross(px,py,ex,ey)/den,u=cross(px,py,dx,dy)/den;
-  if(t>=0&&t<=1&&u>=0&&u<=1&&(!best||t<best.t)){let nx=ey,ny=-ex,len=Math.hypot(nx,ny)||1;nx/=len;ny/=len;if(nx*dx+ny*dy>0){nx=-nx;ny=-ny}best={t,x:x1+dx*t,y:y1+dy*t,nx,ny}}
+ function add(t,nx,ny){
+  if(t<0||t>1||!Number.isFinite(t)||(best&&t>=best.t))return;
+  const len=Math.hypot(nx,ny)||1;nx/=len;ny/=len;
+  if(nx*dx+ny*dy>0){nx=-nx;ny=-ny}
+  best={t,x:x1+dx*t,y:y1+dy*t,nx,ny};
  }
- if(!best&&r>0){const steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/Math.max(2,r*.65)));
-  for(let k=0;k<=steps&&!best;k++){const t=k/steps,x=x1+dx*t,y=y1+dy*t;
-   for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],ex=b.x-a.x,ey=b.y-a.y,u=Math.max(0,Math.min(1,((x-a.x)*ex+(y-a.y)*ey)/(ex*ex+ey*ey||1))),px=a.x+u*ex,py=a.y+u*ey;
-    if((x-px)**2+(y-py)**2<=r*r){let nx=x-px,ny=y-py,len=Math.hypot(nx,ny)||1;best={t,x,y,nx:nx/len,ny:ny/len};break}
-   }
+ if(inside(x1,y1)){
+  const len=Math.hypot(dx,dy)||1;add(0,-dx/len,-dy/len);
+ }
+ for(let i=0;i<pts.length;i++){
+  const a=pts[i],b=pts[(i+1)%pts.length],ex=b.x-a.x,ey=b.y-a.y;
+  const len=Math.hypot(ex,ey);if(len<eps)continue;
+  const tx=ex/len,ty=ey/len,nx=-ty,ny=tx;
+  // Intersect the bullet center with both offset edge lines; retain only
+  // crossings whose projection is actually on the finite edge.
+  for(const side of [-1,1]){
+   const signed=(x1-a.x)*nx+(y1-a.y)*ny-side*rr;
+   const speed=dx*nx+dy*ny;
+   if(Math.abs(speed)<eps)continue;
+   const t=-signed/speed;
+   const px=x1+dx*t,py=y1+dy*t,u=(px-a.x)*tx+(py-a.y)*ty;
+   if(u>=-eps&&u<=len+eps)add(t,nx*side,ny*side);
+  }
+  // Endpoint caps: solve time of impact with each radius-sized circle.
+  if(rr>0)for(const p of [a,b]){
+   const ox=x1-p.x,oy=y1-p.y,A=dx*dx+dy*dy;
+   if(A<eps){if(ox*ox+oy*oy<=rr*rr)add(0,ox,oy);continue}
+   const B=2*(ox*dx+oy*dy),C=ox*ox+oy*oy-rr*rr,disc=B*B-4*A*C;
+   if(C<=0)add(0,ox,oy);
+   else if(disc>=0){const t=(-B-Math.sqrt(disc))/(2*A);add(t,ox+dx*t,oy+dy*t)}
   }
  }
  return best;
@@ -3598,21 +3624,34 @@ function drawBackground(){
   ctx.fillStyle=pal[7];ctx.fillRect(p.x+4,p.y+2,Math.max(0,p.w-8),3);
   ctx.fillStyle='#101a2d8c';for(let xx=p.x+14;xx<p.x+p.w-7;xx+=25)ctx.fillRect(xx,p.y+Math.min(10,p.h-5),11,3);
  }
- // DEV playtest polygons: render the exact rotated silhouettes and seamless slopes.
+ // DEV polygon terrain uses the same layered materials and edge treatment
+ // as the normal platforms, clipped to its actual rotated silhouette.
  if(soDevIsPlaytesting&&arena.devSlopes?.length){
   for(const shape of arena.devSlopes){
-   const pts=shape.polygon;if(!pts.length)continue;
-   ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
-   for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
-   ctx.closePath();
-   const ys=pts.map(v=>v.y),xs=pts.map(v=>v.x),minY=Math.min(...ys),maxY=Math.max(...ys),minX=Math.min(...xs),maxX=Math.max(...xs);
-   const gr=ctx.createLinearGradient(0,minY,0,maxY===minY?minY+1:maxY);gr.addColorStop(0,pal[4]);gr.addColorStop(.25,pal[5]);gr.addColorStop(1,pal[6]);
-   ctx.fillStyle=gr;ctx.fill();ctx.strokeStyle=pal[7];ctx.lineWidth=2.5;ctx.stroke();
-   ctx.save();ctx.clip();ctx.strokeStyle='#ffffff22';ctx.lineWidth=2;
-   for(let xx=minX+15;xx<maxX;xx+=25){ctx.beginPath();ctx.moveTo(xx,minY);ctx.lineTo(xx-8,maxY);ctx.stroke()}
+   const pts=shape.polygon;if(!pts||pts.length<3)continue;
+   const xs=pts.map(v=>v.x),ys=pts.map(v=>v.y);
+   const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+   const trace=()=>{ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.closePath()};
+   ctx.save();ctx.translate(4,7);trace();ctx.fillStyle='#07102199';ctx.fill();ctx.restore();
+   trace();const gr=ctx.createLinearGradient(0,minY,0,maxY>minY?maxY:minY+1);
+   gr.addColorStop(0,pal[4]);gr.addColorStop(.23,pal[5]);gr.addColorStop(1,pal[6]);
+   ctx.fillStyle=gr;ctx.fill();ctx.strokeStyle='#101a2d8c';ctx.lineWidth=2;ctx.stroke();
+   ctx.save();trace();ctx.clip();
+   ctx.fillStyle='#101a2d8c';
+   for(let xx=minX+14;xx<maxX;xx+=25)for(let yy=minY+10;yy<maxY;yy+=25)ctx.fillRect(xx,yy,11,3);
    ctx.restore();
-   const ordered=pts.slice().sort((a,b)=>a.y-b.y);
-   ctx.beginPath();ctx.moveTo(ordered[0].x,ordered[0].y);ctx.lineTo(ordered[1].x,ordered[1].y);ctx.strokeStyle=pal[7];ctx.lineWidth=4;ctx.stroke();
+   // Highlight upward-facing edges, including the diagonal walking surface.
+   for(let i=0;i<pts.length;i++){
+    const a=pts[i],b=pts[(i+1)%pts.length],ex=b.x-a.x,ey=b.y-a.y;
+    if(Math.abs(ex)<.01)continue;
+    const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+    const probe=soDevSurfaceY(shape,mx);
+    if(probe===null||Math.abs(probe-my)>1.5)continue;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+    ctx.strokeStyle=pal[7];ctx.lineWidth=4;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.moveTo(a.x,a.y+2);ctx.lineTo(b.x,b.y+2);
+    ctx.strokeStyle='#ffffff35';ctx.lineWidth=1.4;ctx.stroke();
+   }
   }
  }
  // Pyramid: bright symmetrical diagonal ridge visually joins the short physical stair steps.
